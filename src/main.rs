@@ -7,6 +7,7 @@ use clap::{Parser, Subcommand};
 use rmcp::ServiceExt;
 use std::{net::SocketAddr, process::ExitCode};
 use tokio_util::sync::CancellationToken;
+use tracing_subscriber::{Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
 #[derive(Parser)]
 #[command(
@@ -54,13 +55,21 @@ async fn main() -> ExitCode {
 
 async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-    tracing_subscriber::fmt()
-        .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| "warn".into()),
+    // Dependencies may log complete MCP payloads at debug level. Only reviewed
+    // audit events may reach stderr, even when the operator sets RUST_LOG=trace.
+    tracing_subscriber::registry()
+        .with(
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| "info".into()),
         )
-        .with_writer(std::io::stderr)
-        .with_ansi(false)
-        .json()
+        .with(
+            tracing_subscriber::fmt::layer()
+                .with_writer(std::io::stderr)
+                .with_ansi(false)
+                .json()
+                .with_filter(tracing_subscriber::filter::filter_fn(|metadata| {
+                    metadata.target() == "andromeda::audit"
+                })),
+        )
         .init();
     if !cli.adb_server.ip().is_loopback() {
         return Err("ADB server must use a loopback address".into());

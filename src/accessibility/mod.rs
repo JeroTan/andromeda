@@ -17,7 +17,12 @@ pub struct Node {
     pub password: bool,
 }
 
-pub fn parse(output: &str) -> Result<Vec<Node>> {
+pub struct Hierarchy {
+    pub rotation: u8,
+    pub nodes: Vec<Node>,
+}
+
+pub fn parse(output: &str) -> Result<Hierarchy> {
     let start = output.find("<hierarchy").ok_or_else(|| {
         Error::new(
             "ui_unavailable",
@@ -32,11 +37,23 @@ pub fn parse(output: &str) -> Result<Vec<Node>> {
     reader.config_mut().expand_empty_elements = true;
     let mut nodes = Vec::new();
     let mut parents = Vec::new();
+    let mut rotation = None;
     loop {
         match reader
             .read_event()
             .map_err(|e| Error::new("invalid_ui_tree", e.to_string()))?
         {
+            Event::Start(e) if e.name().as_ref() == b"hierarchy" => {
+                for attr in e.attributes() {
+                    let attr = attr.map_err(|e| Error::new("invalid_ui_tree", e.to_string()))?;
+                    if attr.key.as_ref() == b"rotation" {
+                        rotation = std::str::from_utf8(&attr.value)
+                            .ok()
+                            .and_then(|s| s.parse::<u8>().ok())
+                            .filter(|r| *r <= 3);
+                    }
+                }
+            }
             Event::Start(e) | Event::Empty(e) if e.name().as_ref() == b"node" => {
                 if nodes.len() >= 10000 {
                     return Err(Error::new(
@@ -98,5 +115,9 @@ pub fn parse(output: &str) -> Result<Vec<Node>> {
             _ => {}
         }
     }
-    Ok(nodes)
+    Ok(Hierarchy {
+        rotation: rotation
+            .ok_or_else(|| Error::new("invalid_ui_tree", "UI hierarchy has no valid rotation"))?,
+        nodes,
+    })
 }

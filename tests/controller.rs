@@ -7,6 +7,27 @@ use tokio_util::sync::CancellationToken;
 mod support;
 
 #[tokio::test]
+async fn ui_observation_rejects_a_hierarchy_with_different_rotation() {
+    let fixture = support::DeviceFixture::with_ui_rotation(0, 1).await;
+    let controller = Controller::new(Adb::new(fixture.address), Some("phone-A".into()), false);
+    let report = controller
+        .run(
+            Operation::UiTree,
+            RunOptions::default(),
+            CancellationToken::new(),
+        )
+        .await;
+    assert_eq!(
+        report
+            .result
+            .err()
+            .expect("rotated hierarchy must be rejected")
+            .code,
+        "stale_screen"
+    );
+}
+
+#[tokio::test]
 async fn rotation_change_rejects_tap_before_android_receives_input() {
     use andromeda::{device::Screen, input::Point};
     let fixture = support::DeviceFixture::start(1).await;

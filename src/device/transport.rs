@@ -19,7 +19,22 @@ impl Adb {
                 stderr: Vec::new(),
             };
             let mut output = Vec::new();
-            while let Some(chunk) = shell.next().await? {
+            loop {
+                let chunk = match shell.next().await {
+                    Ok(Some(chunk)) => chunk,
+                    Ok(None) => break,
+                    Err(mut error) => {
+                        if error.code == "device_command_failed" && !output.is_empty() {
+                            // am start -W writes useful failures to stdout. Keep
+                            // a bounded excerpt in the caller's error, never logs.
+                            let excerpt = &output[..output.len().min(4096)];
+                            error
+                                .message
+                                .push_str(&format!("\n{}", String::from_utf8_lossy(excerpt)));
+                        }
+                        return Err(error);
+                    }
+                };
                 if output.len() + chunk.len() > MAX_OUTPUT {
                     return Err(Error::new("output_limit", "Device output exceeded 32 MiB"));
                 }

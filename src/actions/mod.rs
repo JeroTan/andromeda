@@ -65,6 +65,10 @@ pub struct Output {
     pub data: Value,
     pub image: Option<capture::Image>,
 }
+struct UiObservation {
+    screen: Screen,
+    nodes: Vec<accessibility::Node>,
+}
 impl Output {
     fn data(data: Value) -> Self {
         Self { data, image: None }
@@ -144,6 +148,7 @@ impl Controller {
             .remove(&id);
         let elapsed_ms = started.elapsed().as_secs_f64() * 1000.0;
         tracing::info!(
+            target: "andromeda::audit",
             operation_id = id,
             elapsed_ms,
             success = result.is_ok(),
@@ -259,9 +264,12 @@ impl Controller {
                     image: Some(image),
                 })
             }
-            Operation::UiTree => Ok(Output::data(
-                json!({"serial":serial,"screen":self.inner.adb.screen(&serial).await?,"nodes":self.ui_tree(&serial).await?}),
-            )),
+            Operation::UiTree => {
+                let tree = self.ui_tree(&serial).await?;
+                Ok(Output::data(
+                    json!({"serial":serial,"screen":tree.screen,"nodes":tree.nodes}),
+                ))
+            }
             Operation::Actions {
                 actions,
                 interval_ms,
@@ -327,7 +335,7 @@ impl Controller {
                 loop {
                     let matched = match &condition {
                         Condition::Text { value, exact } => {
-                            self.ui_tree(&serial).await?.iter().any(|node| {
+                            self.ui_tree(&serial).await?.nodes.iter().any(|node| {
                                 if *exact {
                                     node.text == *value || node.description == *value
                                 } else {
@@ -338,6 +346,7 @@ impl Controller {
                         Condition::ResourceId { value } => self
                             .ui_tree(&serial)
                             .await?
+                            .nodes
                             .iter()
                             .any(|node| node.resource_id == *value),
                         Condition::Pixel {
@@ -385,12 +394,24 @@ impl Controller {
         }
     }
 
-    async fn ui_tree(&self, serial: &str) -> Result<Vec<accessibility::Node>> {
+    async fn ui_tree(&self, serial: &str) -> Result<UiObservation> {
+        let screen = self.inner.adb.screen(serial).await?;
         let output = self
             .inner
             .adb
             .shell(serial, r#"umask 077; file=$(mktemp /data/local/tmp/andromeda-ui.XXXXXX) || exit 1; trap 'rm -f "$file"' EXIT HUP INT TERM; uiautomator dump "$file" >/dev/null && cat "$file""#)
             .await?;
-        accessibility::parse(&String::from_utf8_lossy(&output))
+        let hierarchy = accessibility::parse(&String::from_utf8_lossy(&output))?;
+        self.inner.adb.ensure_screen(serial, screen).await?;
+        if hierarchy.rotation != screen.rotation {
+            return Err(Error::new(
+                "stale_screen",
+                "UI hierarchy rotation changed during observation; inspect again",
+            ));
+        }
+        Ok(UiObservation {
+            screen,
+            nodes: hierarchy.nodes,
+        })
     }
 }

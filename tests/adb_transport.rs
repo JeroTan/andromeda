@@ -3,6 +3,31 @@ use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::TcpListener,
 };
+mod support;
+
+#[tokio::test]
+async fn launch_failure_preserves_android_stdout_diagnostics() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let adb = Adb::new(listener.local_addr().unwrap());
+    let server = tokio::spawn(async move {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        let message = b"Error: Activity not started, unable to resolve Intent for missing.example";
+        socket.write_u8(1).await.unwrap();
+        socket.write_u32_le(message.len() as u32).await.unwrap();
+        socket.write_all(message).await.unwrap();
+        socket.write_all(&[3, 1, 0, 0, 0, 1]).await.unwrap();
+    });
+    let error = adb
+        .shell("phone-A", "am start -W -p missing.example")
+        .await
+        .unwrap_err();
+    assert!(error.message.contains("unable to resolve"));
+    server.await.unwrap();
+}
 
 #[tokio::test]
 async fn shell_reports_device_exit_failure_instead_of_claiming_success() {

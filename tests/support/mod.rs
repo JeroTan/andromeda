@@ -31,6 +31,9 @@ pub async fn request(socket: &mut TcpStream) -> String {
 
 impl DeviceFixture {
     pub async fn start(rotation: u8) -> Self {
+        Self::with_ui_rotation(rotation, rotation).await
+    }
+    pub async fn with_ui_rotation(rotation: u8, ui_rotation: u8) -> Self {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let address = listener.local_addr().unwrap();
         let commands = Arc::new(Mutex::new(Vec::new()));
@@ -58,6 +61,10 @@ impl DeviceFixture {
                     command if command.contains("uiautomator dump")=>"<?xml version=\"1.0\"?><hierarchy rotation=\"0\"><node text=\"Settings\" enabled=\"true\" bounds=\"[0,0][1080,100]\"><node text=\"secret\" password=\"true\"/><node text=\"Display &amp; brightness\" resource-id=\"android:id/title\" enabled=\"true\"/></node></hierarchy>".into(),
                     _=>String::new(),
                 };
+                let output = output.replace(
+                    "<hierarchy rotation=\"0\">",
+                    &format!("<hierarchy rotation=\"{ui_rotation}\">"),
+                );
                 socket.write_u8(1).await.unwrap();
                 socket.write_u32_le(output.len() as u32).await.unwrap();
                 socket.write_all(output.as_bytes()).await.unwrap();

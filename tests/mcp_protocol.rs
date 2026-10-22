@@ -6,6 +6,66 @@ use rmcp::{
 mod support;
 
 #[tokio::test]
+async fn mcp_cancellation_notification_closes_the_inflight_adb_stream() {
+    use rmcp::{
+        model::{CallToolRequestParams, ClientRequest, Request},
+        service::PeerRequestOptions,
+    };
+    use tokio::io::AsyncReadExt;
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let (client_io, server_io) = tokio::io::duplex(65536);
+    let controller = Controller::new(Adb::new(listener.local_addr().unwrap()), None, false);
+    let task = tokio::spawn(async move {
+        Server { controller }
+            .serve(server_io)
+            .await
+            .unwrap()
+            .waiting()
+            .await
+            .unwrap();
+    });
+    let client = ClientConfig::new(
+        ClientCapabilities::default(),
+        Implementation::new("andromeda-test", "1"),
+    )
+    .serve(client_io)
+    .await
+    .unwrap();
+    let pending = client
+        .send_cancellable_request(
+            ClientRequest::CallToolRequest(Request::new(CallToolRequestParams::new(
+                "adm_list_devices",
+            ))),
+            PeerRequestOptions::no_options(),
+        )
+        .await
+        .unwrap();
+    let (mut socket, _) = listener.accept().await.unwrap();
+    support::request(&mut socket).await;
+    pending
+        .cancel(Some("acceptance test cancellation".into()))
+        .await
+        .unwrap();
+    let mut byte = [0; 1];
+    let read = tokio::time::timeout(std::time::Duration::from_secs(3), socket.read(&mut byte))
+        .await
+        .unwrap()
+        .unwrap();
+    assert_eq!(read, 0, "request cancellation must drop the ADB connection");
+    let stopped = client
+        .call_tool(CallToolRequestParams::new("adm_stop"))
+        .await
+        .unwrap();
+    assert_eq!(
+        stopped.structured_content.unwrap()["data"]["cancelled_operations"],
+        0
+    );
+    assert!(!client.list_all_tools().await.unwrap().is_empty());
+    client.cancel().await.unwrap();
+    task.await.unwrap();
+}
+
+#[tokio::test]
 async fn stop_remains_available_while_another_mcp_call_waits_on_android() {
     use rmcp::model::CallToolRequestParams;
     let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
