@@ -1,0 +1,13 @@
+/target/
+/.scratch/
+*.log
+.DS_Store
+android-companion/.gradle/
+android-companion/**/build/
+android-companion/local.properties
+*.jks
+*.keystore
+*.apk
+*.hprof
+__pycache__/
+
