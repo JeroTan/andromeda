@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Asia/Manila",
+  "device": {
+    "model": "OnePlus CPH2653",
+    "android": "16",
+    "api": 36,
+    "resolution": [
+      1080,
+      2376
+    ],
+    "transport": "USB"
+  },
+  "client": "Codex CLI",
+  "build": "release",
+  "executable_sha256": "d0453ae6131b26ec756cc631522e5c4b255f8ee23c02cc5abee6aaaf77378f87",
+  "test": "Observe dark mode, switch to light mode, verify, restore dark mode, verify",
+  "outcome": "passed",
+  "independent_image_review": [
+    "Dark mode selected",
+    "Light mode selected",
+    "Dark mode restored"
+  ],
+  "calls": [
+    {
+      "tool": "adm_get_device_info",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_get_view",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_get_ui_tree",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_touch",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_get_view",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_touch",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_get_view",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_touch",
+      "success": null,
+      "elapsed_ms": null
+    },
+    {
+      "tool": "adm_get_view",
+      "success": null,
+      "elapsed_ms": null
+    }
+  ],
+  "limitations": [
+    "Single device and session; not a performance benchmark",
+    "Claude Code test pending because account weekly usage limit prevented tool execution",
+    "Images and raw client logs excluded to avoid retaining private device content"
+  ]
+}
