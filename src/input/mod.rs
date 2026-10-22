@@ -146,8 +146,10 @@ impl Action {
             Self::PressKey { key } => format!("input keyevent {}", key.code()),
             Self::TypeText { text } => format!("input text {}", quote(&text.replace(' ', "%s"))),
             Self::LaunchApp { package } => format!(
-                "am start -W -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -p {}",
-                quote(package)
+                "adm_component=$(cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -p {} | tail -n 1); case \"$adm_component\" in {}*) am start -W -n \"$adm_component\";; *) printf '%s\\n' {} >&2; exit 1;; esac",
+                quote(package),
+                quote(&format!("{package}/")),
+                quote(&format!("No launcher activity found for {package}"))
             ),
             Self::OpenUri { uri } => format!(
                 "am start -W -a android.intent.action.VIEW -d {}",
