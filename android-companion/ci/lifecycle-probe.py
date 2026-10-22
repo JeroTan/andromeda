@@ -4,7 +4,7 @@ parser.add_argument('--device',required=True)
 args=parser.parse_args()
 if not args.device.startswith('emulator-'):parser.error('This permission-changing check is restricted to a disposable emulator')
 adb='adb'
-def command(*args):subprocess.run([adb,'-s',args.device,'shell',*args],check=True,stdout=subprocess.DEVNULL)
+def command(*shell_args):subprocess.run([adb,'-s',args.device,'shell',*shell_args],check=True,stdout=subprocess.DEVNULL)
 def read(s,n):
     b=b''
     while len(b)<n:
