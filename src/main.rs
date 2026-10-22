@@ -5,7 +5,7 @@ use andromeda::{
 };
 use clap::{Parser, Subcommand};
 use rmcp::ServiceExt;
-use std::{net::SocketAddr, process::ExitCode};
+use std::{net::SocketAddr, path::PathBuf, process::ExitCode};
 use tokio_util::sync::CancellationToken;
 use tracing_subscriber::{Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
@@ -22,12 +22,20 @@ struct Cli {
     /// Authorize ordinary device input for this session. Ask the human before sensitive actions.
     #[arg(long)]
     allow_control: bool,
+    /// Private application state used by the desktop app and managed connections.
+    #[arg(long, env = "ANDROMEDA_STATE_DIR")]
+    state_dir: Option<PathBuf>,
     #[command(subcommand)]
     command: Option<Command>,
 }
 
 #[derive(Subcommand)]
 enum Command {
+    /// Run a project-scoped MCP connection managed by the desktop app.
+    Managed {
+        #[arg(long)]
+        project: String,
+    },
     /// Run the MCP stdio server (also the default).
     Serve,
     /// Print the complete tool catalog and JSON input schemas.
@@ -74,6 +82,7 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
     if !cli.adb_server.ip().is_loopback() {
         return Err("ADB server must use a loopback address".into());
     }
+    let direct_device_override = cli.device.is_some();
     let controller = Controller::new(Adb::new(cli.adb_server), cli.device, cli.allow_control);
     let server = Server {
         controller: controller.clone(),
@@ -106,6 +115,26 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
             let shutdown = service.cancellation_token();
             tokio::select! {result=service.waiting()=>{result?;},_=tokio::signal::ctrl_c()=>{controller.stop();shutdown.cancel();}}
             controller.stop();
+            return Ok(ExitCode::SUCCESS);
+        }
+        Command::Managed { project } => {
+            if cli.allow_control
+                || direct_device_override
+                || cli.adb_server != "127.0.0.1:5037".parse::<SocketAddr>()?
+            {
+                return Err("Managed devices and control are configured in the desktop app".into());
+            }
+            let directory = match cli.state_dir {
+                Some(path) => path,
+                None => andromeda::projects::Registry::default_directory()?,
+            };
+            let registry = andromeda::projects::Registry::open(directory)?;
+            let client =
+                andromeda::managed::Client::new(registry, project, std::env::current_dir()?)?;
+            let proxy = andromeda::managed::Proxy::connect(client).await?;
+            let service = proxy.serve(rmcp::transport::stdio()).await?;
+            let shutdown = service.cancellation_token();
+            tokio::select! {result=service.waiting()=>{result?;},_=tokio::signal::ctrl_c()=>shutdown.cancel()}
             return Ok(ExitCode::SUCCESS);
         }
     };

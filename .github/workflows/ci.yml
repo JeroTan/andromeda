@@ -30,9 +30,65 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
           components: rustfmt, clippy
-      - run: cargo fmt --check
+      - run: cargo fmt --all --check
       - run: cargo clippy --locked --all-targets -- -D warnings
       - run: cargo test --locked --all-targets
       - run: cargo build --locked --release
       - run: cargo run --locked --release -- tools
+
+  desktop:
+    name: Desktop (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            bundle: deb
+          - os: macos-latest
+            bundle: app
+          - os: windows-latest
+            bundle: msi
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Install Linux desktop dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run build
+      - name: Prepare bundled MCP executable
+        run: node scripts/prepare-server.mjs
+        env:
+          TAURI_ENV_DEBUG: 'true'
+      - run: cargo clippy --locked -p andromeda-desktop --all-targets -- -D warnings
+      - name: Build desktop package
+        run: npm run tauri build -- --debug --bundles ${{ matrix.bundle }}
+      - name: Preserve package permissions
+        shell: bash
+        run: tar -czf ../target/desktop-preview.tar.gz -C ../target/debug bundle
+      - uses: actions/upload-artifact@v4
+        id: preview-upload
+        continue-on-error: true
+        with:
+          name: desktop-preview-${{ runner.os }}
+          path: target/desktop-preview.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report unavailable preview download
+        if: steps.preview-upload.outcome == 'failure'
+        shell: bash
+        run: printf '%s\n' 'The desktop package built successfully. Preview artifact upload failed; no CI download is available for this run. See the upload step for the storage or service error.' >> "$GITHUB_STEP_SUMMARY"
 

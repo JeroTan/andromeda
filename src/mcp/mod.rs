@@ -68,6 +68,10 @@ fn parse<T: DeserializeOwned>(value: Value) -> Result<T> {
     serde_json::from_value(value).map_err(|e| Error::invalid(e.to_string()))
 }
 
+pub(crate) fn validate(name: &str, args: &Value) -> Result<()> {
+    route(name, args.clone()).map(|_| ())
+}
+
 fn route(name: &str, args: Value) -> Result<(Operation, RunOptions)> {
     macro_rules! action {
         ($type:ty,$variant:ident,$field:ident) => {{

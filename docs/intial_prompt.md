@@ -249,6 +249,54 @@ The agent should use Andromeda's tools to observe, act, and verify rather than a
 
 ## Technical architecture
 
+### Product interface requirements added on 2026-10-22
+
+The main Andromeda interface runs on the user's Mac or PC alongside Codex and Claude. It creates and manages the MCP connection used by chats. The optional phone application is a permission and gesture bridge; its setup flow is part of the product and must receive the same visual and usability care as the desktop interface.
+
+**Desktop setup and project access**
+
+- Select a project directory, Android device and allowed tool groups.
+- Preview and apply project-local Codex and Claude MCP configuration while preserving existing settings.
+- Register project access explicitly and reject managed-server startup from an unrelated directory. Resolve canonical paths and symlinks when checking scope.
+- Load a user-selected instruction file within the project so the agent receives the project's device-use rules. Provide an editable starter file.
+- Keep credentials in private application storage. Configuration copied to another project must not silently authorize that project.
+- Show device and MCP connection states, an explicitly enabled screen preview, session state and an accessible stop control.
+- Explain how project scoping works and where the operating-system user remains the trust boundary.
+- Provide a tested npm launch command and downloadable desktop executables/packages that open the interface with minimal setup.
+
+**Visual direction**
+
+Use the user's supplied editorial reference as inspiration for an original Andromeda identity:
+
+- Bold, oversized sans-serif headings, readable body text and a clear hierarchy.
+- An off-white or pale-lavender canvas, strong ink-colored text, thin borders and rounded modular panels.
+- Restrained coral, peach, mint and sky-blue gradients for focal elements and primary actions.
+- Original orbital paths, constellation marks or abstract celestial artwork to express the Andromeda name.
+- Spacious layouts with useful device/project information. Give each screen one clear primary action.
+- Build corresponding light and dark themes, with contrast checked independently.
+
+The reference's typography, panel structure and soft color treatment should guide the interface. Use original product copy, artwork and identity assets.
+
+**Phone bridge experience**
+
+- Use a concise, polished flow for accessibility permission, pairing and session status.
+- Explain why Android requires each permission at the point it is needed.
+- Keep stop/disconnect readily available, with clear disabled, disconnected, unauthorized, expired and error states.
+- Put development-only gesture diagnostics behind a development entry point.
+- Respect system text scaling, screen readers, native back navigation and safe areas. Controls must meet Android's 48 dp touch target guidance.
+- Verify small-screen and landscape layouts, reduced motion, keyboard/focus behavior where applicable, and both color themes.
+
+**UI technology evaluation**
+
+Evaluate Lynx/ReactLynx for a TypeScript presentation layer, including native desktop integration and Android native-module support. Rust remains responsible for MCP, device control, permissions, cancellation and performance-sensitive work. Record the UI framework decision with primary sources and a build/launch check; do not assume that a framework's renderer language is Rust or that desktop rendering alone supplies a complete desktop application framework.
+
+**Release acceptance additions**
+
+- Desktop project registration, configuration preview/application, instruction loading and project isolation are implemented and verified.
+- Desktop and phone interfaces match the approved visual direction and pass relevant accessibility and responsive checks.
+- The documented one-command launcher and desktop packages are tested against the release artifacts.
+- Full automated suites and platform checks run in GitHub PR workflows. Local checks focus on individual changes, debugging and tests requiring the connected phone. Android Studio/emulators are available for testing.
+
 Andromeda will be built primarily in **Rust**, prioritizing low overhead, predictable execution, and portability.
 
 ### Planned technology stack

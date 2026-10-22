@@ -5,4 +5,6 @@ pub mod capture;
 pub mod device;
 pub mod errors;
 pub mod input;
+pub mod managed;
 pub mod mcp;
+pub mod projects;
