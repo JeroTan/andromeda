@@ -1,0 +1,30 @@
+# UI runtime decision research
+
+Checked 2026-10-22. Recommendation, not a completed runtime validation.
+
+Start with **ReactLynx + Lynxtron for the desktop interface**, backed by the existing Rust controller as a separate process. Use ReactLynx inside the Android companion’s existing native shell. Promote this choice after the acceptance spike below; use **Tauri 2 + a TypeScript web UI** if Lynx cannot pass those gates. This honors the requested Lynx direction without treating framework marketing as performance evidence.
+
+## Verified findings
+
+- **Lynx desktop exists.** Version 3.7 introduced official macOS and Windows rendering, mouse/keyboard events, and SVG. Its initial desktop element coverage was incomplete; that release’s percentages are historical, not current guarantees. [Lynx 3.7 announcement](https://lynxjs.org/3.7/blog/lynx-3-7.html)
+- **Lynxtron is available now.** Its current quick start documents scaffolding, development, and packaging. npm returned `@lynx-js/lynxtron` **0.0.30**, published October 16, 2026; the publisher’s manifest links to `lynx-family/lynxtron`. An older overview still says “Coming soon,” contradicted by these stronger distribution sources. [Quick start](https://lynxjs.org/lynxtron/introduction), [published metadata](https://registry.npmjs.org/@lynx-js%2Flynxtron), [older overview](https://lynxjs.org/guide/start/build-with-app-framework)
+- **Platform limits matter.** Published runtime targets are macOS arm64/x64, Windows x64, and Linux x64. Linux arm64 and Windows arm64 are absent from that published target list. The repository recommends macOS/Windows for development; a Linux package alone does not establish feature parity or distro compatibility. [Publisher’s runtime manifest and README](https://registry.npmjs.org/@lynx-js%2Flynxtron), [repository](https://github.com/lynx-family/lynxtron)
+- **TypeScript does not replace Rust.** ReactLynx renders Lynx elements through a React-like API; DOM-dependent packages cannot be assumed compatible. Lynxtron’s host uses Node.js and its renderer uses Lynx. Lynx’s documented desktop native APIs are C/C++; calling this a Rust UI engine would be inaccurate. [ReactLynx](https://lynxjs.org/react/introduction), [Lynxtron architecture](https://lynxjs.org/lynxtron/learn/what-is-lynxtron), [native modules](https://lynxjs.org/guide/use-native-modules)
+- **Android integration can retain the service.** Lynx embeds in an existing Android app, loads a bundle from APK assets, and calls Java/Kotlin native modules through typed interfaces. This supports preserving Andromeda’s AccessibilityService while replacing the permission/pairing screen. The latter is an architectural inference, not a tested integration. [Embedding guide](https://lynxjs.org/guide/start/integrate-with-existing-apps), [native modules](https://lynxjs.org/guide/use-native-modules)
+- **Accessibility needs validation.** Lynx documents labels, traits, focus order, and announcements for Android/iOS. These docs do not prove desktop VoiceOver/Narrator behavior. Keyboard events likewise do not establish complete Tab traversal, visible focus, shortcuts, or accessible dialogs. [Accessibility guide](https://lynxjs.org/guide/inclusion/accessibility)
+- **Offline packaging has a path.** Lynxtron loads local bundles and its builder packages through `electron-builder.yml`. The npm launcher initially installs platform runtimes; production-runtime fetching must happen before offline use. Pin and bundle release assets rather than depend on development servers, CDN fonts, or first-launch downloads. [Local bundle example](https://lynxjs.org/lynxtron/learn/communication-between-node-and-lynx), [builder](https://lynxjs.org/lynxtron/api/@lynx-js/lynxtron-builder/), [runtime metadata](https://registry.npmjs.org/@lynx-js%2Flynxtron)
+- **Tauri is a credible alternative.** It supplies a Rust host, TypeScript messaging APIs, embedded assets, and macOS/Windows/Linux packaging. Android plugins can retain Java/Kotlin platform code and call Rust through JNI. Its webview architecture requires a web UI, so it is a shell alternative rather than a drop-in ReactLynx renderer. [Architecture](https://tauri.app/concept/architecture/), [Rust commands](https://v2.tauri.app/develop/calling-rust/), [mobile plugins](https://v2.tauri.app/develop/plugins/develop-mobile/)
+
+## Proposed boundary and acceptance spike
+
+Keep project canonicalization, tool allowlists, instruction-file access, client configuration writes, device control, cancellation, and timing in Rust. Expose a narrow typed command/event protocol. The Lynxtron host can start the bundled executable with Node’s asynchronous process API and forward messages; no general filesystem or shell API should reach UI code. This is a proposed design using documented host capabilities. [Lynxtron bridges](https://lynxjs.org/lynxtron/learn/communication-between-node-and-lynx), [Node child processes](https://nodejs.org/api/child_process.html)
+
+Before adopting the shell, verify:
+
+1. Packaged macOS/Windows/Linux launch offline; Android loads local assets and preserves permission, pairing, revoke, and stop behavior.
+2. Project selection, instruction preview, tool switches, screen preview, and stop work entirely by keyboard and appropriate screen readers; test scaling and reduced motion.
+3. Rust rejects out-of-scope paths/tools independently of UI state; closing/crashing the UI cannot orphan uncontrolled automation.
+4. Record cold launch, idle memory, preview latency, command latency, and stop latency on actual builds. Compare equivalent workflows before claiming faster performance.
+5. Verify the Andromeda npm launcher and executable install actual release artifacts. Framework scaffolding commands are developer tooling, not the product’s install experience.
+
+Share design tokens and local assets across shells: bold monochrome typography, rounded bordered panels, restrained orbital geometry, and small peach/cyan/lilac accents. Keep desktop project management and phone permission flows distinct.

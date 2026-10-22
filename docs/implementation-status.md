@@ -79,6 +79,9 @@ On 2026-10-22 the user clarified that Andromeda's main interface should be a des
 - [ ] Reviewable project-local Codex/Claude configuration installation preserving existing settings
 - [ ] Simple npm launcher and downloadable desktop packaging
 - [ ] Desktop UI/accessibility and project isolation verification
+- [ ] Shared visual identity based on the supplied editorial reference: bold typography, rounded panels, thin borders, pastel accents and original celestial graphics
+- [ ] Polished phone permission/pairing/session UI with accessibility, text scaling, landscape and light/dark verification
+- [ ] Lynx/TypeScript UI evaluation documented; Rust remains the control and authorization core
 
 The user asked to move full automated suites to GitHub PR workflows. Run only focused checks/debugging and hardware-dependent tests locally. Android Studio and its emulator are authorized for testing.
 
