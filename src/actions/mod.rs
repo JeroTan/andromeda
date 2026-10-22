@@ -87,6 +87,7 @@ pub struct Controller {
     default_serial: Option<String>,
     allow_control: bool,
     owner: Option<Arc<str>>,
+    companion: Option<crate::companion::Companion>,
 }
 struct Inner {
     adb: Adb,
@@ -129,6 +130,7 @@ impl Controller {
             default_serial,
             allow_control,
             owner: Some(Arc::from(owner.into())),
+            companion: self.companion.clone(),
         }
     }
 
@@ -137,6 +139,7 @@ impl Controller {
             default_serial,
             allow_control,
             owner: None,
+            companion: None,
             inner: Arc::new(Inner {
                 adb,
                 next_id: AtomicU64::new(1),
@@ -146,6 +149,22 @@ impl Controller {
                 paused: AtomicBool::new(false),
             }),
         }
+    }
+
+    pub fn with_companion(mut self, store: crate::companion::Store) -> Self {
+        self.companion = Some(crate::companion::Companion::new(
+            self.inner.adb.clone(),
+            store,
+        ));
+        self
+    }
+    fn companion(&self) -> Result<&crate::companion::Companion> {
+        self.companion.as_ref().ok_or_else(|| {
+            Error::new(
+                "companion_not_paired",
+                "Configure the optional Android companion for this operation",
+            )
+        })
     }
 
     /// Operator pause is latched; agents cannot clear it through MCP tools.
@@ -327,6 +346,16 @@ impl Controller {
                 duration(interval_ms, 0, 10000)?;
                 for action in &actions {
                     action.validate()?;
+                    if matches!(
+                        action,
+                        Action::MultiTouch { .. } | Action::CompanionText { .. }
+                    ) && !self.companion()?.is_paired(&serial)?
+                    {
+                        return Err(Error::new(
+                            "companion_not_paired",
+                            "Pair this phone from Andromeda before using companion input",
+                        ));
+                    }
                 }
                 let _guard = self.inner.action_gate.try_lock().map_err(|_| {
                     Error::new(
@@ -334,6 +363,7 @@ impl Controller {
                         "Another input sequence is running; wait or call adm_stop",
                     )
                 })?;
+                let mut companion_results = Vec::new();
                 for (index, action) in actions.iter().enumerate() {
                     if self.is_paused() {
                         return Err(Error::new(
@@ -348,6 +378,24 @@ impl Controller {
                         self.inner.adb.ensure_screen(&serial, screen).await?;
                     }
                     match action {
+                        Action::MultiTouch { strokes, screen } => {
+                            let result = self
+                                .companion()?
+                                .call(
+                                    &serial,
+                                    "gesture",
+                                    json!({"strokes":strokes,"screen":screen}),
+                                )
+                                .await?;
+                            companion_results.push(json!({"action_index":index,"data":result}));
+                        }
+                        Action::CompanionText { text, mode } => {
+                            let result = self
+                                .companion()?
+                                .call(&serial, "type_text", json!({"text":text,"mode":mode}))
+                                .await?;
+                            companion_results.push(json!({"action_index":index,"data":result}));
+                        }
                         Action::Pause { duration_ms } => {
                             tokio::time::sleep(Duration::from_millis(*duration_ms)).await
                         }
@@ -369,7 +417,7 @@ impl Controller {
                     }
                 }
                 Ok(Output::data(
-                    json!({"completed_actions":actions.len(),"verified":false,"note":"Input dispatched. Observe the device to verify the intended outcome."}),
+                    json!({"completed_actions":actions.len(),"companion_results":companion_results,"verified":false,"note":"Input dispatched. Observe the device to verify the intended outcome."}),
                 ))
             }
             Operation::WaitFor { condition, poll_ms } => {
@@ -449,6 +497,34 @@ impl Controller {
 
     async fn ui_tree(&self, serial: &str) -> Result<UiObservation> {
         let screen = self.inner.adb.screen(serial).await?;
+        if let Some(companion) = &self.companion
+            && companion.is_paired(serial)?
+        {
+            match companion.call(serial, "ui_tree", json!({})).await {
+                Ok(result) => {
+                    let observed: crate::device::Screen =
+                        serde_json::from_value(result["screen"].clone()).map_err(|_| {
+                            Error::new("companion_protocol", "Invalid companion screen geometry")
+                        })?;
+                    if observed != screen {
+                        return Err(Error::new(
+                            "stale_screen",
+                            "Display changed during companion UI inspection",
+                        ));
+                    }
+                    let nodes: Vec<accessibility::Node> =
+                        serde_json::from_value(result["nodes"].clone()).map_err(|_| {
+                            Error::new("companion_protocol", "Invalid companion UI nodes")
+                        })?;
+                    self.inner.adb.ensure_screen(serial, screen).await?;
+                    return Ok(UiObservation { screen, nodes });
+                }
+                Err(error)
+                    if error.code == "session_inactive"
+                        || error.code == "companion_unavailable" => {}
+                Err(error) => return Err(error),
+            }
+        }
         let output = self
             .inner
             .adb

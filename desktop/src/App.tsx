@@ -195,6 +195,7 @@ function App() {
   const [documentText, setDocumentText] = useState("");
   const [replace, setReplace] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [bridgeStatus, setBridgeStatus] = useState("");
   const previewGeneration = useRef(0);
   const [theme, setTheme] = useState(
     () => localStorage.getItem("andromeda-theme") || "light",
@@ -254,6 +255,7 @@ function App() {
   useEffect(() => {
     setDraft(data?.projects.find((p) => p.id === selected) || null);
     setPreview(null);
+    setBridgeStatus("");
     previewGeneration.current += 1;
   }, [selected]);
   useEffect(() => {
@@ -808,6 +810,55 @@ function App() {
                     <p className="field-hint">
                       Keep this app open while your agent is connected.
                     </p>
+                    <details className="tool-details">
+                      <summary>Optional phone bridge</summary>
+                      <p className="field-hint">
+                        For multi-touch and Unicode, open Andromeda on the
+                        phone, enable its accessibility service, then choose
+                        Pair this computer.
+                      </p>
+                      <div className="form-actions">
+                        <button
+                          className="secondary"
+                          disabled={
+                            !!busy || !paused || !project.serial || dirty
+                          }
+                          onClick={() =>
+                            void run("pair", async () => {
+                              await invoke("pair_companion", {
+                                id: project.id,
+                              });
+                              setBridgeStatus(
+                                "Paired. Start a session on the phone.",
+                              );
+                            })
+                          }
+                        >
+                          Pair this phone
+                        </button>
+                        <button
+                          className="text-button"
+                          disabled={!!busy || !project.serial || dirty}
+                          onClick={() =>
+                            void run("bridge-status", async () => {
+                              const result = await invoke<{
+                                session_active: boolean;
+                              }>("companion_status", { id: project.id });
+                              setBridgeStatus(
+                                result.session_active
+                                  ? "Phone session active"
+                                  : "Paired · phone session stopped",
+                              );
+                            })
+                          }
+                        >
+                          Check bridge
+                        </button>
+                      </div>
+                      <p className="field-hint" role="status">
+                        {bridgeStatus}
+                      </p>
+                    </details>
                   </div>
                   <div className="panel preview-panel">
                     <div className="section-heading">

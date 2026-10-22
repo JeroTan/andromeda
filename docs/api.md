@@ -32,11 +32,11 @@ Image formats are `png` and `jpeg`. Size limits preserve aspect ratio and never 
 | `adm_open_uri` | `uri` | Common arguments |
 | `adm_batch_actions` | `actions: [...]` | `interval_ms = 0` |
 
-Input needs operator authorization with `--allow-control`. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. These sequences are sequential. Simultaneous multi-touch is tracked separately in the companion work.
+Input needs operator authorization with `--allow-control`. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. These sequences are sequential. Simultaneous multi-touch is available through `adm_multi_touch` with an active companion session.
 
 Keys: `home`, `back`, `recents`, `enter`, `delete`, `tab`, `escape`, `volume_up`, `volume_down`, `power`, `wakeup`.
 
-ADB text accepts 1–4096 printable ASCII bytes excluding `%`. It escapes shell arguments and converts spaces for Android input. Unsupported text is rejected before any batch action executes. Unicode input is part of the optional companion work.
+ADB text accepts 1–4096 printable ASCII bytes excluding `%`. It escapes shell arguments and converts spaces for Android input. Unsupported text is rejected before any batch action executes. Unicode, literal `%` and replacement mode use the paired optional companion; `backend` chooses `auto`, `adb` or `companion`.
 
 Batch elements use an `action` discriminator:
 
@@ -78,3 +78,9 @@ Text matches accessible text or descriptions and is case-sensitive. Pixel tolera
 The server distinguishes invalid arguments, disabled control, missing device selection, ADB connection/rejection/protocol failures, failed Android commands, stale geometry, image/UI failures, output limits, timeout and cancellation. `retryable` describes transport recoverability; it never authorizes blindly repeating input.
 
 No tool treats a dispatched action as a verified task. Successful input returns `verified: false` so the agent must observe the result.
+
+## Companion input
+
+`adm_multi_touch` accepts `{ "screen": { "width": 1080, "height": 2400, "rotation": 0 }, "strokes": [{ "points": [{ "x": 300, "y": 700 }, { "x": 380, "y": 1050 }], "start_ms": 0, "duration_ms": 450 }] }`. Use 1–10 strokes, 1–128 points per stroke and a 10-second maximum end time. A phone-side session and pairing are required. Check the returned `companion_results` and then observe the device.
+
+`adm_type_text` adds optional `backend` (`auto`, `adb`, `companion`) and `mode` (`insert`, `replace`). Auto chooses ADB for printable ASCII insertions and the companion for Unicode, `%`, or replacement. The companion confirms the focused field shows the requested text before it reports `verified: true` for text itself; the overall input tool still reports `verified: false` until the intended app outcome is observed.

@@ -3,6 +3,19 @@ use andromeda::{
     device::Adb,
     input::{Action, Key},
 };
+
+#[test]
+fn disallowed_uri_schemes_are_case_insensitive() {
+    assert_eq!(
+        andromeda::input::Action::OpenUri {
+            uri: "InTeNt://example".into()
+        }
+        .validate()
+        .unwrap_err()
+        .code,
+        "invalid_argument"
+    );
+}
 use tokio_util::sync::CancellationToken;
 mod support;
 

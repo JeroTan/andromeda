@@ -13,7 +13,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 ## Phase 2: Advanced interaction
 
 - [ ] Timed tap and swipe sequences
-- [ ] True concurrent pointers through optional companion
+- [x] True concurrent pointers through optional companion on emulator; physical verification remains below
 - [ ] Batches, stop, deadlines, coordinate/timing validation
 - [ ] Gesture integration tests on supported physical devices
 
@@ -23,7 +23,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 - [ ] Explicit persistent screen streaming and screenshot resizing/compression
 - [ ] Rotation rejection and disconnect/reconnect behavior
 - [ ] Cancellation, action logs, permissions and human approval controls
-- [ ] Companion APK build, installation, permission and UI validation
+- [x] Companion APK build and emulator permission/UI validation; physical and release checks remain below
 
 ## Phase 4: Performance
 
@@ -66,11 +66,11 @@ Private device screenshots and raw client logs are temporary test artifacts, exc
 
 ## Current work
 
-The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1) as `1ca97be`, after CI passed at `ee1a830` on Windows, macOS, Linux and Rust 1.88. The `feat/android-mcp` branch was deleted locally and remotely. Current work is on `feat/desktop-project-control`.
+The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1) as `1ca97be`, after CI passed at `ee1a830` on Windows, macOS, Linux and Rust 1.88. The `feat/android-mcp` branch was deleted locally and remotely. The desktop stage was subsequently merged through PR #2; current work is on `feat/android-companion`.
 
 Repository and instruction files were inspected; no prior implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to the supplied specification.
 
-The merged implementation contains 16 core tools. `adm_multi_touch`, the companion integration, persistent capture, stronger per-action approval, the benchmark suite/comparisons, remaining client/device checks and the final release remain in scope and are not complete. Desktop additions have separate platform/UX gates. The full goal remains active.
+The merged core contains 16 tools. The companion branch adds `adm_multi_touch` as the seventeenth and integrates Unicode input, pairing and the phone UI. This branch is not yet reviewed or merged. Persistent capture, the benchmark suite/comparisons, remaining client/device checks and the final release remain in scope and are not complete. Desktop additions have separate platform/UX gates. The full goal remains active.
 
 ## User additions and workflow preferences
 
@@ -81,13 +81,13 @@ On 2026-10-22 the user clarified that Andromeda's main interface should be a des
 - [ ] Reviewable project-local Codex/Claude configuration installation preserving existing settings
 - [ ] Simple npm launcher and downloadable desktop packaging
 - [ ] Desktop UI/accessibility and project isolation verification
-- [ ] Shared visual identity based on the supplied editorial reference: bold typography, rounded panels, thin borders, pastel accents and original celestial graphics
+- [x] Shared visual identity based on the supplied editorial reference: bold typography, rounded panels, thin borders, pastel accents and original celestial graphics
 - [ ] Polished phone permission/pairing/session UI with accessibility, text scaling, landscape and light/dark verification
-- [ ] Lynx/TypeScript UI evaluation documented; Rust remains the control and authorization core
+- [x] Lynx/TypeScript UI evaluation documented; Rust remains the control and authorization core
 
 The user asked to move full automated suites to GitHub PR workflows. Run only focused checks/debugging and hardware-dependent tests locally. Android Studio and its emulator are authorized for testing.
 
-The companion prototype is now in `android-companion/`, with its temporary build under ignored `.scratch/companion-build`. It builds with AGP 9.4.1, Gradle 9.7.1 and Android API 37. Its development APK is installed on the physical phone. Android currently reports its accessibility permission as disabled; the user's initial readiness response was followed by clarification of the desktop interface. No pairing token was saved, and no companion control test has run yet. The prototype UI will be replaced with ReactLynx.
+The companion source is in `android-companion/`. Its ReactLynx UI bundle and debug/release APKs build with AGP 9.4.1, Gradle 9.7.1 and Android API 37. An isolated Android 17 emulator completed pairing, a user-started session, two-pointer gesture and Unicode text checks. See [companion acceptance evidence](evidence/companion-acceptance-2026-10-22.json). The physical phone is currently disconnected, so its advanced gesture and TalkBack acceptance gates remain open.
 
 The UI runtime spike selected Tauri 2 for desktop and ReactLynx for Android; see [runtime research](research/ui-runtime.md) and [Android integration research](research/android-lynx.md). The Lynx desktop spike rendered the requested visual direction but did not meet the observed desktop accessibility/Linux-window gates. Its app process was closed after inspection.
 
@@ -96,3 +96,5 @@ Project registry/configuration work now has focused tests for directory scope, d
 PR #2 is open for the desktop stage. Its first workflow exposed current-Clippy and Windows line-ending issues; these were fixed. The next run built the macOS package and passed the core checks on macOS/Linux/Rust 1.88. GitHub rejected preview artifact upload because account-level Actions artifact storage is exhausted. Package builds and tests remain required; preview uploads report availability separately. Release artifact verification remains a required gate.
 
 At code head `151cd43`, [PR CI run 39759622974](https://github.com/JeroTan/andromeda/actions/runs/39759622974) passed all seven jobs: core tests/builds on Windows, macOS, Linux and Rust 1.88, plus macOS app/Windows MSI/Linux deb desktop packages. All three artifact uploads succeeded on this run. Both review axes have no unresolved findings after fixes; the packaged macOS UI also shows an actual MCP client connecting and disconnecting. Native Windows/Linux UI, full accessibility/scaling and physical preview/input acceptance remain open.
+
+[PR #2](https://github.com/JeroTan/andromeda/pull/2) merged as `5b3f8cd` after all seven jobs passed at `7ba7c17` in run 39762860792. Its feature branch was deleted locally and remotely, and the acceptance app process was closed. Phone bridge implementation continues on `feat/android-companion`; no release has been published.

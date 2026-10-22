@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-22",
+  "device": "isolated Android 17 emulator, 1080×2400 portrait, arm64",
+  "ui": {
+    "runtime": "ReactLynx bundle in offline APK",
+    "verified": [
+      "Launches and renders the original Andromeda light and dark UI",
+      "Stop remains visible while content scrolls",
+      "At 200% system font scale, the primary permission control remains readable and reachable",
+      "Android accessibility tree exposes Stop and Enable accessibility as buttons and the hero title as a heading when TalkBack is active",
+      "Accessibility ACTION_CLICK on Enable accessibility opens Android settings"
+    ]
+  },
+  "companion": {
+    "verified": [
+      "User-opened pairing window accepts the Rust host and stores its credential outside the project",
+      "A 15-minute phone session is required for companion input",
+      "Two 450 ms strokes dispatched together produced max_pointers=2 and one completed gesture on the debug test pad",
+      "Unicode insertion produced the exact focused field text Hi 🌌 你好, including a space, emoji and CJK characters",
+      "An immediate clear-then-insert sequence waits for the actual field state before reporting success",
+      "Host unpair stopped the phone session and removed its saved credential"
+    ]
+  },
+  "verification_limits": [
+    "The physical phone was not connected during this acceptance run",
+    "Emulator permission grant used a disposable test device; physical permission still requires its owner",
+    "The debug test pad is absent from release builds",
+    "No raw screenshots, pairing tokens or device identifiers are included in this evidence file"
+  ]
+}

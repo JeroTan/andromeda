@@ -21,6 +21,32 @@ pub struct Swipe {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[serde(deny_unknown_fields)]
+pub struct Stroke {
+    pub points: Vec<Point>,
+    #[serde(default)]
+    pub start_ms: u64,
+    pub duration_ms: u64,
+}
+
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum TextMode {
+    #[default]
+    Insert,
+    Replace,
+}
+
+#[derive(Debug, Clone, Copy, Default, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum TextBackend {
+    #[default]
+    Auto,
+    Adb,
+    Companion,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum Key {
     Home,
@@ -57,25 +83,82 @@ impl Key {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(tag = "action", rename_all = "snake_case", deny_unknown_fields)]
 pub enum Action {
-    Touch { point: Point, screen: Screen },
-    Swipe { swipe: Swipe, screen: Screen },
-    PressKey { key: Key },
-    TypeText { text: String },
-    LaunchApp { package: String },
-    OpenUri { uri: String },
-    Pause { duration_ms: u64 },
+    Touch {
+        point: Point,
+        screen: Screen,
+    },
+    Swipe {
+        swipe: Swipe,
+        screen: Screen,
+    },
+    PressKey {
+        key: Key,
+    },
+    TypeText {
+        text: String,
+    },
+    CompanionText {
+        text: String,
+        #[serde(default)]
+        mode: TextMode,
+    },
+    MultiTouch {
+        strokes: Vec<Stroke>,
+        screen: Screen,
+    },
+    LaunchApp {
+        package: String,
+    },
+    OpenUri {
+        uri: String,
+    },
+    Pause {
+        duration_ms: u64,
+    },
 }
 
 impl Action {
     pub fn screen(&self) -> Option<Screen> {
         match self {
-            Self::Touch { screen, .. } | Self::Swipe { screen, .. } => Some(*screen),
+            Self::Touch { screen, .. }
+            | Self::Swipe { screen, .. }
+            | Self::MultiTouch { screen, .. } => Some(*screen),
             _ => None,
         }
     }
 
     pub fn validate(&self) -> Result<()> {
         match self {
+            Self::MultiTouch { strokes, screen } => {
+                if strokes.is_empty() || strokes.len() > 10 {
+                    return Err(Error::invalid(
+                        "Provide 1..=10 simultaneous gesture strokes",
+                    ));
+                }
+                for stroke in strokes {
+                    duration(stroke.duration_ms, 1, 10000)?;
+                    if stroke.start_ms > 10000 || stroke.start_ms + stroke.duration_ms > 10000 {
+                        return Err(Error::invalid(
+                            "All gesture strokes must finish within 10000 ms",
+                        ));
+                    }
+                    if stroke.points.is_empty() || stroke.points.len() > 128 {
+                        return Err(Error::invalid("Each stroke needs 1..=128 points"));
+                    }
+                    for point in &stroke.points {
+                        screen.validate_point(point.x, point.y)?;
+                    }
+                }
+                Ok(())
+            }
+            Self::CompanionText { text, .. } => {
+                if text.len() > 16384 || text.contains('\0') {
+                    return Err(Error::invalid(
+                        "Companion text must fit within 16384 UTF-8 bytes and contain no NUL",
+                    ));
+                }
+                Ok(())
+            }
             Self::Touch { point, screen } => screen.validate_point(point.x, point.y),
             Self::Swipe { swipe, screen } => {
                 screen.validate_point(swipe.from.x, swipe.from.y)?;
@@ -120,10 +203,11 @@ impl Action {
                         "Expected a URI with a valid scheme and no control characters",
                     ));
                 }
-                if uri.starts_with("intent:")
-                    || uri.starts_with("file:")
-                    || uri.starts_with("javascript:")
-                {
+                let scheme = uri
+                    .split_once(':')
+                    .map(|(scheme, _)| scheme.to_ascii_lowercase())
+                    .unwrap_or_default();
+                if ["intent", "file", "javascript"].contains(&scheme.as_str()) {
                     return Err(Error::invalid(
                         "intent, file and javascript URIs are not supported",
                     ));
@@ -155,7 +239,9 @@ impl Action {
                 "am start -W -a android.intent.action.VIEW -d {}",
                 quote(uri)
             ),
-            Self::Pause { .. } => return Ok(None),
+            Self::Pause { .. } | Self::CompanionText { .. } | Self::MultiTouch { .. } => {
+                return Ok(None);
+            }
         }))
     }
 }

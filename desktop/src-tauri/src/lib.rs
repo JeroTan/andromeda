@@ -23,6 +23,7 @@ use tokio_util::sync::CancellationToken;
 struct AppState {
     registry: Registry,
     controller: Controller,
+    companion: andromeda::companion::Companion,
     host: Host,
     changes: Mutex<BTreeMap<u64, ConfigChange>>,
     next_change: AtomicU64,
@@ -129,6 +130,32 @@ async fn devices(state: State<'_, AppState>) -> Result<Vec<DeviceSummary>> {
         .await;
     serde_json::from_value(execution.result?.data["devices"].clone())
         .map_err(|_| Error::new("invalid_devices", "Could not read the connected devices"))
+}
+
+#[tauri::command]
+async fn pair_companion(state: State<'_, AppState>, id: String) -> Result<()> {
+    let _guard = state.settings.lock().await;
+    require_paused(&state)?;
+    let project = state.registry.get(&id)?;
+    let serial = project.serial.ok_or_else(|| {
+        Error::new(
+            "device_required",
+            "Select and save this project's phone first",
+        )
+    })?;
+    state.companion.pair(&serial).await
+}
+
+#[tauri::command]
+async fn companion_status(state: State<'_, AppState>, id: String) -> Result<serde_json::Value> {
+    let project = state.registry.get(&id)?;
+    let serial = project.serial.ok_or_else(|| {
+        Error::new(
+            "device_required",
+            "Select and save this project's phone first",
+        )
+    })?;
+    state.companion.status(&serial).await
 }
 
 #[derive(Serialize)]
@@ -320,13 +347,17 @@ pub fn run() {
                 .map(PathBuf::from)
                 .map(Ok)
                 .unwrap_or_else(Registry::default_directory)?;
-            let registry = Registry::open(directory)?;
-            let controller = Controller::new(Adb::new("127.0.0.1:5037".parse()?), None, true);
+            let registry = Registry::open(directory.clone())?;
+            let store = andromeda::companion::Store::open(directory)?;
+            let adb = Adb::new("127.0.0.1:5037".parse()?);
+            let companion = andromeda::companion::Companion::new(adb.clone(), store.clone());
+            let controller = Controller::new(adb, None, true).with_companion(store);
             let host =
                 tauri::async_runtime::block_on(Host::start(registry.clone(), controller.clone()))?;
             app.manage(AppState {
                 registry,
                 controller,
+                companion,
                 host,
                 changes: Mutex::default(),
                 next_change: AtomicU64::new(1),
@@ -348,6 +379,8 @@ pub fn run() {
             choose_project,
             save_project,
             devices,
+            pair_companion,
+            companion_status,
             instructions,
             save_instructions,
             preview_connection,

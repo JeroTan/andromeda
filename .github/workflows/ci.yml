@@ -92,3 +92,67 @@ jobs:
         shell: bash
         run: printf '%s\n' 'The desktop package built successfully. Preview artifact upload failed; no CI download is available for this run. See the upload step for the storage or service error.' >> "$GITHUB_STEP_SUMMARY"
 
+  android-companion:
+    name: Android companion and emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: android-companion/ui/package-lock.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+      - run: npm ci --prefix android-companion/ui
+      - run: npm run format:check --prefix android-companion/ui
+      - run: npm run build --prefix android-companion/ui
+      - name: Install Android 37 compile platform
+        run: sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0'
+      - name: Build debug, release and UI test APKs
+        run: android-companion/gradlew -p android-companion :app:assembleDebug :app:assembleRelease :app:assembleDebugAndroidTest --no-daemon --console=plain
+      - name: Check packaged resources and permissions
+        run: |
+          python3 - <<'PY'
+          import pathlib,zipfile
+          apk=pathlib.Path('android-companion/app/build/outputs/apk/debug/app-debug.apk')
+          with zipfile.ZipFile(apk) as package:
+              files=set(package.namelist())
+          assert 'assets/main.lynx.bundle' in files, 'offline UI bundle missing'
+          assert any(name.startswith('lib/arm64-v8a/') for name in files), 'arm64 runtime missing'
+          assert any(name.startswith('lib/x86_64/') for name in files), 'emulator runtime missing'
+          print('Offline UI bundle and Android runtimes are packaged.')
+          PY
+          aapt_tool="$(find "$ANDROID_HOME/build-tools" -name aapt -type f | sort -V | tail -n 1)"
+          "$aapt_tool" dump permissions android-companion/app/build/outputs/apk/debug/app-debug.apk > android-companion-permissions.txt
+          if rg -q 'android.permission.INTERNET|android.permission.READ_EXTERNAL_STORAGE|android.permission.WRITE_EXTERNAL_STORAGE' android-companion-permissions.txt; then
+            cat android-companion-permissions.txt
+            exit 1
+          fi
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          target: google_apis_playstore
+          arch: x86_64
+          disable-animations: true
+          script: bash android-companion/ci/emulator-smoke.sh
+      - name: Archive companion preview
+        shell: bash
+        run: tar -czf android-companion-preview.tar.gz -C android-companion/app/build/outputs/apk debug release
+      - uses: actions/upload-artifact@v4
+        id: phone-upload
+        continue-on-error: true
+        with:
+          name: android-companion-preview
+          path: android-companion-preview.tar.gz
+          if-no-files-found: error
+          retention-days: 7
+      - name: Report unavailable phone preview
+        if: steps.phone-upload.outcome == 'failure'
+        run: printf '%s\n' 'The APKs built and the emulator check passed. Artifact storage rejected the preview upload; see that step for details.' >> "$GITHUB_STEP_SUMMARY"
+

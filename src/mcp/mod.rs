@@ -178,7 +178,56 @@ fn route(name: &str, args: Value) -> Result<(Operation, RunOptions)> {
             )
         }
         "adm_press_key" => action!(PressKey, PressKey, key),
-        "adm_type_text" => action!(TypeText, TypeText, text),
+        "adm_type_text" => {
+            let p = parse::<TypeText>(args)?;
+            if p.text.is_empty() && matches!(p.mode, crate::input::TextMode::Insert) {
+                return Err(Error::invalid("Insertion text cannot be empty"));
+            }
+            let options = p.options();
+            let adb_text = Action::TypeText {
+                text: p.text.clone(),
+            };
+            let companion = matches!(p.backend, crate::input::TextBackend::Companion)
+                || (matches!(p.backend, crate::input::TextBackend::Auto)
+                    && (matches!(p.mode, crate::input::TextMode::Replace)
+                        || adb_text.validate().is_err()));
+            if matches!(p.backend, crate::input::TextBackend::Adb)
+                && matches!(p.mode, crate::input::TextMode::Replace)
+            {
+                return Err(Error::invalid(
+                    "Replacement mode requires the companion backend",
+                ));
+            }
+            let action = if companion {
+                Action::CompanionText {
+                    text: p.text,
+                    mode: p.mode,
+                }
+            } else {
+                adb_text
+            };
+            (
+                Operation::Actions {
+                    actions: vec![action],
+                    interval_ms: 0,
+                },
+                options,
+            )
+        }
+        "adm_multi_touch" => {
+            let p = parse::<MultiTouch>(args)?;
+            let options = p.options();
+            (
+                Operation::Actions {
+                    actions: vec![Action::MultiTouch {
+                        strokes: p.strokes,
+                        screen: p.screen,
+                    }],
+                    interval_ms: 0,
+                },
+                options,
+            )
+        }
         "adm_launch_app" => action!(LaunchApp, LaunchApp, package),
         "adm_open_uri" => action!(OpenUri, OpenUri, uri),
         "adm_batch_actions" => {
@@ -274,9 +323,14 @@ pub fn tools() -> Vec<Tool> {
             "Press an Android navigation or hardware key.",
             false,
         ),
+        define::<MultiTouch>(
+            "adm_multi_touch",
+            "Dispatch 1..=10 synchronized finger paths through the paired Android companion. Each stroke has start_ms and duration_ms; all finish within 10000 ms. Requires an active phone session and fresh screen geometry.",
+            false,
+        ),
         define::<TypeText>(
             "adm_type_text",
-            "Type printable ASCII through Android input. Literal percent and Unicode need the optional companion.",
+            "Insert text. Auto uses ADB for printable ASCII and the paired companion for Unicode/literal percent. Explicit replacement requires companion. Backend failures never fall back or retry input.",
             false,
         ),
         define::<LaunchApp>(

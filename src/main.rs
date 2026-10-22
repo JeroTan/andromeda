@@ -31,6 +31,12 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Pair the selected phone while its user-opened pairing window is active.
+    Pair,
+    /// Read optional companion pairing/session state for the selected phone.
+    CompanionStatus,
+    /// Stop the phone companion and remove this computer's saved credential.
+    Unpair,
     /// Run a project-scoped MCP connection managed by the desktop app.
     Managed {
         #[arg(long)]
@@ -83,11 +89,51 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
         return Err("ADB server must use a loopback address".into());
     }
     let direct_device_override = cli.device.is_some();
-    let controller = Controller::new(Adb::new(cli.adb_server), cli.device, cli.allow_control);
+    let directory = match cli.state_dir.clone() {
+        Some(path) => path,
+        None => andromeda::projects::Registry::default_directory()?,
+    };
+    let store = andromeda::companion::Store::open(directory)?;
+    let companion = andromeda::companion::Companion::new(Adb::new(cli.adb_server), store.clone());
+    let controller = Controller::new(
+        Adb::new(cli.adb_server),
+        cli.device.clone(),
+        cli.allow_control,
+    )
+    .with_companion(store.clone());
     let server = Server {
         controller: controller.clone(),
     };
     let result = match cli.command.unwrap_or(Command::Serve) {
+        Command::Pair => {
+            let serial = cli
+                .device
+                .as_deref()
+                .ok_or("Choose --device explicitly when pairing")?;
+            companion.pair(serial).await?;
+            println!(
+                "{{\"success\":true,\"paired\":true,\"next\":\"Start a session on the phone\"}}"
+            );
+            return Ok(ExitCode::SUCCESS);
+        }
+        Command::CompanionStatus => {
+            let serial = cli.device.as_deref().ok_or("Choose --device explicitly")?;
+            println!(
+                "{}",
+                serde_json::json!({"success":true,"data":companion.status(serial).await?})
+            );
+            return Ok(ExitCode::SUCCESS);
+        }
+        Command::Unpair => {
+            let serial = cli.device.as_deref().ok_or("Choose --device explicitly")?;
+            let stopped = companion.stop(serial).await.is_ok();
+            store.forget(serial)?;
+            println!(
+                "{}",
+                serde_json::json!({"success":true,"saved_pairing_removed":true,"phone_session_stopped":stopped,"note":"Use Forget this computer on the phone to revoke its pairing credential"})
+            );
+            return Ok(ExitCode::SUCCESS);
+        }
         Command::Tools => {
             println!("{}", serde_json::to_string_pretty(&tools())?);
             return Ok(ExitCode::SUCCESS);
