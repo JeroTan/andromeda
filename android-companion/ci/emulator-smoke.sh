@@ -23,3 +23,5 @@ adb shell cmd uimode night yes >/dev/null
 adb shell am start -W -n io.andromeda.companion/.MainActivity >/dev/null
 adb shell pidof io.andromeda.companion >/dev/null
 printf '%s\n' 'Companion stayed running with large text and dark mode.'
+
+python3 android-companion/ci/lifecycle-probe.py --device "$(adb get-serialno)"
