@@ -12,7 +12,7 @@ Project scoping prevents accidental activation in unrelated chats. It does not s
 
 ## Shared control
 
-The desktop app owns a controller and an authenticated loopback gateway. Managed MCP processes authenticate as registered projects. The gateway enforces each project's tool and device policy; a managed client never falls back to unrestricted ADB when the app is closed. Desktop stop cancels all managed work, while a project's stop cancels that project's work. Input dispatch remains coordinated across projects sharing a phone.
+The desktop app owns a controller and an authenticated loopback gateway. Managed MCP processes authenticate as registered projects. The gateway enforces each project's tool and device policy; a managed client never falls back to unrestricted ADB when the app is closed. Desktop stop cancels all managed work and latches input paused; only the operator can resume. A project's stop cancels that project's work, including pending approvals. Every managed input request needs approval for its exact arguments, selected device and project policy. Its deadline includes approval time. Input dispatch remains coordinated across projects sharing a phone.
 
 The gateway is an internal transport. MCP remains stdio. It accepts bounded, framed requests and cancels in-flight work when a client disconnects. Endpoint metadata and credentials use private application storage.
 
@@ -27,7 +27,7 @@ Behavior is verified through the public MCP, device/controller and companion pro
 
 ## Distribution
 
-Native Rust executables remain the runtime. A small npm launcher downloads a matching versioned release, verifies its checksum and opens the desktop app. Downloadable desktop packages provide a direct launch option. The Android bridge is a separate optional APK. No installer silently enables accessibility or USB debugging.
+The desktop shell uses Tauri with a TypeScript UI and the Rust controller. A small npm launcher downloads a matching versioned release, verifies its checksum and opens the desktop app. Downloadable desktop packages provide a direct launch option. The Android bridge is a separate optional APK with a ReactLynx presentation layer. No installer silently enables accessibility or USB debugging.
 
 ## Visual direction
 
@@ -35,6 +35,6 @@ The user's 2026-10-22 reference replaces the initial dark developer-tool styling
 
 Desktop panels organize project scope, agent connections, device state and preview. The phone bridge presents permission, pairing and session states with one primary action at a time. Move the test pad out of the primary setup flow. Both interfaces need keyboard/screen-reader support, readable scaling, visible focus and independently verified dark-theme contrast.
 
-The presentation stack remains under evaluation. Lynx/ReactLynx is a user-suggested option; TypeScript is acceptable for UI while device control and authorization stay in Rust. The runtime research note will record verified platform support and packaging constraints before implementation commits to a framework.
+The [runtime spike](docs/research/ui-runtime.md) selected Tauri 2 for desktop and ReactLynx for Android. Lynxtron rendered the visual direction, but its current Linux package supports headless rendering only, and the observed macOS accessibility tree omitted application controls. The Android integration is documented separately in [android-lynx.md](docs/research/android-lynx.md). Both finished interfaces still need their own accessibility, offline-launch and performance checks.
 
 This document includes the desktop scope added by the user on 2026-10-22. The implementation ledger distinguishes completed behavior from remaining work.

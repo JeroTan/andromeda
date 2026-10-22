@@ -66,9 +66,11 @@ Private device screenshots and raw client logs are temporary test artifacts, exc
 
 ## Current work
 
-Branch: `feat/android-mcp`, based on `f128cac`. Repository and instruction files were inspected; no existing implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to this supplied specification.
+The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1) as `1ca97be`, after CI passed at `ee1a830` on Windows, macOS, Linux and Rust 1.88. The `feat/android-mcp` branch was deleted locally and remotely. Current work is on `feat/desktop-project-control`.
 
-This first implementation contains 16 core tools. `adm_multi_touch`, the companion, persistent capture, stronger per-action approval, the benchmark suite/comparisons, remaining platform/client/device checks and the final release remain in scope and are not complete. CI configuration is present; remote execution must still pass. The full goal remains active.
+Repository and instruction files were inspected; no prior implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to the supplied specification.
+
+The merged implementation contains 16 core tools. `adm_multi_touch`, the companion integration, persistent capture, stronger per-action approval, the benchmark suite/comparisons, remaining client/device checks and the final release remain in scope and are not complete. Desktop additions have separate platform/UX gates. The full goal remains active.
 
 ## User additions and workflow preferences
 
@@ -85,4 +87,8 @@ On 2026-10-22 the user clarified that Andromeda's main interface should be a des
 
 The user asked to move full automated suites to GitHub PR workflows. Run only focused checks/debugging and hardware-dependent tests locally. Android Studio and its emulator are authorized for testing.
 
-The companion prototype is in ignored `.scratch/companion-build` while the core PR finishes. It builds with AGP 9.4.1, Gradle 9.7.1 and Android API 37. Its development APK is installed on the physical phone. Android currently reports its accessibility permission as disabled; the user's initial readiness response was followed by clarification of the desktop interface. No pairing token was saved, and no companion control test has run yet.
+The companion prototype is now in `android-companion/`, with its temporary build under ignored `.scratch/companion-build`. It builds with AGP 9.4.1, Gradle 9.7.1 and Android API 37. Its development APK is installed on the physical phone. Android currently reports its accessibility permission as disabled; the user's initial readiness response was followed by clarification of the desktop interface. No pairing token was saved, and no companion control test has run yet. The prototype UI will be replaced with ReactLynx.
+
+The UI runtime spike selected Tauri 2 for desktop and ReactLynx for Android; see [runtime research](research/ui-runtime.md) and [Android integration research](research/android-lynx.md). The Lynx desktop spike rendered the requested visual direction but did not meet the observed desktop accessibility/Linux-window gates. Its app process was closed after inspection.
+
+Project registry/configuration work now has focused tests for directory scope, disabled projects, instruction symlink rejection, preservation of existing Claude/Codex settings, stale-preview rejection and configuration path escapes. A shared controller can isolate project stop operations while retaining an operator-wide stop. The authenticated managed gateway and Tauri interface now integrate these capabilities. Focused tests also cover per-request approval, cancellation of pending approvals, operator pause, and concurrent instruction-file edits. The packaged macOS preview launches with local assets and exposes its application controls in the native accessibility tree. Project selection, starter-instruction creation, both themes and Codex/Claude configuration saving have been exercised in an isolated test workspace. The generated bundled MCP command initializes, loads the selected instructions, discovers devices, rejects an unrelated working directory and fails after app closure. See [desktop acceptance evidence](evidence/desktop-acceptance-2026-10-22.json). Cross-platform packaging, remaining UI checks and PR review are pending.

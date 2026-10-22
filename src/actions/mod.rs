@@ -11,7 +11,7 @@ use std::{
     collections::BTreeMap,
     sync::{
         Arc, Mutex,
-        atomic::{AtomicU64, Ordering},
+        atomic::{AtomicBool, AtomicU64, Ordering},
     },
     time::{Duration, Instant},
 };
@@ -84,15 +84,21 @@ pub struct Execution {
 #[derive(Clone)]
 pub struct Controller {
     inner: Arc<Inner>,
+    default_serial: Option<String>,
+    allow_control: bool,
+    owner: Option<Arc<str>>,
 }
 struct Inner {
     adb: Adb,
-    default_serial: Option<String>,
-    allow_control: bool,
     next_id: AtomicU64,
-    active: Mutex<BTreeMap<u64, CancellationToken>>,
+    active: Mutex<BTreeMap<u64, OwnedOperation>>,
     action_gate: tokio::sync::Mutex<()>,
     image_gate: Arc<tokio::sync::Semaphore>,
+    paused: AtomicBool,
+}
+struct OwnedOperation {
+    cancel: CancellationToken,
+    owner: Option<Arc<str>>,
 }
 
 struct ActiveOperation {
@@ -110,26 +116,60 @@ impl Drop for ActiveOperation {
 }
 
 impl Controller {
+    /// Share dispatch coordination while isolating a project's stop operation.
+    /// The caller must enforce its project/device/tool authorization policy.
+    pub fn scoped(
+        &self,
+        owner: impl Into<String>,
+        default_serial: Option<String>,
+        allow_control: bool,
+    ) -> Self {
+        Self {
+            inner: self.inner.clone(),
+            default_serial,
+            allow_control,
+            owner: Some(Arc::from(owner.into())),
+        }
+    }
+
     pub fn new(adb: Adb, default_serial: Option<String>, allow_control: bool) -> Self {
         Self {
+            default_serial,
+            allow_control,
+            owner: None,
             inner: Arc::new(Inner {
                 adb,
-                default_serial,
-                allow_control,
                 next_id: AtomicU64::new(1),
                 active: Mutex::new(BTreeMap::new()),
                 action_gate: tokio::sync::Mutex::new(()),
                 image_gate: Arc::new(tokio::sync::Semaphore::new(2)),
+                paused: AtomicBool::new(false),
             }),
         }
     }
 
+    /// Operator pause is latched; agents cannot clear it through MCP tools.
+    pub fn pause(&self) -> usize {
+        self.inner.paused.store(true, Ordering::SeqCst);
+        self.stop()
+    }
+    pub fn resume(&self) {
+        self.inner.paused.store(false, Ordering::SeqCst);
+    }
+    pub fn is_paused(&self) -> bool {
+        self.inner.paused.load(Ordering::SeqCst)
+    }
+
     pub fn stop(&self) -> usize {
         let active = self.inner.active.lock().unwrap_or_else(|e| e.into_inner());
-        for token in active.values() {
-            token.cancel();
+        let mut count = 0;
+        for operation in active.values() {
+            if self.owner.is_none() || operation.owner == self.owner {
+                operation.cancel.cancel();
+                count += 1;
+            }
         }
-        active.len()
+        count
     }
 
     pub async fn run(
@@ -141,11 +181,6 @@ impl Controller {
         let id = self.inner.next_id.fetch_add(1, Ordering::Relaxed);
         let started = Instant::now();
         let result = self.run_inner(operation, options, cancel, id).await;
-        self.inner
-            .active
-            .lock()
-            .unwrap_or_else(|e| e.into_inner())
-            .remove(&id);
         let elapsed_ms = started.elapsed().as_secs_f64() * 1000.0;
         tracing::info!(
             target: "andromeda::audit",
@@ -178,7 +213,13 @@ impl Controller {
                     "At most 32 requests may run concurrently",
                 ));
             }
-            active.insert(id, cancel.clone());
+            active.insert(
+                id,
+                OwnedOperation {
+                    cancel: cancel.clone(),
+                    owner: self.owner.clone(),
+                },
+            );
         }
         let _registration = ActiveOperation {
             inner: self.inner.clone(),
@@ -192,7 +233,13 @@ impl Controller {
     }
 
     async fn perform(&self, operation: Operation, serial: Option<String>) -> Result<Output> {
-        if matches!(operation, Operation::Actions { .. }) && !self.inner.allow_control {
+        if matches!(operation, Operation::Actions { .. }) && self.is_paused() {
+            return Err(Error::new(
+                "control_paused",
+                "Device input is paused by the operator in the desktop app",
+            ));
+        }
+        if matches!(operation, Operation::Actions { .. }) && !self.allow_control {
             return Err(Error::new(
                 "control_disabled",
                 "Input is disabled. The operator must restart with --allow-control to authorize device control.",
@@ -203,7 +250,7 @@ impl Controller {
                 json!({"devices":self.inner.adb.list_devices().await?}),
             ));
         }
-        let serial=serial.or_else(||self.inner.default_serial.clone()).ok_or_else(||Error::new("device_required","Choose a serial from adm_list_devices or set --device. Devices are never selected implicitly."))?;
+        let serial=serial.or_else(||self.default_serial.clone()).ok_or_else(||Error::new("device_required","Choose a serial from adm_list_devices or set --device. Devices are never selected implicitly."))?;
         match operation {
             Operation::DeviceInfo => {
                 let screen = self.inner.adb.screen(&serial).await?;
@@ -211,7 +258,7 @@ impl Controller {
                 let properties = String::from_utf8_lossy(&properties);
                 let mut lines = properties.lines();
                 Ok(Output::data(
-                    json!({"serial":serial,"screen":screen,"model":lines.next(),"manufacturer":lines.next(),"android_version":lines.next(),"api_level":lines.next(),"control_enabled":self.inner.allow_control}),
+                    json!({"serial":serial,"screen":screen,"model":lines.next(),"manufacturer":lines.next(),"android_version":lines.next(),"api_level":lines.next(),"control_enabled":self.allow_control && !self.is_paused()}),
                 ))
             }
             Operation::ListApps { include_system } => {
@@ -288,6 +335,12 @@ impl Controller {
                     )
                 })?;
                 for (index, action) in actions.iter().enumerate() {
+                    if self.is_paused() {
+                        return Err(Error::new(
+                            "control_paused",
+                            "Device input was paused by the operator",
+                        ));
+                    }
                     if index > 0 {
                         tokio::time::sleep(Duration::from_millis(interval_ms)).await;
                     }

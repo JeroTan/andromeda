@@ -2,9 +2,13 @@
 
 Andromeda gives MCP agents tools to observe and control an Android device. The server is written in Rust and talks directly to your local ADB server over USB or an explicitly authorized ADB connection.
 
-[Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md)
+[Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Desktop setup](docs/desktop.md)
 
 **Development status:** the core server is implemented and undergoing device tests. The full release checklist is in [implementation-status.md](docs/implementation-status.md). Version `v0.1.0` has not been released.
+
+## Desktop preview
+
+The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and asks for approval before each managed input request. It includes device selection, an on-demand screen preview, and a stop control that keeps input paused. See [desktop setup](docs/desktop.md) to build and run it. The one-command npm launcher is still in development.
 
 ## Run locally
 

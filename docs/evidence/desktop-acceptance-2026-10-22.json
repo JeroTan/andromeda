@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-22",
+  "platform": "macOS arm64",
+  "build": "Tauri debug application bundle; local assets; bundled Rust MCP executable",
+  "workspace": "isolated temporary project and private registry, excluded from Git",
+  "verified": [
+    "Packaged application launches without a development server",
+    "Native accessibility tree exposes buttons, headings, fields, tool disclosure and dialogs",
+    "Native folder chooser registers the selected project",
+    "Instruction editor creates the starter file",
+    "Light and dark themes render with the Andromeda visual direction",
+    "Codex and Claude configuration previews resolve the bundled MCP executable",
+    "Both project-local configurations are saved through the desktop UI",
+    "Generated MCP command initializes over stdio and includes the project's instructions",
+    "Managed tool list contains six observation tools and Stop by default",
+    "Managed device discovery succeeds",
+    "Same generated configuration is rejected from an unrelated working directory",
+    "Managed startup fails after closing the desktop app"
+  ],
+  "remaining": [
+    "PR workflow builds and full automated tests",
+    "Windows and Linux native UI acceptance",
+    "Complete keyboard and screen-reader task acceptance, scaling and smaller-window review",
+    "Physical preview and input approval acceptance with a connected Android phone",
+    "Phone ReactLynx interface, packaging launcher and release acceptance"
+  ],
+  "privacy": "No device screenshots, raw client logs or registry credentials are included. UI screenshots were inspected inline, not saved as public artifacts."
+}

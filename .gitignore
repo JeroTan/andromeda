@@ -10,4 +10,10 @@ android-companion/local.properties
 *.apk
 *.hprof
 __pycache__/
+node_modules/
+desktop/dist/
+desktop/src-tauri/gen/
+desktop/src-tauri/target/
+desktop/src-tauri/binaries/
+desktop/src-tauri/Cargo.lock
 
