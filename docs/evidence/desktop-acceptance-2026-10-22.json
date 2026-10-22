@@ -15,14 +15,19 @@
     "Managed tool list contains six observation tools and Stop by default",
     "Managed device discovery succeeds",
     "Same generated configuration is rejected from an unrelated working directory",
-    "Managed startup fails after closing the desktop app"
+    "Managed startup fails after closing the desktop app",
+    "Full Rust suites pass on Windows, macOS, Linux stable and Linux Rust 1.88",
+    "Desktop lint/build/package checks pass for Windows MSI, macOS app and Linux deb",
+    "All three preview artifact uploads succeeded in the final code workflow",
+    "Native desktop UI shows MCP connected during an actual stdio client session, then MCP disconnected after it exits"
   ],
   "remaining": [
-    "PR workflow builds and full automated tests",
     "Windows and Linux native UI acceptance",
     "Complete keyboard and screen-reader task acceptance, scaling and smaller-window review",
     "Physical preview and input approval acceptance with a connected Android phone",
     "Phone ReactLynx interface, packaging launcher and release acceptance"
   ],
-  "privacy": "No device screenshots, raw client logs or registry credentials are included. UI screenshots were inspected inline, not saved as public artifacts."
+  "privacy": "No device screenshots, raw client logs or registry credentials are included. UI screenshots were inspected inline, not saved as public artifacts.",
+  "code_head": "151cd43d2cb42f47609c40dbb46d836a427baf06",
+  "ci_run": "https://github.com/JeroTan/andromeda/actions/runs/39759622974"
 }
