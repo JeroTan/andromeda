@@ -5,6 +5,8 @@ type Status = {
   enabled: boolean;
   paired: boolean;
   session_active: boolean;
+  session_expired: boolean;
+  last_contact_seconds: number;
   pairing_seconds: number;
   session_seconds: number;
   dark: boolean;
@@ -128,7 +130,7 @@ function App() {
     "Enable accessibility so your paired computer can read accessible screens, enter text and perform gestures during a session.",
     "Your phone and computer need an introduction. Open pairing here, then choose this phone in Andromeda on your computer.",
     "Start a session when you’re ready to use accessibility tools. You decide when it begins and ends.",
-    "Your computer is connected to this phone’s accessibility tools. Keep your task in view, and stop whenever you need.",
+    "This phone is ready to accept requests from your paired computer. Keep your task in view, and stop whenever you need.",
   ][step];
   const seconds = status.session_seconds;
   const remaining = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
@@ -296,10 +298,24 @@ function App() {
                   ? "Waiting for your computer"
                   : status.session_active
                     ? `Session active · ${remaining} left`
-                    : status.paired
-                      ? "Computer paired · session stopped"
-                      : "Ready to pair"}
+                    : status.session_expired
+                      ? "Session expired · start a new session to continue"
+                      : status.paired
+                        ? "Computer paired · session stopped"
+                        : "Ready to pair"}
             </text>
+            {status.paired && (
+              <text
+                flatten={false}
+                accessibility-element={true}
+                className="small"
+                style={type(status.small_size)}
+              >
+                {status.last_contact_seconds < 0
+                  ? "Waiting for a computer request. Pairing does not mean a computer is connected."
+                  : `Last computer request ${status.last_contact_seconds}s ago. Connection is checked when a request arrives.`}
+              </text>
+            )}
             <text
               accessibility-element={true}
               flatten={false}

@@ -33,6 +33,7 @@ public final class ControlService extends AccessibilityService {
     public static volatile ControlService instance;
     private static final Object ENDPOINT_LOCK = new Object();
     private volatile long pairingUntil=0, armedUntil=0;
+    private volatile long lastAuthenticatedAt=0;
     private final AtomicLong generation=new AtomicLong();
     private final AtomicBoolean gestureActive=new AtomicBoolean();
     private final Handler main=new Handler(Looper.getMainLooper());
@@ -70,6 +71,8 @@ public final class ControlService extends AccessibilityService {
     public boolean hasPairing(){return !preferences.getString("token","").isEmpty();}
     public int pairingSeconds(){return (int)Math.max(0,(pairingUntil-SystemClock.elapsedRealtime()+999)/1000);}
     public int sessionSeconds(){return (int)Math.max(0,(armedUntil-SystemClock.elapsedRealtime()+999)/1000);}
+    public boolean sessionExpired(){return armedUntil>0 && armedUntil<=SystemClock.elapsedRealtime();}
+    public int lastContactSeconds(){return lastAuthenticatedAt==0?-1:(int)Math.min(Integer.MAX_VALUE,(SystemClock.elapsedRealtime()-lastAuthenticatedAt)/1000);}
     public void forgetComputer(){stopSession();if(!preferences.edit().remove("token").commit())throw new IllegalStateException("Could not remove the pairing. Try again.");for(LocalSocket client:clients)close(client);}
     private boolean armed(){return armedUntil>SystemClock.elapsedRealtime();}
     public String statusText(){
@@ -147,6 +150,7 @@ public final class ControlService extends AccessibilityService {
         }
         byte[] expected=preferences.getString("token","").getBytes(StandardCharsets.UTF_8);
         if(expected.length!=64 || !MessageDigest.isEqual(expected,token.getBytes(StandardCharsets.UTF_8)))throw new Problem("unauthorized","Pair this computer again from the phone");
+        lastAuthenticatedAt=SystemClock.elapsedRealtime();
         if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("gesture_active",gestureActive.get()));
         if(method.equals("stop")){stopSession();return success(new JSONObject().put("stopped",true).put("note","Already dispatched Android input may finish"));}
         requireSession();long requestGeneration=generation.get();

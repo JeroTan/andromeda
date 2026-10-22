@@ -65,6 +65,8 @@ public final class CompanionModule extends LynxModule {
         status.put("enabled", service != null);
         status.put("paired", service != null && service.hasPairing());
         status.put("session_active", service != null && service.sessionSeconds() > 0);
+        status.put("session_expired", service != null && service.sessionExpired());
+        status.put("last_contact_seconds", service == null ? -1 : service.lastContactSeconds());
         status.put("pairing_seconds", service == null ? 0 : service.pairingSeconds());
         status.put("session_seconds", service == null ? 0 : service.sessionSeconds());
         status.put("dark", (mContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
