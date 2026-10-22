@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-23",
+  "device": "OnePlus CPH2653, Android 16/API 36, USB, 1080x2376 portrait",
+  "verified": {
+    "permission": "Owner enabled accessibility and opened pairing on the phone",
+    "pairing": "Rust host paired successfully; phone session was explicitly started",
+    "multi_touch": "Two strokes in one adm_multi_touch call; Android test pad observed max_pointers=2, completed=1, duration_ms=450",
+    "unicode": "Immediate clear then insert yielded exactly Hi 🌌 你好 in the editable field",
+    "stop": "Phone Stop changed session_active to false; subsequent companion input returned session_inactive",
+    "cleanup": "Synthetic text cleared; phone session stopped"
+  },
+  "limitations": [
+    "This confirms device behavior, not a reproducible performance comparison",
+    "TalkBack task traversal, broader orientation/scaling checks and final release acceptance remain open",
+    "Screenshots, raw tool results, pairing secrets and serial identifiers are excluded from Git"
+  ]
+}
