@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /** ADB-local, paired, explicitly armed accessibility endpoint. No network listener. */
 public final class ControlService extends AccessibilityService {
     public static volatile ControlService instance;
+    private static final Object ENDPOINT_LOCK = new Object();
     private volatile long pairingUntil=0, armedUntil=0;
     private final AtomicLong generation=new AtomicLong();
     private final AtomicBoolean gestureActive=new AtomicBoolean();
@@ -48,8 +49,12 @@ public final class ControlService extends AccessibilityService {
     @Override public void onAccessibilityEvent(AccessibilityEvent event){}
     @Override public void onInterrupt(){stopSession();}
     @Override public void onDestroy(){
-        instance=null;stopSession();pairingUntil=0;
-        try{if(listener!=null)listener.close();}catch(Exception ignored){}
+        synchronized(ENDPOINT_LOCK){
+            if(instance==this)instance=null;
+            try{if(listener!=null)listener.close();}catch(Exception ignored){}
+            listener=null;
+        }
+        stopSession();pairingUntil=0;
         for(LocalSocket client:clients)close(client);
         workers.shutdownNow();super.onDestroy();
     }
@@ -74,10 +79,16 @@ public final class ControlService extends AccessibilityService {
     }
 
     private void listen(){
+        LocalServerSocket owned=null;
         try{
-            listener=new LocalServerSocket("andromeda-v1");
+            synchronized(ENDPOINT_LOCK){
+                if(instance!=this)return;
+                owned=new LocalServerSocket("andromeda-v1");
+                listener=owned;
+            }
             while(instance==this){
-                LocalSocket client=listener.accept();
+                LocalSocket client=owned.accept();
+                if(instance!=this){close(client);break;}
                 int uid=client.getPeerCredentials().getUid();
                 // adbd uses shell on production devices and root on test emulators.
                 if(uid!=2000 && uid!=0){close(client);continue;}
@@ -87,6 +98,11 @@ public final class ControlService extends AccessibilityService {
         }catch(Exception stopped){
             // No request content or token is written to Android logs.
             if(instance==this)stopSession();
+        }finally{
+            synchronized(ENDPOINT_LOCK){
+                try{if(owned!=null)owned.close();}catch(Exception ignored){}
+                if(listener==owned)listener=null;
+            }
         }
     }
     private void serve(LocalSocket socket) {
