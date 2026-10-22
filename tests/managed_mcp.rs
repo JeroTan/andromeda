@@ -12,6 +12,60 @@ use serde_json::json;
 mod support;
 
 #[tokio::test]
+async fn desktop_reports_when_a_managed_mcp_client_connects_and_disconnects() {
+    let workspace = tempfile::tempdir().unwrap();
+    let directory = workspace.path().join("project");
+    std::fs::create_dir(&directory).unwrap();
+    let registry = Registry::open(workspace.path().join("state")).unwrap();
+    let project = registry.register(&directory).unwrap();
+    let fixture = support::DeviceFixture::start(0).await;
+    let host = Host::start(
+        registry.clone(),
+        Controller::new(Adb::new(fixture.address), None, true),
+    )
+    .await
+    .unwrap();
+    let proxy = Proxy::connect(Client::new(registry, project.id.clone(), directory).unwrap())
+        .await
+        .unwrap();
+    assert_eq!(
+        host.connections()
+            .iter()
+            .find(|status| status.project_id == project.id)
+            .unwrap()
+            .clients,
+        1
+    );
+    drop(proxy);
+    tokio::time::timeout(std::time::Duration::from_secs(2), async {
+        while host.connections().iter().any(|status| status.clients > 0) {
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+}
+
+#[tokio::test]
+async fn a_later_operator_stop_invalidates_an_earlier_resume_request() {
+    let workspace = tempfile::tempdir().unwrap();
+    let registry = Registry::open(workspace.path().join("state")).unwrap();
+    let fixture = support::DeviceFixture::start(0).await;
+    let host = Host::start(
+        registry,
+        Controller::new(Adb::new(fixture.address), None, true),
+    )
+    .await
+    .unwrap();
+    let earlier = host.pause_generation();
+    host.stop_all();
+    assert_eq!(host.resume(earlier).unwrap_err().code, "session_changed");
+    assert!(host.is_paused());
+    host.resume(host.pause_generation()).unwrap();
+    assert!(!host.is_paused());
+}
+
+#[tokio::test]
 async fn managed_input_requires_operator_approval_and_stop_cancels_pending_approval() {
     let workspace = tempfile::tempdir().unwrap();
     let project = workspace.path().join("project");
@@ -34,7 +88,7 @@ async fn managed_input_requires_operator_approval_and_stop_cancels_pending_appro
     )
     .await
     .unwrap();
-    host.resume();
+    host.resume(host.pause_generation()).unwrap();
     let client = Client::new(registry, saved.id, project).unwrap();
     let proposal = tokio::spawn({
         let client = client.clone();

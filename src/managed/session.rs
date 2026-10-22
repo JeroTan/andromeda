@@ -10,7 +10,7 @@ use std::{
         Arc, Mutex,
         atomic::{AtomicU64, Ordering},
     },
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tokio::sync::oneshot;
 use tokio_util::sync::CancellationToken;
@@ -20,6 +20,7 @@ pub struct Approval {
     pub id: u64,
     pub project_id: String,
     pub project_name: String,
+    pub project_root: std::path::PathBuf,
     pub serial: Option<String>,
     pub tool: String,
     pub arguments: Value,
@@ -36,6 +37,27 @@ struct Active {
 pub(super) struct Session {
     next: AtomicU64,
     active: Mutex<BTreeMap<u64, Active>>,
+    connections: Mutex<Connections>,
+}
+
+#[derive(Clone, Serialize)]
+pub struct ConnectionStatus {
+    pub project_id: String,
+    pub clients: usize,
+    pub initialization_error: Option<String>,
+}
+
+#[derive(Default)]
+struct Connections {
+    leases: BTreeMap<String, (String, Instant)>,
+    errors: BTreeMap<String, String>,
+}
+
+impl Connections {
+    fn expire(&mut self) {
+        self.leases
+            .retain(|_, (_, seen)| seen.elapsed() < Duration::from_secs(15));
+    }
 }
 
 pub(super) struct Admission {
@@ -54,6 +76,75 @@ impl Drop for Admission {
 }
 
 impl Session {
+    pub fn heartbeat(&self, project: &str, id: &str, connected: bool) -> Result<()> {
+        if id.len() != 32 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
+            return Err(Error::invalid("Invalid managed connection ID"));
+        }
+        let mut connections = self.connections.lock().unwrap_or_else(|e| e.into_inner());
+        connections.expire();
+        if connections
+            .leases
+            .get(id)
+            .is_some_and(|(owner, _)| owner != project)
+        {
+            return Err(Error::new(
+                "connection_mismatch",
+                "Connection belongs to another project",
+            ));
+        }
+        if connected {
+            if connections.leases.len() >= 128 && !connections.leases.contains_key(id) {
+                return Err(Error::new(
+                    "busy",
+                    "At most 128 managed clients may connect",
+                ));
+            }
+            connections
+                .leases
+                .insert(id.into(), (project.into(), Instant::now()));
+            connections.errors.remove(project);
+        } else {
+            connections.leases.remove(id);
+        }
+        Ok(())
+    }
+
+    pub fn initialization_error(&self, project: &str, error: &Error) {
+        let mut connections = self.connections.lock().unwrap_or_else(|e| e.into_inner());
+        if connections.errors.len() < 100 || connections.errors.contains_key(project) {
+            connections
+                .errors
+                .insert(project.into(), error.message.clone());
+        }
+    }
+
+    pub fn connections(&self) -> Vec<ConnectionStatus> {
+        let mut connections = self.connections.lock().unwrap_or_else(|e| e.into_inner());
+        connections.expire();
+        let mut statuses = BTreeMap::<String, ConnectionStatus>::new();
+        for (project, _) in connections.leases.values() {
+            statuses
+                .entry(project.clone())
+                .or_insert(ConnectionStatus {
+                    project_id: project.clone(),
+                    clients: 0,
+                    initialization_error: None,
+                })
+                .clients += 1;
+        }
+        for (project, error) in &connections.errors {
+            statuses
+                .entry(project.clone())
+                .or_insert(ConnectionStatus {
+                    project_id: project.clone(),
+                    clients: 0,
+                    initialization_error: None,
+                })
+                .initialization_error = Some(error.clone());
+        }
+        statuses.into_values().collect()
+    }
+
     pub fn admit(self: &Arc<Self>, project: &str, cancel: CancellationToken) -> Result<Admission> {
         let mut active = self.active.lock().unwrap_or_else(|e| e.into_inner());
         if active.len() >= 32 {
@@ -155,6 +246,7 @@ impl Admission {
                     id: self.id,
                     project_id: project.id.clone(),
                     project_name: project.name.clone(),
+                    project_root: project.root.clone(),
                     serial: project.serial.clone(),
                     tool: tool.into(),
                     arguments: arguments.clone(),

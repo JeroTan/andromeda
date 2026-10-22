@@ -29,6 +29,8 @@ To build a packaged preview, run `npm run tauri build -- --debug`. The build scr
 
 **Show screen** captures one screenshot on request. It does not start background capture. Hide the preview to remove it from the interface. The desktop preview is not saved to a file.
 
+The agent panel reports managed MCP connections separately from project access. A connection that stops responding disappears within 15 seconds. Initialization failures while loading project instructions appear in the panel. Changing the selected device clears the previous device's preview.
+
 ## Scope and private state
 
 Managed MCP startup validates the process's actual working directory against the registered canonical project path. Descendant directories are allowed; unrelated paths and escaped symlinks are rejected. Tool allowlists and device restrictions are checked by the desktop host for every request. Disabling a project revokes subsequent requests. Edit access while input is paused.

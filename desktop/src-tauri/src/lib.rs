@@ -3,7 +3,7 @@ use andromeda::{
     capture,
     device::{Adb, DeviceSummary},
     errors::{Error, Result},
-    managed::{Approval, Host},
+    managed::{Approval, ConnectionStatus, Host},
     projects::{Client, ConfigChange, Project, Registry},
 };
 use base64::Engine;
@@ -33,7 +33,9 @@ struct AppState {
 struct Snapshot {
     projects: Vec<Project>,
     paused: bool,
+    pause_generation: u64,
     approvals: Vec<Approval>,
+    connections: Vec<ConnectionStatus>,
     tools: Vec<ToolSummary>,
 }
 #[derive(Serialize)]
@@ -48,7 +50,9 @@ async fn snapshot(state: State<'_, AppState>) -> Result<Snapshot> {
     Ok(Snapshot {
         projects: state.registry.list()?,
         paused: state.host.is_paused(),
+        pause_generation: state.host.pause_generation(),
         approvals: state.host.approvals(),
+        connections: state.host.connections(),
         tools: andromeda::mcp::tools()
             .into_iter()
             .map(|tool| ToolSummary {
@@ -248,10 +252,9 @@ fn pause(state: State<'_, AppState>) -> usize {
 }
 
 #[tauri::command]
-async fn resume(state: State<'_, AppState>) -> Result<()> {
+async fn resume(state: State<'_, AppState>, generation: u64) -> Result<()> {
     let _guard = state.settings.lock().await;
-    state.host.resume();
-    Ok(())
+    state.host.resume(generation)
 }
 
 #[tauri::command]
@@ -263,6 +266,7 @@ fn decide(state: State<'_, AppState>, id: u64, allow: bool) -> Result<()> {
 struct PreviewImage {
     data_url: String,
     elapsed_ms: f64,
+    serial: String,
 }
 
 #[tauri::command]
@@ -281,7 +285,7 @@ async fn capture_preview(state: State<'_, AppState>, id: String) -> Result<Previ
                 quality: Some(80),
             }),
             RunOptions {
-                serial: Some(serial),
+                serial: Some(serial.clone()),
                 timeout_ms: Some(15000),
             },
             CancellationToken::new(),
@@ -292,6 +296,7 @@ async fn capture_preview(state: State<'_, AppState>, id: String) -> Result<Previ
         .image
         .ok_or_else(|| Error::new("missing_image", "Android returned no screenshot"))?;
     Ok(PreviewImage {
+        serial,
         data_url: format!(
             "data:{};base64,{}",
             image.mime_type,
@@ -333,10 +338,9 @@ pub fn run() {
             if matches!(
                 event,
                 tauri::WindowEvent::CloseRequested { .. } | tauri::WindowEvent::Destroyed
-            ) {
-                if let Some(state) = window.try_state::<AppState>() {
-                    state.host.shutdown();
-                }
+            ) && let Some(state) = window.try_state::<AppState>()
+            {
+                state.host.shutdown();
             }
         })
         .invoke_handler(tauri::generate_handler![

@@ -1,4 +1,4 @@
-use super::Client;
+use super::{Client, ConnectionLease};
 use crate::errors::Result;
 use rmcp::{ErrorData, RoleServer, ServerHandler, model::*, service::RequestContext};
 use serde_json::Value;
@@ -7,12 +7,18 @@ use serde_json::Value;
 pub struct Proxy {
     client: Client,
     info: ServerConfig,
+    _connection: std::sync::Arc<ConnectionLease>,
 }
 
 impl Proxy {
     pub async fn connect(client: Client) -> Result<Self> {
         let info = client.info().await?;
-        Ok(Self { client, info })
+        let connection = client.track_connection().await?;
+        Ok(Self {
+            client,
+            info,
+            _connection: std::sync::Arc::new(connection),
+        })
     }
 }
 

@@ -115,14 +115,13 @@ impl Registry {
         let mut projects = Vec::new();
         for entry in fs::read_dir(&self.directory)? {
             let path = entry?.path();
-            if path.extension().is_some_and(|s| s == "json") {
-                if let Some(id) = path
+            if path.extension().is_some_and(|s| s == "json")
+                && let Some(id) = path
                     .file_stem()
                     .and_then(|s| s.to_str())
                     .filter(|s| valid_id(s))
-                {
-                    projects.push(self.load(id)?.project);
-                }
+            {
+                projects.push(self.load(id)?.project);
             }
             if projects.len() > 100 {
                 return Err(Error::new(

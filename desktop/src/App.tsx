@@ -21,6 +21,7 @@ type Tool = { name: string; description: string; read_only: boolean };
 type Approval = {
   id: number;
   project_name: string;
+  project_root: string;
   serial: string | null;
   tool: string;
   arguments: unknown;
@@ -29,7 +30,13 @@ type Approval = {
 type Snapshot = {
   projects: Project[];
   paused: boolean;
+  pause_generation: number;
   approvals: Approval[];
+  connections: {
+    project_id: string;
+    clients: number;
+    initialization_error: string | null;
+  }[];
   tools: Tool[];
 };
 type Device = { serial: string; state: string; details: string };
@@ -41,7 +48,7 @@ type Change = {
   after: string;
 };
 type Instructions = { path: string; content: string | null; starter: string };
-type Preview = { data_url: string; elapsed_ms: number };
+type Preview = { data_url: string; elapsed_ms: number; serial: string };
 type DialogState =
   | { kind: "connection"; client: string; change: Change }
   | { kind: "instructions"; project: Project; document: Instructions }
@@ -196,6 +203,9 @@ function App() {
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
   const project = data?.projects.find((p) => p.id === selected);
+  const connection = data?.connections.find(
+    (status) => status.project_id === selected,
+  );
   const dirty = !!(
     draft &&
     project &&
@@ -285,6 +295,10 @@ function App() {
         instructionFile: draft.instruction_file,
         enabled: draft.enabled,
       });
+      if (saved.serial !== project?.serial) {
+        previewGeneration.current += 1;
+        setPreview(null);
+      }
       setDraft(saved);
       setNotice(
         "Project access saved. Reconnect your agent to refresh its tool list.",
@@ -420,7 +434,9 @@ function App() {
               onClick={() =>
                 paused
                   ? void run("resume", async () => {
-                      await invoke("resume");
+                      await invoke("resume", {
+                        generation: data?.pause_generation,
+                      });
                       setNotice(
                         "Session ready. Input requests will appear for your approval.",
                       );
@@ -757,6 +773,16 @@ function App() {
                   <div className="panel agent-panel">
                     <span className="eyebrow">YOUR AGENT / CONNECT</span>
                     <h2>Meet on familiar ground.</h2>
+                    <p className="connection-state" role="status">
+                      {connection?.clients
+                        ? `MCP connected · ${connection.clients} client${connection.clients === 1 ? "" : "s"}`
+                        : "MCP disconnected"}
+                    </p>
+                    {connection?.initialization_error && (
+                      <p className="field-error">
+                        Connection failed: {connection.initialization_error}
+                      </p>
+                    )}
                     <p>
                       Preview the project configuration, then add Andromeda to
                       your agent.
@@ -788,7 +814,7 @@ function App() {
                       <span className="eyebrow">DEVICE / PREVIEW</span>
                       <Icon name="phone" />
                     </div>
-                    {preview ? (
+                    {preview && preview.serial === project.serial ? (
                       <>
                         <img
                           className="phone-preview"
@@ -796,7 +822,8 @@ function App() {
                           alt="Most recently requested screenshot of the selected Android phone"
                         />
                         <p className="field-hint">
-                          Snapshot · {Math.round(preview.elapsed_ms)} ms
+                          Snapshot · {preview.serial} ·{" "}
+                          {Math.round(preview.elapsed_ms)} ms
                         </p>
                       </>
                     ) : (
@@ -990,6 +1017,7 @@ function App() {
           {dialog.kind === "approval" && (
             <>
               <span className="eyebrow">{dialog.approval.project_name}</span>
+              <p className="path-block">{dialog.approval.project_root}</p>
               <h3 className="request-name">{label(dialog.approval.tool)}</h3>
               <p>
                 Device: <span className="mono">{dialog.approval.serial}</span>

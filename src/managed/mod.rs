@@ -16,7 +16,7 @@ use std::{
     fs::{self, File, OpenOptions},
     net::SocketAddr,
     path::PathBuf,
-    sync::Arc,
+    sync::{Arc, Mutex},
     time::{Duration, Instant},
 };
 use tokio::{
@@ -29,7 +29,7 @@ mod proxy;
 mod session;
 mod wire;
 pub use proxy::Proxy;
-pub use session::Approval;
+pub use session::{Approval, ConnectionStatus};
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -53,6 +53,7 @@ struct Request {
 enum Command {
     Tools,
     Info,
+    Connection { id: String, connected: bool },
     Call { name: String, arguments: Value },
 }
 
@@ -67,6 +68,7 @@ pub struct Host {
     cancel: CancellationToken,
     controller: Controller,
     session: Arc<session::Session>,
+    pause_generation: Mutex<u64>,
     task: JoinHandle<()>,
     endpoint_path: PathBuf,
     key: String,
@@ -141,6 +143,7 @@ impl Host {
             cancel,
             controller,
             session,
+            pause_generation: Mutex::new(0),
             task,
             endpoint_path,
             key,
@@ -148,17 +151,42 @@ impl Host {
         })
     }
     pub fn stop_all(&self) -> usize {
+        let mut generation = self
+            .pause_generation
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        *generation = generation.wrapping_add(1);
         self.controller.pause();
         self.session.stop(None)
     }
-    pub fn resume(&self) {
+    pub fn pause_generation(&self) -> u64 {
+        *self
+            .pause_generation
+            .lock()
+            .unwrap_or_else(|e| e.into_inner())
+    }
+    pub fn resume(&self, expected_generation: u64) -> Result<()> {
+        let generation = self
+            .pause_generation
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
+        if *generation != expected_generation || self.cancel.is_cancelled() {
+            return Err(Error::new(
+                "session_changed",
+                "The session was stopped after this Resume request; review its current state",
+            ));
+        }
         self.controller.resume();
+        Ok(())
     }
     pub fn is_paused(&self) -> bool {
         self.controller.is_paused()
     }
     pub fn approvals(&self) -> Vec<Approval> {
         self.session.approvals()
+    }
+    pub fn connections(&self) -> Vec<ConnectionStatus> {
+        self.session.connections()
     }
     pub fn decide(&self, id: u64, allow: bool) -> Result<()> {
         if allow && self.is_paused() {
@@ -283,10 +311,17 @@ async fn dispatch(
         controller: controller.scoped(&project.id, project.serial.clone(), allow_control),
     };
     match request.command {
+        Command::Connection { id, connected } => {
+            session.heartbeat(&project.id, &id, connected)?;
+            Ok(json!({"connected":connected}))
+        }
         Command::Tools => encode(catalog),
         Command::Info => {
             let mut info = server.get_info();
-            if let Some(instructions) = registry.instructions(&project.id)? {
+            let instructions = registry
+                .instructions(&project.id)
+                .inspect_err(|error| session.initialization_error(&project.id, error))?;
+            if let Some(instructions) = instructions {
                 let base = info.instructions.unwrap_or_default();
                 info.instructions = Some(format!(
                     "{base}\n\nInstructions selected for this project:\n{instructions}"
@@ -363,6 +398,9 @@ async fn dispatch(
             let admission = session.admit(&project.id, cancel.clone())?;
             let execute = async {
                 if is_input {
+                    if controller.is_paused() {
+                        return Err(Error::new("control_paused", "Device input is paused"));
+                    }
                     admission
                         .approve(&project, &name, &arguments, timeout)
                         .await?;
@@ -403,6 +441,50 @@ pub struct Client {
 }
 
 impl Client {
+    async fn track_connection(&self) -> Result<ConnectionLease> {
+        let id = random_hex(16)?;
+        let cancel = CancellationToken::new();
+        self.rpc(
+            Command::Connection {
+                id: id.clone(),
+                connected: true,
+            },
+            cancel.clone(),
+        )
+        .await?;
+        let client = self.clone();
+        let connection = id.clone();
+        let stop = cancel.clone();
+        tokio::spawn(async move {
+            loop {
+                tokio::select! {
+                    biased;
+                    _ = stop.cancelled() => break,
+                    _ = tokio::time::sleep(Duration::from_secs(4)) => {}
+                }
+                let _ = client
+                    .rpc(
+                        Command::Connection {
+                            id: connection.clone(),
+                            connected: true,
+                        },
+                        stop.clone(),
+                    )
+                    .await;
+            }
+            // A clean shutdown removes the lease immediately. A crashed process expires after 15s.
+            let _ = client
+                .rpc(
+                    Command::Connection {
+                        id: connection,
+                        connected: false,
+                    },
+                    CancellationToken::new(),
+                )
+                .await;
+        });
+        Ok(ConnectionLease { cancel })
+    }
     pub fn new(registry: Registry, project_id: String, working_directory: PathBuf) -> Result<Self> {
         registry.authorize(&project_id, &working_directory)?;
         Ok(Self {
@@ -521,6 +603,14 @@ impl Client {
             _=cancel.cancelled()=>Err(Error::new("cancelled","MCP request cancelled; observe before retrying input")),
             result=tokio::time::timeout(Duration::from_millis(timeout),operation)=>result.map_err(|_|Error::new("timeout","Desktop request timed out; observe before retrying input"))?,
         }
+    }
+}
+struct ConnectionLease {
+    cancel: CancellationToken,
+}
+impl Drop for ConnectionLease {
+    fn drop(&mut self) {
+        self.cancel.cancel();
     }
 }
 fn decode<T: serde::de::DeserializeOwned>(value: Value) -> Result<T> {

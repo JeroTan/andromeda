@@ -87,7 +87,9 @@ pub fn verify<T: Serialize>(
     }
     let bytes: Vec<u8> = proof
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|chunk| {
             let digit = |c: u8| {
                 if c.is_ascii_digit() {
