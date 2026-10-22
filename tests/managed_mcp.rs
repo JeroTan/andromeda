@@ -25,9 +25,39 @@ async fn desktop_reports_when_a_managed_mcp_client_connects_and_disconnects() {
     )
     .await
     .unwrap();
-    let proxy = Proxy::connect(Client::new(registry, project.id.clone(), directory).unwrap())
-        .await
-        .unwrap();
+    let proxy = Proxy::connect(
+        Client::new(registry.clone(), project.id.clone(), directory.clone()).unwrap(),
+    )
+    .await
+    .unwrap();
+    assert!(
+        host.connections().is_empty(),
+        "A proxy waiting for initialize is not a connected MCP client"
+    );
+    let (client_io, server_io) = tokio::io::duplex(65536);
+    let server = tokio::spawn(async move {
+        proxy
+            .serve(server_io)
+            .await
+            .unwrap()
+            .waiting()
+            .await
+            .unwrap();
+    });
+    let client = ClientConfig::new(
+        ClientCapabilities::default(),
+        Implementation::new("connection-test", "1"),
+    )
+    .serve(client_io)
+    .await
+    .unwrap();
+    tokio::time::timeout(std::time::Duration::from_secs(2), async {
+        while host.connections().is_empty() {
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
     assert_eq!(
         host.connections()
             .iter()
@@ -36,7 +66,22 @@ async fn desktop_reports_when_a_managed_mcp_client_connects_and_disconnects() {
             .clients,
         1
     );
-    drop(proxy);
+    std::fs::write(directory.join("ANDROMEDA.md"), [0xff]).unwrap();
+    let failed =
+        Proxy::connect(Client::new(registry, project.id.clone(), directory).unwrap()).await;
+    assert_eq!(failed.err().unwrap().code, "invalid_instructions");
+    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+    assert!(
+        host.connections()
+            .iter()
+            .find(|status| status.project_id == project.id)
+            .unwrap()
+            .initialization_error
+            .is_some(),
+        "A healthy client's heartbeat must preserve another client's initialization failure"
+    );
+    client.cancel().await.unwrap();
+    server.await.unwrap();
     tokio::time::timeout(std::time::Duration::from_secs(2), async {
         while host.connections().iter().any(|status| status.clients > 0) {
             tokio::task::yield_now().await;

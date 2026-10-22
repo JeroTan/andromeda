@@ -53,8 +53,16 @@ struct Request {
 enum Command {
     Tools,
     Info,
-    Connection { id: String, connected: bool },
+    Connection { id: String, event: ConnectionEvent },
     Call { name: String, arguments: Value },
+}
+
+#[derive(Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum ConnectionEvent {
+    Initialized,
+    Heartbeat,
+    Closed,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -311,9 +319,9 @@ async fn dispatch(
         controller: controller.scoped(&project.id, project.serial.clone(), allow_control),
     };
     match request.command {
-        Command::Connection { id, connected } => {
-            session.heartbeat(&project.id, &id, connected)?;
-            Ok(json!({"connected":connected}))
+        Command::Connection { id, event } => {
+            session.connection_event(&project.id, &id, event)?;
+            Ok(json!({"acknowledged":true}))
         }
         Command::Tools => encode(catalog),
         Command::Info => {
@@ -447,7 +455,7 @@ impl Client {
         self.rpc(
             Command::Connection {
                 id: id.clone(),
-                connected: true,
+                event: ConnectionEvent::Initialized,
             },
             cancel.clone(),
         )
@@ -466,7 +474,7 @@ impl Client {
                     .rpc(
                         Command::Connection {
                             id: connection.clone(),
-                            connected: true,
+                            event: ConnectionEvent::Heartbeat,
                         },
                         stop.clone(),
                     )
@@ -477,7 +485,7 @@ impl Client {
                 .rpc(
                     Command::Connection {
                         id: connection,
-                        connected: false,
+                        event: ConnectionEvent::Closed,
                     },
                     CancellationToken::new(),
                 )

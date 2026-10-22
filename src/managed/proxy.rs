@@ -1,28 +1,40 @@
 use super::{Client, ConnectionLease};
 use crate::errors::Result;
-use rmcp::{ErrorData, RoleServer, ServerHandler, model::*, service::RequestContext};
+use rmcp::{
+    ErrorData, RoleServer, ServerHandler,
+    model::*,
+    service::{NotificationContext, RequestContext},
+};
 use serde_json::Value;
 
 #[derive(Clone)]
 pub struct Proxy {
     client: Client,
     info: ServerConfig,
-    _connection: std::sync::Arc<ConnectionLease>,
+    connection: std::sync::Arc<tokio::sync::OnceCell<ConnectionLease>>,
 }
 
 impl Proxy {
     pub async fn connect(client: Client) -> Result<Self> {
         let info = client.info().await?;
-        let connection = client.track_connection().await?;
         Ok(Self {
             client,
             info,
-            _connection: std::sync::Arc::new(connection),
+            connection: std::sync::Arc::new(tokio::sync::OnceCell::new()),
         })
     }
 }
 
 impl ServerHandler for Proxy {
+    async fn on_initialized(&self, _context: NotificationContext<RoleServer>) {
+        if let Err(error) = self
+            .connection
+            .get_or_try_init(|| self.client.track_connection())
+            .await
+        {
+            tracing::warn!(target: "andromeda::audit", code = error.code, "Managed connection status unavailable");
+        }
+    }
     fn get_info(&self) -> ServerConfig {
         self.info.clone()
     }

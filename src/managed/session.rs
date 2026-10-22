@@ -76,7 +76,12 @@ impl Drop for Admission {
 }
 
 impl Session {
-    pub fn heartbeat(&self, project: &str, id: &str, connected: bool) -> Result<()> {
+    pub fn connection_event(
+        &self,
+        project: &str,
+        id: &str,
+        event: super::ConnectionEvent,
+    ) -> Result<()> {
         if id.len() != 32 || !id.bytes().all(|b| b.is_ascii_hexdigit()) {
             return Err(Error::invalid("Invalid managed connection ID"));
         }
@@ -92,7 +97,7 @@ impl Session {
                 "Connection belongs to another project",
             ));
         }
-        if connected {
+        if !matches!(event, super::ConnectionEvent::Closed) {
             if connections.leases.len() >= 128 && !connections.leases.contains_key(id) {
                 return Err(Error::new(
                     "busy",
@@ -102,7 +107,9 @@ impl Session {
             connections
                 .leases
                 .insert(id.into(), (project.into(), Instant::now()));
-            connections.errors.remove(project);
+            if matches!(event, super::ConnectionEvent::Initialized) {
+                connections.errors.remove(project);
+            }
         } else {
             connections.leases.remove(id);
         }

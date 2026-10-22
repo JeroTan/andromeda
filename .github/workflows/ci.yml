@@ -80,9 +80,15 @@ jobs:
         shell: bash
         run: tar -czf ../target/desktop-preview.tar.gz -C ../target/debug bundle
       - uses: actions/upload-artifact@v4
+        id: preview-upload
+        continue-on-error: true
         with:
           name: desktop-preview-${{ runner.os }}
           path: target/desktop-preview.tar.gz
           if-no-files-found: error
           retention-days: 7
+      - name: Report unavailable preview download
+        if: steps.preview-upload.outcome == 'failure'
+        shell: bash
+        run: printf '%s\n' 'The desktop package built successfully. Preview artifact upload failed; no CI download is available for this run. See the upload step for the storage or service error.' >> "$GITHUB_STEP_SUMMARY"
 

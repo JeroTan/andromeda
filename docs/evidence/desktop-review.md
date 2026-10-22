@@ -22,4 +22,6 @@ Three findings:
 
 The full product remains unfinished. This review does not claim acceptance for the phone UI, npm launcher, benchmarks or release.
 
-Initial findings: Standards 2; Spec 3. Fixes await reviewer verification and the next full PR workflow run.
+The standards reviewer verified both fixes at `63536e2`. The spec follow-up verified preview identity, project identity and stop ordering, then found two connection-state issues: a proxy was counted before MCP initialization, and a healthy heartbeat cleared another client's initialization error. Tracking now starts from the successful MCP initialized notification, and errors clear only on a fresh successful initialization. The focused test fails with each previous behavior and passes with both fixes. Full PR CI and final spec verification remain pending.
+
+Initial findings: Standards 2; Spec 3. Follow-up findings: Spec 2.

@@ -14,7 +14,7 @@ npm ci
 npm run tauri dev
 ```
 
-To build a packaged preview, run `npm run tauri build -- --debug`. The build script includes a matching MCP executable inside the package. CI produces preview packages for macOS, Windows and Linux. These packages are development builds; the signed release and npm launcher are tracked separately in the release checklist.
+To build a packaged preview, run `npm run tauri build -- --debug`. The build script includes a matching MCP executable inside the package. CI builds preview packages for macOS, Windows and Linux; downloads are available when the account's Actions artifact storage permits upload. Build/test failures fail the job; an unavailable preview upload is reported separately in its summary. These packages are development builds; release packaging and the npm launcher are tracked separately in the release checklist.
 
 ## Connect a project
 
