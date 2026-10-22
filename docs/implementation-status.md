@@ -69,3 +69,17 @@ Private device screenshots and raw client logs are temporary test artifacts, exc
 Branch: `feat/android-mcp`, based on `f128cac`. Repository and instruction files were inspected; no existing implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to this supplied specification.
 
 This first implementation contains 16 core tools. `adm_multi_touch`, the companion, persistent capture, stronger per-action approval, the benchmark suite/comparisons, remaining platform/client/device checks and the final release remain in scope and are not complete. CI configuration is present; remote execution must still pass. The full goal remains active.
+
+## User additions and workflow preferences
+
+On 2026-10-22 the user clarified that Andromeda's main interface should be a desktop app on Mac/PC. It should create MCP configurations for chats, scope access to selected project directories, read a project instruction file, and offer a simple npm launch command or downloadable executable. The Android app is an optional permission/gesture bridge, not the main product interface.
+
+- [ ] Rust desktop setup/control app with device selection, preview and stop controls
+- [ ] Project registration, allowed-tool policy, instruction-file loading and startup scope checks
+- [ ] Reviewable project-local Codex/Claude configuration installation preserving existing settings
+- [ ] Simple npm launcher and downloadable desktop packaging
+- [ ] Desktop UI/accessibility and project isolation verification
+
+The user asked to move full automated suites to GitHub PR workflows. Run only focused checks/debugging and hardware-dependent tests locally. Android Studio and its emulator are authorized for testing.
+
+The companion prototype is in ignored `.scratch/companion-build` while the core PR finishes. It builds with AGP 9.4.1, Gradle 9.7.1 and Android API 37. Its development APK is installed on the physical phone. Android currently reports its accessibility permission as disabled; the user's initial readiness response was followed by clarification of the desktop interface. No pairing token was saved, and no companion control test has run yet.
