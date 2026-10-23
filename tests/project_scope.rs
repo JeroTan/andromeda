@@ -29,6 +29,29 @@ fn instruction_edits_preserve_concurrent_changes_and_remain_within_the_project()
 }
 
 #[test]
+fn removing_a_project_only_removes_its_registration() {
+    let workspace = tempfile::tempdir().unwrap();
+    let project = workspace.path().join("project");
+    let other = workspace.path().join("other");
+    std::fs::create_dir(&project).unwrap();
+    std::fs::create_dir(&other).unwrap();
+    let marker = project.join("keep.txt");
+    std::fs::write(&marker, "keep this").unwrap();
+    let registry = Registry::open(workspace.path().join("state")).unwrap();
+    let saved = registry.register(&project).unwrap();
+    let remaining = registry.register(&other).unwrap();
+
+    registry.remove(&saved.id).unwrap();
+
+    assert!(project.is_dir());
+    assert_eq!(std::fs::read_to_string(marker).unwrap(), "keep this");
+    assert!(registry.get(&saved.id).is_err());
+    let projects = registry.list().unwrap();
+    assert_eq!(projects.len(), 1);
+    assert_eq!(projects[0].id, remaining.id);
+}
+
+#[test]
 fn a_registered_project_rejects_mcp_startup_from_an_unrelated_directory() {
     let workspace = tempfile::tempdir().unwrap();
     let project = workspace.path().join("project");

@@ -2,8 +2,10 @@ use crate::errors::Result;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 mod screen;
+mod stream;
 mod transport;
 pub use screen::Screen;
+pub use stream::ScreenStream;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct DeviceSummary {

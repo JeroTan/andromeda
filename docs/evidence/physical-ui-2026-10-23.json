@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-23",
+  "device": "OnePlus CPH2653, Android 16/API 36, USB",
+  "verified": {
+    "session_timer": "Selected 15 minutes; the active session showed 'Session active · 15:00 left'; Stop session returned to 'Computer paired · session stopped'; the timer was restored to Off.",
+    "start_stop": "Start session and Stop session both changed the visible state and the three-step list correctly.",
+    "settings": "Settings -> Session opened the timer choices; the selected value persisted on return to Settings and Home.",
+    "rotation": "accelerometer_rotation=0 plus user_rotation=1 produced UI rotation 1 and 2376x1080 bounds; restored to 0/0 and portrait.",
+    "talkback": "TalkBack and Andromeda were both bound; visible focus rings appeared on Settings and Stop; a tap on Start session started a session while TalkBack was enabled.",
+    "service_rebind": "UiAutomation/uiautomator dump suppressed accessibility services; the hardened service retried the bind and the UI returned to 'All set. You lead.' without an app restart."
+  },
+  "builds": "Debug, release and debugAndroidTest APK builds passed after the service lifecycle change; the debug APK was installed over the existing app data.",
+  "limitations": [
+    "TalkBack full focus order, labels, double-tap activation and permission/pairing screen traversal still need a human pass.",
+    "The TalkBack first-run hint overlay and synthetic key events do not reproduce a human traversal.",
+    "The 15-minute timer was stopped manually. Emulator smoke verifies selection and persistence; actual expiry/auto-stop has not been verified.",
+    "UiAutomation suppresses accessibility services, so screenshots rather than uiautomator dumps were used for readiness checks.",
+    "Screenshots and device serial identifiers are excluded from Git."
+  ]
+}

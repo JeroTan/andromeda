@@ -2,7 +2,7 @@ use crate::{
     actions::{Condition, RunOptions},
     capture,
     device::Screen,
-    input::{Action, Key, Point, Swipe},
+    input::{Action, Key, Point, Stroke, Swipe, TextBackend, TextMode},
 };
 use schemars::JsonSchema;
 use serde::Deserialize;
@@ -29,6 +29,17 @@ request!(View {
     #[serde(default)]
     image: capture::Options
 });
+request!(LongView {
+    screen: Screen,
+    viewport: capture::Viewport,
+    swipe: Swipe,
+    #[serde(default = "capture::default_pages")]
+    max_pages: u8,
+    #[serde(default = "capture::default_settle_ms")]
+    settle_ms: u64,
+    #[serde(default)]
+    image: capture::Options
+});
 request!(Apps {
     #[serde(default)]
     include_system: bool
@@ -44,7 +55,14 @@ request!(SwipeOne {
 });
 request!(SwipeMany { swipes:Vec<Swipe>, screen:Screen, #[serde(default)] interval_ms:u64 });
 request!(PressKey { key: Key });
-request!(TypeText { text: String });
+request!(TypeText {
+    text: String,
+    #[serde(default)]
+    backend: TextBackend,
+    #[serde(default)]
+    mode: TextMode
+});
+request!(MultiTouch { strokes:Vec<Stroke>, screen:Screen });
 request!(LaunchApp { package: String });
 request!(OpenUri { uri: String });
 request!(Batch { actions:Vec<Action>, #[serde(default)] interval_ms:u64 });

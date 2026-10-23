@@ -34,10 +34,21 @@ impl DeviceFixture {
         Self::with_ui_rotation(rotation, rotation).await
     }
     pub async fn with_ui_rotation(rotation: u8, ui_rotation: u8) -> Self {
+        Self::with_capture_output(rotation, ui_rotation, None).await
+    }
+    pub async fn with_capture(png: Vec<u8>) -> Self {
+        Self::with_capture_output(0, 0, Some(png)).await
+    }
+    async fn with_capture_output(rotation: u8, ui_rotation: u8, png: Option<Vec<u8>>) -> Self {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let address = listener.local_addr().unwrap();
         let commands = Arc::new(Mutex::new(Vec::new()));
         let observed = commands.clone();
+        let dimensions = png
+            .as_ref()
+            .map(|bytes| image::load_from_memory(bytes).unwrap())
+            .map(|image| (image.width(), image.height()))
+            .unwrap_or((1080, 2400));
         let task = tokio::spawn(async move {
             while let Ok((mut socket, _)) = listener.accept().await {
                 let service = request(&mut socket).await;
@@ -57,7 +68,7 @@ impl DeviceFixture {
                 observed.lock().unwrap().push(command.clone());
                 socket.write_all(b"OKAY").await.unwrap();
                 let output=match command.as_str() {
-                    "wm size && dumpsys input"=>format!("Physical size: 1080x2400\nSurfaceOrientation: {rotation}\n"),
+                    "wm size && dumpsys input"=>format!("Physical size: {}x{}\nSurfaceOrientation: {rotation}\n", dimensions.0, dimensions.1),
                     command if command.contains("uiautomator dump")=>"<?xml version=\"1.0\"?><hierarchy rotation=\"0\"><node text=\"Settings\" enabled=\"true\" bounds=\"[0,0][1080,100]\"><node text=\"secret\" password=\"true\"/><node text=\"Display &amp; brightness\" resource-id=\"android:id/title\" enabled=\"true\"/></node></hierarchy>".into(),
                     _=>String::new(),
                 };
@@ -65,9 +76,14 @@ impl DeviceFixture {
                     "<hierarchy rotation=\"0\">",
                     &format!("<hierarchy rotation=\"{ui_rotation}\">"),
                 );
+                let output = if command == "screencap -p" {
+                    png.clone().unwrap_or_default()
+                } else {
+                    output.into_bytes()
+                };
                 socket.write_u8(1).await.unwrap();
                 socket.write_u32_le(output.len() as u32).await.unwrap();
-                socket.write_all(output.as_bytes()).await.unwrap();
+                socket.write_all(&output).await.unwrap();
                 socket.write_all(&[3, 1, 0, 0, 0, 0]).await.unwrap();
             }
         });

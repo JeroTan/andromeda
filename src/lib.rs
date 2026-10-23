@@ -2,6 +2,7 @@
 pub mod accessibility;
 pub mod actions;
 pub mod capture;
+pub mod companion;
 pub mod device;
 pub mod errors;
 pub mod input;

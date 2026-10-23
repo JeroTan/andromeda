@@ -1,0 +1,91 @@
+{
+  "host_arch": "aarch64",
+  "host_os": "macos",
+  "limitations": [
+    "Fixed-source offline decode/resize/encode only; excludes Android capture, MCP upload and model thinking.",
+    "Quality numbers are codec-specific; these are not matched-perceptual-quality comparisons. webp_lossless preserves pixels; JPEG, webp and AVIF are lossy.",
+    "Auto compares PNG/JPEG/WebP bytes, including both lossy and lossless WebP. AVIF is opt-in and excluded from auto because ordinary vision clients do not list it as supported.",
+    "Smaller encoded files reduce transport bytes, not necessarily image token counts; image dimensions still matter."
+  ],
+  "max_width": 720,
+  "profile": "release",
+  "quality": 80,
+  "samples_per_format": 3,
+  "schema_version": 1,
+  "source_height": 2376,
+  "source_width": 1080,
+  "workloads": [
+    {
+      "bytes": 661366,
+      "format": "png",
+      "mime_type": "image/png",
+      "p50_ms": 23.735916,
+      "p95_ms": 23.90525,
+      "processing_ms": [
+        23.602583,
+        23.735916,
+        23.90525
+      ]
+    },
+    {
+      "bytes": 135712,
+      "format": "jpeg",
+      "mime_type": "image/jpeg",
+      "p50_ms": 25.60275,
+      "p95_ms": 25.952583,
+      "processing_ms": [
+        25.412750000000003,
+        25.60275,
+        25.952583
+      ]
+    },
+    {
+      "bytes": 56360,
+      "format": "webp",
+      "mime_type": "image/webp",
+      "p50_ms": 56.781791,
+      "p95_ms": 56.860959,
+      "processing_ms": [
+        56.259625,
+        56.781791,
+        56.860959
+      ]
+    },
+    {
+      "bytes": 640032,
+      "format": "webp_lossless",
+      "mime_type": "image/webp",
+      "p50_ms": 23.988709,
+      "p95_ms": 24.358958,
+      "processing_ms": [
+        23.7695,
+        23.988709,
+        24.358958
+      ]
+    },
+    {
+      "bytes": 56360,
+      "format": "auto_compatible",
+      "mime_type": "image/webp",
+      "p50_ms": 71.764208,
+      "p95_ms": 71.909875,
+      "processing_ms": [
+        71.198917,
+        71.764208,
+        71.909875
+      ]
+    },
+    {
+      "bytes": 68894,
+      "format": "avif_speed_10",
+      "mime_type": "image/avif",
+      "p50_ms": 308.053209,
+      "p95_ms": 308.57050000000004,
+      "processing_ms": [
+        306.695958,
+        308.053209,
+        308.57050000000004
+      ]
+    }
+  ]
+}

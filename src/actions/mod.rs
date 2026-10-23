@@ -1,3 +1,4 @@
+mod long_view;
 use crate::{
     accessibility, capture,
     device::{Adb, Screen},
@@ -41,6 +42,7 @@ pub enum Operation {
     ListDevices,
     DeviceInfo,
     View(capture::Options),
+    LongView(capture::Scroll),
     UiTree,
     ListApps {
         include_system: bool,
@@ -87,6 +89,7 @@ pub struct Controller {
     default_serial: Option<String>,
     allow_control: bool,
     owner: Option<Arc<str>>,
+    companion: Option<crate::companion::Companion>,
 }
 struct Inner {
     adb: Adb,
@@ -129,6 +132,7 @@ impl Controller {
             default_serial,
             allow_control,
             owner: Some(Arc::from(owner.into())),
+            companion: self.companion.clone(),
         }
     }
 
@@ -137,6 +141,7 @@ impl Controller {
             default_serial,
             allow_control,
             owner: None,
+            companion: None,
             inner: Arc::new(Inner {
                 adb,
                 next_id: AtomicU64::new(1),
@@ -146,6 +151,39 @@ impl Controller {
                 paused: AtomicBool::new(false),
             }),
         }
+    }
+
+    /// Open a persistent capture stream for the selected device.
+    pub async fn stream(
+        &self,
+        serial: Option<String>,
+        interval_ms: u64,
+    ) -> Result<crate::device::ScreenStream> {
+        let serial = serial
+            .or_else(|| self.default_serial.clone())
+            .ok_or_else(|| {
+                Error::new(
+                    "device_required",
+                    "Choose a serial from adm_list_devices or set --device. Devices are never selected implicitly.",
+                )
+            })?;
+        self.inner.adb.stream(&serial, interval_ms).await
+    }
+
+    pub fn with_companion(mut self, store: crate::companion::Store) -> Self {
+        self.companion = Some(crate::companion::Companion::new(
+            self.inner.adb.clone(),
+            store,
+        ));
+        self
+    }
+    fn companion(&self) -> Result<&crate::companion::Companion> {
+        self.companion.as_ref().ok_or_else(|| {
+            Error::new(
+                "companion_not_paired",
+                "Configure the optional Android companion for this operation",
+            )
+        })
     }
 
     /// Operator pause is latched; agents cannot clear it through MCP tools.
@@ -233,13 +271,21 @@ impl Controller {
     }
 
     async fn perform(&self, operation: Operation, serial: Option<String>) -> Result<Output> {
-        if matches!(operation, Operation::Actions { .. }) && self.is_paused() {
+        if matches!(
+            operation,
+            Operation::Actions { .. } | Operation::LongView(_)
+        ) && self.is_paused()
+        {
             return Err(Error::new(
                 "control_paused",
                 "Device input is paused by the operator in the desktop app",
             ));
         }
-        if matches!(operation, Operation::Actions { .. }) && !self.allow_control {
+        if matches!(
+            operation,
+            Operation::Actions { .. } | Operation::LongView(_)
+        ) && !self.allow_control
+        {
             return Err(Error::new(
                 "control_disabled",
                 "Input is disabled. The operator must restart with --allow-control to authorize device control.",
@@ -282,6 +328,7 @@ impl Controller {
                 packages.sort_unstable();
                 Ok(Output::data(json!({"packages":packages})))
             }
+            Operation::LongView(options) => self.long_view(&serial, options).await,
             Operation::View(options) => {
                 options.validate()?;
                 let permit = self
@@ -291,12 +338,20 @@ impl Controller {
                     .acquire_owned()
                     .await
                     .map_err(|_| Error::new("shutdown", "Image processor closed"))?;
+                let geometry_started = Instant::now();
                 let screen = self.inner.adb.screen(&serial).await?;
+                let geometry_before_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
+                let capture_started = Instant::now();
                 let png = self.inner.adb.shell(&serial, "screencap -p").await?;
+                let capture_ms = capture_started.elapsed().as_secs_f64() * 1000.0;
+                let geometry_started = Instant::now();
                 self.inner.adb.ensure_screen(&serial, screen).await?;
-                let image = tokio::task::spawn_blocking(move || {
+                let geometry_after_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
+                let (image, image_processing_ms) = tokio::task::spawn_blocking(move || {
                     let _permit = permit;
+                    let started = Instant::now();
                     capture::encode(png, options)
+                        .map(|image| (image, started.elapsed().as_secs_f64() * 1000.0))
                 })
                 .await
                 .map_err(|e| Error::new("image_encoding", e.to_string()))??;
@@ -307,7 +362,7 @@ impl Controller {
                     ));
                 }
                 Ok(Output {
-                    data: json!({"serial":serial,"screen":screen,"image_width":image.width,"image_height":image.height,"scale_to_screen":{"x":screen.width as f64/image.width as f64,"y":screen.height as f64/image.height as f64},"bytes":image.bytes.len()}),
+                    data: json!({"serial":serial,"screen":screen,"image_width":image.width,"image_height":image.height,"scale_to_screen":{"x":screen.width as f64/image.width as f64,"y":screen.height as f64/image.height as f64},"bytes":image.bytes.len(),"mime_type":image.mime_type,"timings":{"geometry_before_ms":geometry_before_ms,"capture_ms":capture_ms,"geometry_after_ms":geometry_after_ms,"image_processing_ms":image_processing_ms}}),
                     image: Some(image),
                 })
             }
@@ -327,6 +382,16 @@ impl Controller {
                 duration(interval_ms, 0, 10000)?;
                 for action in &actions {
                     action.validate()?;
+                    if matches!(
+                        action,
+                        Action::MultiTouch { .. } | Action::CompanionText { .. }
+                    ) && !self.companion()?.is_paired(&serial)?
+                    {
+                        return Err(Error::new(
+                            "companion_not_paired",
+                            "Pair this phone from Andromeda before using companion input",
+                        ));
+                    }
                 }
                 let _guard = self.inner.action_gate.try_lock().map_err(|_| {
                     Error::new(
@@ -334,6 +399,7 @@ impl Controller {
                         "Another input sequence is running; wait or call adm_stop",
                     )
                 })?;
+                let mut companion_results = Vec::new();
                 for (index, action) in actions.iter().enumerate() {
                     if self.is_paused() {
                         return Err(Error::new(
@@ -348,6 +414,24 @@ impl Controller {
                         self.inner.adb.ensure_screen(&serial, screen).await?;
                     }
                     match action {
+                        Action::MultiTouch { strokes, screen } => {
+                            let result = self
+                                .companion()?
+                                .call(
+                                    &serial,
+                                    "gesture",
+                                    json!({"strokes":strokes,"screen":screen}),
+                                )
+                                .await?;
+                            companion_results.push(json!({"action_index":index,"data":result}));
+                        }
+                        Action::CompanionText { text, mode } => {
+                            let result = self
+                                .companion()?
+                                .call(&serial, "type_text", json!({"text":text,"mode":mode}))
+                                .await?;
+                            companion_results.push(json!({"action_index":index,"data":result}));
+                        }
                         Action::Pause { duration_ms } => {
                             tokio::time::sleep(Duration::from_millis(*duration_ms)).await
                         }
@@ -369,7 +453,7 @@ impl Controller {
                     }
                 }
                 Ok(Output::data(
-                    json!({"completed_actions":actions.len(),"verified":false,"note":"Input dispatched. Observe the device to verify the intended outcome."}),
+                    json!({"completed_actions":actions.len(),"companion_results":companion_results,"verified":false,"note":"Input dispatched. Observe the device to verify the intended outcome."}),
                 ))
             }
             Operation::WaitFor { condition, poll_ms } => {
@@ -449,6 +533,34 @@ impl Controller {
 
     async fn ui_tree(&self, serial: &str) -> Result<UiObservation> {
         let screen = self.inner.adb.screen(serial).await?;
+        if let Some(companion) = &self.companion
+            && companion.is_paired(serial)?
+        {
+            match companion.call(serial, "ui_tree", json!({})).await {
+                Ok(result) => {
+                    let observed: crate::device::Screen =
+                        serde_json::from_value(result["screen"].clone()).map_err(|_| {
+                            Error::new("companion_protocol", "Invalid companion screen geometry")
+                        })?;
+                    if observed != screen {
+                        return Err(Error::new(
+                            "stale_screen",
+                            "Display changed during companion UI inspection",
+                        ));
+                    }
+                    let nodes: Vec<accessibility::Node> =
+                        serde_json::from_value(result["nodes"].clone()).map_err(|_| {
+                            Error::new("companion_protocol", "Invalid companion UI nodes")
+                        })?;
+                    self.inner.adb.ensure_screen(serial, screen).await?;
+                    return Ok(UiObservation { screen, nodes });
+                }
+                Err(error)
+                    if error.code == "session_inactive"
+                        || error.code == "companion_unavailable" => {}
+                Err(error) => return Err(error),
+            }
+        }
         let output = self
             .inner
             .adb

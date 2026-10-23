@@ -1,0 +1,472 @@
+{
+  "limitations": [
+    "Workloads run sequentially; repeat in reversed order to examine temperature/order effects.",
+    "External adb is a transport baseline, not an Android MCP product comparison.",
+    "Controller workloads include validation and image processing; compare raw PNG paths for transport overhead.",
+    "Battery level and temperature are recorded, but thermal throttling is not controlled.",
+    "No input, stream FPS, host CPU/RSS or model/tool overhead is measured by this capture-only harness."
+  ],
+  "metadata": {
+    "android_version": "17",
+    "api_level": "37",
+    "battery_level_percent": 100,
+    "battery_temperature_c": 25.0,
+    "build_profile": "release",
+    "deadline_ms": 15000,
+    "emulator": true,
+    "host_arch": "aarch64",
+    "host_os": "macos",
+    "logical_cpus": 10,
+    "model": "sdk_gphone64_arm64",
+    "model_reasoning_included": false,
+    "samples_per_workload": 20,
+    "screen": {
+      "height": 2400,
+      "rotation": 0,
+      "width": 1080
+    },
+    "screenshots_saved": false,
+    "timestamp_unix_ms": 1792716692774,
+    "transport": "emulator",
+    "warmup_per_workload": 2
+  },
+  "schema_version": 1,
+  "workloads": [
+    {
+      "description": "Direct ADB shell-v2 screencap; native PNG, no decode or geometry checks inside the timed request",
+      "failures": 0,
+      "name": "direct_adb_png",
+      "p50_ms": 411.85925000000003,
+      "p95_ms": 440.051917,
+      "samples": [
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 413.162292,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 410.687583,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 413.639292,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 407.01104100000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 412.89775000000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 411.85925000000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 410.37,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 414.416708,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 408.339917,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 440.051917,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 417.45925,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 414.144291,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 414.770541,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 461.527333,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 410.51995800000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 409.68012500000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 409.714625,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 409.165875,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 409.99716600000005,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 420.289416,
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "description": "External adb shell screencap process; same native PNG request, includes host process startup",
+      "failures": 0,
+      "name": "adb_cli_png",
+      "p50_ms": 416.29166699999996,
+      "p95_ms": 419.642,
+      "samples": [
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 418.220833,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 419.642,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 418.87933300000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 416.980708,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 416.14675,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 416.29166699999996,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 415.868625,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 412.40833399999997,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 416.988458,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 415.131667,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 415.803333,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 419.672375,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 414.672792,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 415.32220800000005,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 419.322875,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 413.29187499999995,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 416.939917,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 418.767791,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 418.227958,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 414.268292,
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "description": "Controller capture with before/after geometry checks, bounded PNG decode and native PNG output",
+      "failures": 0,
+      "name": "controller_native_png",
+      "p50_ms": 442.49100000000004,
+      "p95_ms": 490.62975,
+      "samples": [
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 440.638875,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 440.314208,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 457.47450000000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313674,
+          "elapsed_ms": 484.613958,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 440.79049999999995,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 447.204208,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 509.509208,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 451.69658400000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 442.626708,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 438.538042,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 441.55204100000003,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 439.770292,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 442.49100000000004,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 439.181166,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 490.62975,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 448.63874999999996,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 442.430542,
+          "error_code": null
+        },
+        {
+          "bytes": 1313679,
+          "elapsed_ms": 459.687917,
+          "error_code": null
+        },
+        {
+          "bytes": 1313952,
+          "elapsed_ms": 447.543083,
+          "error_code": null
+        },
+        {
+          "bytes": 1313952,
+          "elapsed_ms": 438.950875,
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "description": "Controller capture with geometry checks, resize to max width 720, JPEG quality 80",
+      "failures": 0,
+      "name": "controller_jpeg_720",
+      "p50_ms": 454.282875,
+      "p95_ms": 459.66025,
+      "samples": [
+        {
+          "bytes": 85357,
+          "elapsed_ms": 454.282875,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 454.148625,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.95475000000005,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 453.32525000000004,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.65075,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 451.345208,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 450.015042,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 452.680208,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.754375,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 453.063541,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 455.191208,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 450.822375,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 467.330792,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 452.078333,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.395542,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.0625,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 455.568167,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 456.18649999999997,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 459.66025,
+          "error_code": null
+        },
+        {
+          "bytes": 85357,
+          "elapsed_ms": 453.793,
+          "error_code": null
+        }
+      ]
+    }
+  ]
+}

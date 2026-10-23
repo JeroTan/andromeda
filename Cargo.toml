@@ -22,6 +22,10 @@ name = "andromeda"
 name = "andromeda"
 path = "src/main.rs"
 
+[features]
+# AVIF is opt-in because common vision clients do not accept it.
+avif = ["image/avif"]
+
 [dependencies]
 base64 = "0.22"
 clap = { version = "4.5", features = ["derive", "env"] }
@@ -29,7 +33,7 @@ directories = "6"
 getrandom = "0.4"
 fs2 = "0.4"
 hmac = "0.12"
-image = { version = "0.25.10", default-features = false, features = ["png", "jpeg"] }
+image = { version = "0.25.10", default-features = false, features = ["png", "jpeg", "webp"] }
 quick-xml = { version = "0.38", features = ["serialize"] }
 rmcp = { version = "3.6", features = ["transport-io"] }
 schemars = "1"
@@ -40,6 +44,7 @@ thiserror = "2"
 toml_edit = "0.23"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "net", "io-util", "signal", "time", "sync"] }
 tokio-util = "0.7"
+webp = { version = "0.3.1", default-features = false }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
 

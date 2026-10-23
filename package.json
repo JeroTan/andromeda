@@ -1,0 +1,24 @@
+{
+  "name": "andromeda",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local Android observation and control for MCP agents",
+  "type": "module",
+  "bin": {
+    "andromeda": "npm/launcher.mjs"
+  },
+  "files": [
+    "npm/launcher.mjs",
+    "npm/README.md",
+    "README.md",
+    "LICENSE",
+    "LICENSE-APACHE",
+    "LICENSE-MIT"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test:launcher": "node --test npm/launcher.test.mjs"
+  }
+}

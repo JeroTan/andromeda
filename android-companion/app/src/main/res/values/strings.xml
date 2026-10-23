@@ -1,0 +1,7 @@
+<resources>
+  <string name="service_description">Let your paired computer read accessible screen content, enter text and perform gestures during a session you start. Screens may contain private information. Stop the session or disable accessibility at any time.</string>
+  <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar"><item name="android:fontFamily">sans</item><item name="android:colorAccent">#17643A</item><item name="android:windowLightStatusBar">true</item></style>
+  <item name="gesture_pad" type="id"/>
+  <item name="unicode_input" type="id"/>
+  <item name="session_status" type="id"/>
+</resources>

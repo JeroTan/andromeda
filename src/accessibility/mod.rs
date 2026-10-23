@@ -1,8 +1,8 @@
 use crate::errors::{Error, Result};
 use quick_xml::{Reader, events::Event};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Node {
     pub id: usize,
     pub parent: Option<usize>,
