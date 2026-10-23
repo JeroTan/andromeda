@@ -120,8 +120,9 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
             .all(|p| p["state"] == "running")
     );
     let a = host.project_session(&projects[0].id);
-    *phone_events.lock().unwrap() =
-        vec![json!({"project_id":a.project_id,"state":"paused","generation":a.generation})];
+    *phone_events.lock().unwrap() = vec![
+        json!({"project_id":a.project_id,"state":"paused","generation":a.generation,"session_id":a.session_id,"event_id":1}),
+    ];
     host.sync_phone_sessions().await.unwrap();
     assert_eq!(
         host.project_session(&projects[0].id).state,
@@ -139,10 +140,29 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
         )
         .await;
     assert_eq!(result.structured_content.unwrap()["success"], true);
+    // Phone Stop queued after a Resume response belongs to the same session;
+    // it must still win when the desktop has already advanced its generation.
+    let paused = host.project_session(&projects[0].id);
+    host.set_project_state(
+        &paused.project_id,
+        ProjectState::Running,
+        paused.generation,
+        host.pause_generation(),
+    )
+    .unwrap();
+    *phone_events.lock().unwrap() = vec![
+        json!({"project_id":paused.project_id,"state":"stopped","generation":paused.generation,"session_id":paused.session_id,"event_id":2}),
+    ];
+    host.sync_phone_sessions().await.unwrap();
+    assert_eq!(
+        host.project_session(&projects[0].id).state,
+        ProjectState::Stopped
+    );
     // An old phone Resume must never resurrect a later desktop Stop.
     host.stop_project(&projects[0].id);
-    *phone_events.lock().unwrap() =
-        vec![json!({"project_id":a.project_id,"state":"running","generation":a.generation})];
+    *phone_events.lock().unwrap() = vec![
+        json!({"project_id":a.project_id,"state":"running","generation":a.generation,"session_id":a.session_id,"event_id":1}),
+    ];
     host.sync_phone_sessions().await.unwrap();
     assert_eq!(
         host.project_session(&projects[0].id).state,

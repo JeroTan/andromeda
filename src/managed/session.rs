@@ -24,6 +24,8 @@ pub struct ProjectSession {
     pub project_id: String,
     pub state: ProjectState,
     pub generation: u64,
+    pub session_id: u64,
+    pub phone_ack: u64,
 }
 impl ProjectSession {
     fn stopped(id: &str) -> Self {
@@ -31,6 +33,8 @@ impl ProjectSession {
             project_id: id.into(),
             state: ProjectState::Stopped,
             generation: 0,
+            session_id: 0,
+            phone_ack: 0,
         }
     }
 }
@@ -192,8 +196,12 @@ impl Session {
                 "Project session changed; use its current controls",
             ));
         }
+        let fresh_start = current.state == ProjectState::Stopped && state == ProjectState::Running;
         current.state = state;
         current.generation = current.generation.wrapping_add(1);
+        if fresh_start {
+            current.session_id = current.generation;
+        }
         let result = current.clone();
         if state != ProjectState::Running {
             for active in control
@@ -205,6 +213,31 @@ impl Session {
             }
         }
         Ok(result)
+    }
+    pub fn phone_event(&self, project: &str, state: ProjectState, session_id: u64, event_id: u64) {
+        let mut control = self.control.lock().unwrap_or_else(|e| e.into_inner());
+        let Some(current) = control.projects.get_mut(project) else {
+            return;
+        };
+        if current.session_id != session_id || event_id <= current.phone_ack {
+            return;
+        }
+        current.phone_ack = event_id;
+        // A stopped session can only be started by the desktop operator.
+        if current.state == ProjectState::Stopped && state != ProjectState::Stopped {
+            return;
+        }
+        current.state = state;
+        current.generation = current.generation.wrapping_add(1);
+        if state != ProjectState::Running {
+            for active in control
+                .active
+                .values()
+                .filter(|active| active.project == project)
+            {
+                active.cancel.cancel();
+            }
+        }
     }
     pub fn admit(
         self: &Arc<Self>,

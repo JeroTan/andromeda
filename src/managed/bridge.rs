@@ -75,7 +75,7 @@ impl Bridge {
         for project in projects.iter().filter(|p| p.enabled) {
             if let Some(serial) = &project.serial {
                 let state = self.session.project(&project.id);
-                devices.entry(serial.clone()).or_default().push(json!({"id":project.id,"name":project.name,"state":state.state,"generation":state.generation}));
+                devices.entry(serial.clone()).or_default().push(json!({"id":project.id,"name":project.name,"state":state.state,"generation":state.generation,"session_id":state.session_id,"phone_ack":state.phone_ack}));
             }
         }
         let mut workers = tokio::task::JoinSet::new();
@@ -174,19 +174,23 @@ impl Bridge {
             if !current.enabled || current.serial.as_deref() != Some(serial) {
                 continue;
             }
-            let expected = event["generation"].as_u64();
-            if expected != sent["generation"].as_u64() {
-                continue;
-            }
             let state: ProjectState = serde_json::from_value(event["state"].clone())
                 .map_err(|_| Error::new("companion_protocol", "Invalid phone project state"))?;
-            // Phone Resume only resumes a paused session; Start stays on the desktop
-            // where the complete device/tool/directory scope is visible.
-            if state == ProjectState::Running && sent["state"] != "paused" {
+            let Some(session_id) = event["session_id"].as_u64() else {
+                continue;
+            };
+            if Some(session_id) != sent["session_id"].as_u64() {
                 continue;
             }
-            let changed = self.session.transition(id, state, expected);
-            if state == ProjectState::Running && changed.is_ok() {
+            let Some(event_id) = event["event_id"].as_u64() else {
+                continue;
+            };
+            // Acknowledge exact phone events, not just host generations: a later
+            // phone Stop/Pause can arrive after an earlier Resume was applied.
+            self.session.phone_event(id, state, session_id, event_id);
+            if state == ProjectState::Running
+                && self.session.project(id).state == ProjectState::Running
+            {
                 self.controller.resume();
             }
         }
