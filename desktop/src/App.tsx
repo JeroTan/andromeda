@@ -466,10 +466,13 @@ function App() {
       });
   }
   async function stop() {
+    liveGeneration.current = null;
+    liveRef.current = false;
+    setLive(false);
+    setPreview(null);
+    previewGeneration.current += 1;
     try {
       const count = await invoke<number>("pause");
-      setPreview(null);
-      previewGeneration.current += 1;
       setNotice(
         `Input paused. ${count} managed request${count === 1 ? "" : "s"} cancelled.`,
       );

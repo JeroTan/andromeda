@@ -309,6 +309,7 @@ async fn apply_connection(
 
 #[tauri::command]
 fn pause(state: State<'_, AppState>) -> usize {
+    stop_preview_task(state.inner());
     state.host.stop_all()
 }
 

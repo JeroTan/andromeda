@@ -39,7 +39,7 @@ The launcher resolves `ANDROMEDA_DESKTOP_BIN`, a macOS `.app` path in `ANDROMEDA
 
 Pause the session, select the project, choose **Remove project**, and confirm. This removes the project registration and stops its live preview. The project folder and its files stay on disk. Existing Codex or Claude configuration is not changed; remove the `andromeda` entry manually if you no longer want it. Re-add the folder to manage it again.
 
-**Stop & pause** cancels managed requests across projects, including requests awaiting approval, and keeps input paused until you resume it. A project's `adm_stop` cancels only that project's requests. Input already accepted by Android may finish; observe the device before retrying. Closing the app shuts down the gateway and cancels its operations. An agent cannot resume the desktop session through MCP.
+**Stop & pause** also stops the active live preview, cancels managed requests across projects, including requests awaiting approval, and keeps input paused until you resume it. A project's `adm_stop` cancels only that project's requests. Input already accepted by Android may finish; observe the device before retrying. Closing the app shuts down the gateway and cancels its operations. An agent cannot resume the desktop session through MCP.
 
 **Show screen** captures one screenshot on request. **Start live preview** opens one persistent capture stream and keeps updating the image until you choose **Stop live preview** or **Hide**. Live preview is explicit; it does not start automatically, and changing the selected device or project stops it. The desktop preview is not saved to a file. A stream error appears beside the preview and stops the stream rather than silently retrying.
 
