@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "backend": "experimental_android_screenrecord_h264_ffmpeg_mjpeg",
+  "size": "720x1584",
+  "duration_limit_seconds": 8,
+  "bit_rate": 2000000,
+  "frames": 0,
+  "first_frame_ms": null,
+  "median_frame_interval_ms": null,
+  "p95_frame_interval_ms": null,
+  "sampled_receive_fps": null,
+  "samples": [],
+  "problem": "Video experiment exceeded its bounded deadline",
+  "limitations": [
+    "Read-only current-screen capture; decoded image bytes are discarded, never written to this report.",
+    "Interarrival time and FPS are not capture-to-host latency or frame age. This elementary H.264 pipe does not preserve device PTS.",
+    "Cold start includes adb/Android encoder/ffmpeg startup. This is a proof harness, not an integrated MCP backend.",
+    "No tap, swipe, app launch, audio recording, device setting change or model call is performed."
+  ],
+  "source_error": "",
+  "decoder_error": "",
+  "date": "2026-10-23",
+  "device_model": "OnePlus CPH2653",
+  "android_version": "16",
+  "api_level": 36,
+  "transport": "USB",
+  "display_state": "operator-unlocked, awake",
+  "cleanup": "Two native test processes outlived the requested duration; ADB signals were denied by device policy. Cleared by operator restart; zero remaining test recorders verified.",
+  "shipped_backend": false
+}

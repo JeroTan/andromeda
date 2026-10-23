@@ -37,4 +37,4 @@ This is a design proposal, not shipped functionality:
 
 A bounded native `screenrecord --output-format=h264` pipe produced no usable frames on this OnePlus. While asleep it reported `INVALID_LAYER_STACK`; while awake its processes outlived the requested duration. The host pipeline ended, but the phone's `screen_record` policy denied ADB signals to the two stalled native processes. The operator restarted the phone to clear them; verification found zero remaining test recorders.
 
-The throwaway harness is excluded from Git. **Do not repeat native screenrecord experiments on this device.** Choose a separately owned backend and verify its teardown on an emulator first. No sub-100/500 ms result was obtained from this failed experiment, and no captured video was retained.
+The throwaway harness is excluded from Git. **Do not repeat native screenrecord experiments on this device.** Choose a separately owned backend and verify its teardown on an emulator first. No sub-100/500 ms result was obtained from this failed experiment, and no captured video was retained. [Failed-run metadata](../../benchmarks/results/oneplus-native-video-failed-2026-10-23.json).

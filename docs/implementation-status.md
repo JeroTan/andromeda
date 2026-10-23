@@ -198,3 +198,5 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - Follow-up Standards and Spec reviews of `216b19d` → `60285e9` confirmed the preview/launcher fixes with no actionable findings. They were read-only reviews and did not run CI or phone actions.
 
 - Packaged macOS startup was verified through its native accessibility interface: the rebuilt app opened with input paused and no registered projects, then was closed to stop its local gateway. The final global Stop/preview follow-up also passed both review axes without actionable findings.
+
+- The rebuilt macOS bundle's MCP executable advertises all 18 tools, identifies scrolling capture as input, and documents automatic image encoding. Both final review axes found no regressions in the global Stop/preview change.
