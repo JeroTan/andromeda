@@ -40,9 +40,9 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 - [x] Installation, Claude Code, Codex, Cursor and API guides
 - [x] Example prompts, demonstrations, contribution and security policies
 - [x] License and dependency/license review
-- [x] GitHub CI on Windows, macOS and Linux (core and desktop; companion PR run pending)
+- [x] Historical GitHub CI evidence on Windows, macOS and Linux (core/desktop); Actions now disabled and manual-only
 - [ ] Release packaging, third-party notices and artifact verification
-- [ ] Reviewed PRs merged to main with conventional titles
+- [x] Reviewed feature PRs merged to main with conventional titles
 - [ ] v0.1.0 release published after acceptance gates pass
 - [ ] Temporary branches, build artifacts and processes cleaned up
 
@@ -68,11 +68,11 @@ Private device screenshots and raw client logs are temporary test artifacts, exc
 
 ## Current work
 
-The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1) as `1ca97be`, after CI passed at `ee1a830` on Windows, macOS, Linux and Rust 1.88. The `feat/android-mcp` branch was deleted locally and remotely. The desktop stage was subsequently merged through PR #2; current work is on `feat/android-companion`.
+The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1) as `1ca97be`, after CI passed at `ee1a830` on Windows, macOS, Linux and Rust 1.88. The `feat/android-mcp` branch was deleted locally and remotely. The desktop stage was subsequently merged through PR #2. [PR #3](https://github.com/JeroTan/andromeda/pull/3) merged the phone/capture/desktop follow-up as `d0efc43`; the feature branches were removed locally and remotely where present.
 
 Repository and instruction files were inspected; no prior implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to the supplied specification.
 
-The merged core contains 16 tools. PR #3 adds `adm_multi_touch` and `adm_get_long_view` (18 total), Unicode input, pairing, the phone UI, persistent capture and compressed output. Both review axes found preview/launcher defects; the fixes passed their follow-up reviews. Local validation is recorded below. Matched open-source comparisons, remaining client/device checks and final release packaging remain incomplete; desktop additions retain platform/UX gates. The overall release scope is not complete.
+Main now contains 18 tools. PR #3 added `adm_multi_touch` and `adm_get_long_view`, Unicode input, pairing, the phone UI, persistent capture and compressed output. Both review axes found preview/launcher defects; the fixes passed their follow-up reviews. Local validation is recorded below. Matched open-source comparisons, remaining client/device checks and final release packaging remain incomplete; desktop additions retain platform/UX gates. The overall release scope is not complete.
 
 ## User additions and workflow preferences
 
@@ -163,15 +163,16 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - macOS signing/notarization, Windows signing and any store packaging are release decisions. The current debug package is a development preview, not a signed release.
 - Published npm platform packages, GitHub release assets and `v0.1.0` publication remain open.
 
-### 7. PR review and merge — needs a push/review decision
+### 7. Feature integration — merged
 
-- The phone/capture/desktop integration is committed on `feat/android-companion` and tracked in PR #3. Hosted Actions is disabled by the operator; use the latest local validation and review records below.
-- Update the branch with review fixes, complete both review axes and record local validation before merge. Keep full physical accessibility and release gates open until verified. Hosted platform reruns require a new explicit operator instruction.
+- PRs #1–#3 are merged to main. The phone/capture/desktop integration merged at `d0efc43` after local validation and both review axes; release acceptance remains separate.
+- Hosted Actions is disabled by the operator. Re-enabling or rerunning it requires a new explicit instruction. The earlier Windows-fixture and Android-emulator failures remain documented; they are not reported as remote passes.
 
-### 8. Cleanup — needs a keep/remove decision
+### 8. Cleanup — development outputs retained
 
-- Test emulator, desktop app and ADB server were stopped; `.scratch` and the benchmark temp directory were removed.
-- Remaining build artifacts and feature branches are intentionally kept for review. Deleting them requires a decision about whether the debug packages and evidence are still needed.
+- Task-owned desktop preview/gateway processes were closed, temporary game captures and the failed video harness were removed, and completed feature branches were deleted.
+- The operator restart cleared both native test recorder processes; verification found zero remaining. That native recorder path is excluded from product code and further physical experiments.
+- Keep the rebuilt preview package, development build caches and the small private codec reference while release validation is unfinished. The shared ADB server remains available for the user's Android tools.
 
 
 ## Continuation on 2026-10-23
