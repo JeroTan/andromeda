@@ -95,3 +95,19 @@ This requires a paired phone and an active companion session. For Unicode text, 
 - Stop with `adm_stop` or **Stop & pause** when the screen is unexpected.
 - Do not claim task completion from `success: true`; verify the intended UI state.
 - Do not put passwords, pairing secrets or private screenshots in a public demo.
+
+## Hold one finger while another swipes
+
+`adm_multi_touch` can schedule both motions locally in one request. For example, on a deliberately chosen test surface with this observed geometry:
+
+```json
+{
+  "screen": {"width": 1080, "height": 2400, "rotation": 0},
+  "strokes": [
+    {"points": [{"x": 300, "y": 900}], "start_ms": 0, "duration_ms": 3000},
+    {"points": [{"x": 700, "y": 1700}, {"x": 700, "y": 1000}], "start_ms": 800, "duration_ms": 500}
+  ]
+}
+```
+
+The first finger stays down while the second moves. A paired phone and active companion session are required. Timing is predetermined and runs on the phone; it does not wait for another model response. Changing the path in response to new observations while a finger remains held is a separate planned capability, requiring a bounded owner/lease and release handling. Observation or dispatch success alone does not verify the intended app outcome.
