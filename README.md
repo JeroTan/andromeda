@@ -2,13 +2,13 @@
 
 Andromeda gives MCP agents tools to observe and control an Android device. The server is written in Rust and talks directly to your local ADB server over USB or an explicitly authorized ADB connection.
 
-[Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md)
+[Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Examples](docs/examples.md) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md)
 
 **Development status:** the core server is implemented and undergoing device tests. The full release checklist is in [implementation-status.md](docs/implementation-status.md). Version `v0.1.0` has not been released.
 
 ## Desktop preview
 
-The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and asks for approval before each managed input request. It includes device selection, an on-demand screen preview, and a stop control that keeps input paused. See [desktop setup](docs/desktop.md) to build and run it. The one-command npm launcher is still in development.
+The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and asks for approval before each managed input request. It includes device selection, an on-demand snapshot, an explicit live preview that runs until stopped, and a stop control that keeps input paused. See [desktop setup](docs/desktop.md) to build and run it. The [npm launcher](npm/README.md) resolves a local or platform desktop package; it has been tested against local builds, while published platform packages remain a release task.
 
 ## Run locally
 
@@ -50,7 +50,7 @@ Coordinates use native screen pixels, with `(0, 0)` at the top left of the curre
 
 The device layer opens ADB services directly, without launching a host `adb` process for each tool call. Requests have deadlines and bounded output. `adm_stop` cancels active work, and failed input is never retried automatically. Screenshots can be scaled and encoded as PNG or JPEG.
 
-Measurements and comparison workloads will be published with the benchmark suite. There is no claim that Andromeda is the fastest Android MCP implementation.
+The capture, persistent-stream and input benchmark harness, plus Android 17 emulator and OnePlus physical baselines, are in [benchmarks](benchmarks/README.md). Matched open-source comparisons remain future work. There is no claim that Andromeda is the fastest Android MCP implementation.
 
 ## Control and privacy
 
@@ -70,4 +70,4 @@ cargo test --all-targets
 
 The reusable Rust device/controller library has no dependency on an AI vendor. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [original specification](docs/intial_prompt.md) for scope and test expectations.
 
-Original Andromeda code is available under MIT or Apache-2.0, at your option. Third-party dependencies retain their own licenses.
+Original Andromeda code is available under MIT or Apache-2.0, at your option. Third-party dependencies retain their own licenses; see the [license review](docs/licenses.md).

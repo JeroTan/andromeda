@@ -138,6 +138,13 @@ impl Registry {
         Ok(self.load(id)?.project)
     }
 
+    /// Remove a project registration without touching the project directory.
+    pub fn remove(&self, id: &str) -> Result<()> {
+        let path = self.path(id)?;
+        self.load(id)?;
+        fs::remove_file(path).map_err(config_io)
+    }
+
     pub fn authorize(&self, id: &str, working_directory: &Path) -> Result<Project> {
         let project = self.load(id)?.project;
         if !project.enabled {

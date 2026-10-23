@@ -16,6 +16,8 @@ Download Platform Tools from [Android Developers](https://developer.android.com/
 
 5. Copy the serial into your [MCP client configuration](clients.md).
 
+See [examples](examples.md) for safe observation, settings, batch, wait and companion-gesture prompts.
+
 `andromeda` starts the stdio server. `andromeda tools` prints tool schemas. `andromeda --device SERIAL call adm_get_device_info` runs a diagnostic call. Use an absolute executable path in client configuration when the client cannot find your Cargo bin directory.
 
 ## Troubleshooting

@@ -521,6 +521,17 @@ input[type="checkbox"] {
   background: transparent;
   text-decoration-thickness: 2px;
 }
+.text-button.danger {
+  color: var(--error);
+}
+.danger-button {
+  color: var(--error);
+  border-color: currentColor;
+  font-size: 13px;
+}
+.danger-button:not(:disabled):hover {
+  background: var(--subtle);
+}
 .project-detail {
   min-width: 0;
 }

@@ -33,8 +33,20 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --locked --all-targets -- -D warnings
       - run: cargo test --locked --all-targets
+      - name: Verify optional AVIF encoder
+        run: cargo test --locked --features avif --test image_formats
       - run: cargo build --locked --release
       - run: cargo run --locked --release -- tools
+
+  launcher:
+    name: npm launcher
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm run test:launcher
 
   desktop:
     name: Desktop (${{ matrix.os }})

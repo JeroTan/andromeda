@@ -280,7 +280,8 @@ The reference's typography, panel structure and soft color treatment should guid
 **Phone bridge experience**
 
 - Use a concise, polished flow for accessibility permission, pairing and session status.
-- Explain why Android requires each permission at the point it is needed.
+- Keep sessions open until the user stops them by default. Provide a Settings button, clickable settings sections and a Session section containing an optional session timer (Off by default, 15 minutes, 30 minutes or 1 hour). Persist the choice and apply it to the next session. Keep Stop accessible throughout settings navigation.
+- Explain why Android requires each permission at the point it is needed. Detect existing permission, saved pairing and active session before choosing a setup step. Refresh on return to the app. Distinguish an enabled permission from a temporarily disconnected service; never reopen permission settings automatically or repeat completed setup.
 - Keep stop/disconnect readily available, with clear disabled, disconnected, unauthorized, expired and error states.
 - Put development-only gesture diagnostics behind a development entry point.
 - Respect system text scaling, screen readers, native back navigation and safe areas. Controls must meet Android's 48 dp touch target guidance.
@@ -597,3 +598,12 @@ Stop building one automation for every app.
 Build an interface that lets your AI figure out the rest.
 
 *Built with Rust. Designed for MCP. Created for developers who want to give their AI agents a way to interact with the real world.*
+
+### Automation additions requested on 2026-10-23
+
+- Add a bounded long-view tool for scrolling lists: explicit viewport and swipe, page/deadline limits, settling delay, repeat detection, and readable page mapping. Treat scrolling as input requiring authorization/approval. Honor Stop, cancellation and rotation changes. Do not claim that a bounded scan sees an entire unbounded list or that older image tiles are current tap coordinates.
+- Expose and document sequential tap/swipe batches with configurable gaps and per-step pauses. Execute predetermined timing locally to avoid model round trips; prevalidate all actions and stop on failure. Existing `adm_touch_many`, `adm_swipe_many` and `adm_batch_actions` provide this behavior.
+- Separate device capture/input latency, MCP/client overhead and model thinking time when measuring interactive tasks. Retain timing samples and verified outcomes without publishing account screenshots.
+- Investigate adaptive held gestures as a separate controller capability: one owner per device, explicit bounded gesture lease, continuation updates, a local expiry/watchdog and release on Stop/disconnect. Planning agents may propose updates; the local controller owns precise timing and arbitration. Do not use model or subagent response time as an input-timing guarantee. This remains a planned capability until implemented and tested through the public companion protocol.
+
+- Support compressed screen output using lossy/lossless WebP and an optional AVIF encoder. Measure payload size and processing cost on the same source. Offer automatic selection among compatible PNG/JPEG/WebP encodings, reporting the chosen MIME type; never choose AVIF automatically for ordinary vision clients. Preserve image/native coordinate mapping. Keep lossless output explicit and document codec-specific quality settings and client compatibility.

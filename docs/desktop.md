@@ -14,7 +14,17 @@ npm ci
 npm run tauri dev
 ```
 
-To build a packaged preview, run `npm run tauri build -- --debug`. The build script includes a matching MCP executable inside the package. CI builds preview packages for macOS, Windows and Linux; downloads are available when the account's Actions artifact storage permits upload. Build/test failures fail the job; an unavailable preview upload is reported separately in its summary. These packages are development builds; release packaging and the npm launcher are tracked separately in the release checklist.
+To build a packaged preview, run `npm run tauri build -- --debug`. The build script includes a matching MCP executable inside the package. CI builds preview packages for macOS, Windows and Linux; downloads are available when the account's Actions artifact storage permits upload. Build/test failures fail the job; an unavailable preview upload is reported separately in its summary. These packages are development builds; published platform packages remain a release task.
+
+After a local build, the one-command launcher is available from the repository root:
+
+```sh
+node npm/launcher.mjs
+# or, after npm link
+andromeda
+```
+
+The launcher resolves `ANDROMEDA_DESKTOP_BIN`, a macOS `.app` path in `ANDROMEDA_DESKTOP_APP`, a `@andromeda/desktop-<platform>-<arch>` package, or a local Tauri/development build. `--print-path` reports the selected executable. It does not download a release or start the MCP server itself. See [npm/README.md](../npm/README.md).
 
 ## Connect a project
 
@@ -25,9 +35,13 @@ To build a packaged preview, run `npm run tauri build -- --debug`. The build scr
 5. Reconnect MCP in your agent or reopen its project. Accept the client's project/connection trust prompt when appropriate. Instructions load when the MCP connection initializes.
 6. Choose **Resume session** when ready for input. Review each proposed action in the desktop app and choose **Allow once** or **Decline**. Approval covers the exact tool arguments and selected device. The tool's `timeout_ms` includes time spent waiting for approval (15 seconds by default, up to 120 seconds).
 
+## Remove a project
+
+Pause the session, select the project, choose **Remove project**, and confirm. This removes the project registration and stops its live preview. The project folder and its files stay on disk. Existing Codex or Claude configuration is not changed; remove the `andromeda` entry manually if you no longer want it. Re-add the folder to manage it again.
+
 **Stop & pause** cancels managed requests across projects, including requests awaiting approval, and keeps input paused until you resume it. A project's `adm_stop` cancels only that project's requests. Input already accepted by Android may finish; observe the device before retrying. Closing the app shuts down the gateway and cancels its operations. An agent cannot resume the desktop session through MCP.
 
-**Show screen** captures one screenshot on request. It does not start background capture. Hide the preview to remove it from the interface. The desktop preview is not saved to a file.
+**Show screen** captures one screenshot on request. **Start live preview** opens one persistent capture stream and keeps updating the image until you choose **Stop live preview** or **Hide**. Live preview is explicit; it does not start automatically, and changing the selected device or project stops it. The desktop preview is not saved to a file. A stream error appears beside the preview and stops the stream rather than silently retrying.
 
 The agent panel reports managed MCP connections separately from project access. A connection that stops responding disappears within 15 seconds. Initialization failures while loading project instructions appear in the panel. Changing the selected device clears the previous device's preview.
 
@@ -47,4 +61,5 @@ This scope prevents accidental use from unrelated chats. It is not an OS sandbox
 - **Input paused:** choose Resume session in Andromeda. Tool calls cannot clear an operator pause.
 - **Approval expires:** send a new request after observing the current screen. If appropriate, use a larger `timeout_ms`; approval does not extend the request deadline.
 - **Configuration changed:** reopen the preview so it incorporates external edits.
+- **Live preview stopped:** check the USB connection and unlock the phone, then start the preview again. The last frame remains until you hide it.
 - **Moved application:** reconnect the project to update its executable path.

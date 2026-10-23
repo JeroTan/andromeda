@@ -6,6 +6,7 @@ import {
   type ReactNode,
 } from "react";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 import "./App.css";
 
 type Project = {
@@ -49,9 +50,17 @@ type Change = {
 };
 type Instructions = { path: string; content: string | null; starter: string };
 type Preview = { data_url: string; elapsed_ms: number; serial: string };
+type PreviewFrame = Preview & {
+  encode_ms: number;
+  sequence: number;
+  width: number;
+  height: number;
+};
+type PreviewError = { serial: string; code: string; message: string };
 type DialogState =
   | { kind: "connection"; client: string; change: Change }
   | { kind: "instructions"; project: Project; document: Instructions }
+  | { kind: "remove"; project: Project }
   | { kind: "approval"; approval: Approval };
 
 const label = (tool: string) => tool.replace("adm_", "").replace(/_/g, " ");
@@ -195,8 +204,13 @@ function App() {
   const [documentText, setDocumentText] = useState("");
   const [replace, setReplace] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [live, setLive] = useState(false);
+  const [liveError, setLiveError] = useState("");
   const [bridgeStatus, setBridgeStatus] = useState("");
   const previewGeneration = useRef(0);
+  const liveRef = useRef(false);
+  liveRef.current = live;
+  const serialRef = useRef<string | null>(null);
   const [theme, setTheme] = useState(
     () => localStorage.getItem("andromeda-theme") || "light",
   );
@@ -204,6 +218,7 @@ function App() {
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
   const project = data?.projects.find((p) => p.id === selected);
+  serialRef.current = project?.serial ?? null;
   const connection = data?.connections.find(
     (status) => status.project_id === selected,
   );
@@ -217,7 +232,11 @@ function App() {
   const refresh = useCallback(async () => {
     const state = await invoke<Snapshot>("snapshot");
     setData(state);
-    setSelected((current) => current || state.projects[0]?.id || "");
+    setSelected((current) =>
+      state.projects.some((project) => project.id === current)
+        ? current
+        : state.projects[0]?.id || "",
+    );
   }, []);
   const refreshDevices = useCallback(async () => {
     try {
@@ -255,9 +274,44 @@ function App() {
   useEffect(() => {
     setDraft(data?.projects.find((p) => p.id === selected) || null);
     setPreview(null);
+    setLive(false);
+    setLiveError("");
     setBridgeStatus("");
     previewGeneration.current += 1;
+    void invoke("stop_preview").catch(() => {});
   }, [selected]);
+  useEffect(() => {
+    let disposed = false;
+    const unlisteners: Array<() => void> = [];
+    function register<T>(name: string, handler: (payload: T) => void) {
+      void listen<T>(name, (event) => {
+        if (!disposed) handler(event.payload);
+      }).then((unlisten) => {
+        if (disposed) unlisten();
+        else unlisteners.push(unlisten);
+      });
+    }
+    register<PreviewFrame>("preview-frame", (frame) => {
+      if (!liveRef.current || frame.serial !== serialRef.current) return;
+      setPreview(frame);
+      setLiveError("");
+    });
+    register<PreviewError>("preview-error", (error) => {
+      if (!liveRef.current || error.serial !== serialRef.current) return;
+      setLive(false);
+      setLiveError(error.message);
+    });
+    return () => {
+      disposed = true;
+      for (const unlisten of unlisteners) unlisten();
+    };
+  }, []);
+  useEffect(
+    () => () => {
+      void invoke("stop_preview").catch(() => {});
+    },
+    [],
+  );
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("andromeda-theme", theme);
@@ -300,6 +354,9 @@ function App() {
       if (saved.serial !== project?.serial) {
         previewGeneration.current += 1;
         setPreview(null);
+        liveRef.current = false;
+        setLive(false);
+        setLiveError("");
       }
       setDraft(saved);
       setNotice(
@@ -327,6 +384,28 @@ function App() {
       setDocumentText(document.content ?? document.starter);
       setDialog({ kind: "instructions", project, document });
     });
+  }
+  async function startLive() {
+    if (!project?.serial) return;
+    setBusy("live");
+    setError("");
+    setNotice("");
+    setLiveError("");
+    try {
+      await invoke("start_preview", { id: project.id });
+      liveRef.current = true;
+      setLive(true);
+      setNotice("Live preview started. It runs until you stop it.");
+    } catch (error) {
+      setError(message(error));
+    } finally {
+      setBusy("");
+    }
+  }
+  async function stopLive() {
+    liveRef.current = false;
+    setLive(false);
+    await invoke("stop_preview").catch(() => {});
   }
   function toggleTool(name: string) {
     if (draft)
@@ -739,7 +818,7 @@ function App() {
                     </fieldset>
                     {!paused && (
                       <p className="field-hint">
-                        Pause the session to edit project access.
+                        Pause the session to edit or remove project access.
                       </p>
                     )}
                     <div className="form-actions">
@@ -768,6 +847,19 @@ function App() {
                           Discard edits
                         </button>
                       )}
+                      <button
+                        className="text-button danger"
+                        type="button"
+                        onClick={() => setDialog({ kind: "remove", project })}
+                        disabled={!!busy || dirty || !paused}
+                        title={
+                          !paused
+                            ? "Pause the session before removing this project"
+                            : undefined
+                        }
+                      >
+                        Remove project
+                      </button>
                     </div>
                   </form>
                 </section>
@@ -870,11 +962,17 @@ function App() {
                         <img
                           className="phone-preview"
                           src={preview.data_url}
-                          alt="Most recently requested screenshot of the selected Android phone"
+                          alt={
+                            live
+                              ? "Live preview of the selected Android phone"
+                              : "Most recently requested screenshot of the selected Android phone"
+                          }
                         />
-                        <p className="field-hint">
-                          Snapshot · {preview.serial} ·{" "}
-                          {Math.round(preview.elapsed_ms)} ms
+                        <p className="field-hint" role="status">
+                          {live ? "Live" : "Snapshot"} · {preview.serial} ·{" "}
+                          {live
+                            ? `${Math.max(1, Math.round(1000 / Math.max(preview.elapsed_ms, 1)))} fps`
+                            : `${Math.round(preview.elapsed_ms)} ms`}
                         </p>
                       </>
                     ) : (
@@ -885,43 +983,72 @@ function App() {
                           to your phone.
                         </h2>
                         <p>
-                          Capture a screen when you’re ready to see it here.
+                          Capture a screen on request, or start an explicit live
+                          preview. Nothing is saved.
                         </p>
                       </>
                     )}
+                    {liveError && (
+                      <p className="field-error" role="alert">
+                        {liveError}
+                      </p>
+                    )}
                     <div className="preview-actions">
-                      <button
-                        className="secondary"
-                        disabled={!!busy || !project.serial || dirty}
-                        onClick={() =>
-                          void run("preview", async () => {
-                            const id = project.id;
-                            const generation = ++previewGeneration.current;
-                            const result = await invoke<Preview>(
-                              "capture_preview",
-                              { id },
-                            );
-                            if (
-                              selectedRef.current === id &&
-                              previewGeneration.current === generation
-                            )
-                              setPreview(result);
-                          })
-                        }
-                      >
-                        {busy === "preview"
-                          ? "Capturing…"
-                          : preview
-                            ? "Refresh snapshot"
-                            : "Show screen"}
-                        <Icon name="arrow" />
-                      </button>
+                      {!live && (
+                        <button
+                          className="secondary"
+                          disabled={!!busy || !project.serial || dirty}
+                          onClick={() =>
+                            void run("preview", async () => {
+                              const id = project.id;
+                              const generation = ++previewGeneration.current;
+                              const result = await invoke<Preview>(
+                                "capture_preview",
+                                { id },
+                              );
+                              if (
+                                selectedRef.current === id &&
+                                previewGeneration.current === generation
+                              )
+                                setPreview(result);
+                            })
+                          }
+                        >
+                          {busy === "preview"
+                            ? "Capturing…"
+                            : preview
+                              ? "Refresh snapshot"
+                              : "Show screen"}
+                          <Icon name="arrow" />
+                        </button>
+                      )}
+                      {live ? (
+                        <button
+                          className="secondary"
+                          aria-pressed="true"
+                          onClick={() => void stopLive()}
+                        >
+                          Stop live preview
+                        </button>
+                      ) : (
+                        <button
+                          className="secondary"
+                          aria-pressed="false"
+                          disabled={!!busy || !project.serial || dirty}
+                          onClick={() => void startLive()}
+                        >
+                          {busy === "live" ? "Starting…" : "Start live preview"}
+                          <Icon name="arrow" />
+                        </button>
+                      )}
                       {preview && (
                         <button
                           className="text-button"
                           onClick={() => {
+                            if (live) void stopLive();
                             previewGeneration.current += 1;
                             setPreview(null);
+                            setLiveError("");
                           }}
                         >
                           Hide
@@ -949,7 +1076,9 @@ function App() {
               ? `Connect ${dialog.client === "codex" ? "Codex" : "Claude"}`
               : dialog.kind === "instructions"
                 ? "Project instructions"
-                : "Review device input"
+                : dialog.kind === "remove"
+                  ? "Remove project"
+                  : "Review device input"
           }
           onClose={() => {
             if (!busy) setDialog(null);
@@ -1004,6 +1133,52 @@ function App() {
                   }
                 >
                   {busy === "apply" ? "Saving…" : "Save connection"}
+                </button>
+                <button
+                  className="secondary"
+                  disabled={!!busy}
+                  onClick={() => setDialog(null)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </>
+          )}
+          {dialog.kind === "remove" && (
+            <>
+              <p>
+                Remove <strong>{dialog.project.name}</strong> from Andromeda?
+              </p>
+              <p className="path-block">{dialog.project.root}</p>
+              <p className="field-hint">
+                This removes the project registration and stops its live
+                preview. Your project files stay on disk. Existing Codex or
+                Claude configuration is not changed.
+              </p>
+              <div className="form-actions">
+                <button
+                  className="danger-button"
+                  disabled={!!busy || !paused}
+                  onClick={() =>
+                    void run("remove", async () => {
+                      const id = dialog.project.id;
+                      await invoke("remove_project", { id });
+                      if (selectedRef.current === id) {
+                        setSelected("");
+                        setDraft(null);
+                      }
+                      previewGeneration.current += 1;
+                      setPreview(null);
+                      setLive(false);
+                      setLiveError("");
+                      setDialog(null);
+                      setNotice(
+                        "Project removed from Andromeda. Its files were not changed.",
+                      );
+                    })
+                  }
+                >
+                  {busy === "remove" ? "Removing…" : "Remove project"}
                 </button>
                 <button
                   className="secondary"

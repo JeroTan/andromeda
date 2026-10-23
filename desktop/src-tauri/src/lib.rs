@@ -8,6 +8,7 @@ use andromeda::{
 };
 use base64::Engine;
 use serde::Serialize;
+use serde_json::json;
 use std::{
     collections::BTreeMap,
     path::PathBuf,
@@ -15,10 +16,16 @@ use std::{
         Mutex,
         atomic::{AtomicU64, Ordering},
     },
+    time::{Duration, Instant},
 };
-use tauri::{Manager, State};
+use tauri::{Emitter, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 use tokio_util::sync::CancellationToken;
+
+struct PreviewTask {
+    generation: u64,
+    cancel: CancellationToken,
+}
 
 struct AppState {
     registry: Registry,
@@ -28,6 +35,19 @@ struct AppState {
     changes: Mutex<BTreeMap<u64, ConfigChange>>,
     next_change: AtomicU64,
     settings: tokio::sync::Mutex<()>,
+    preview: Mutex<Option<PreviewTask>>,
+    next_preview: AtomicU64,
+}
+
+fn stop_preview_task(state: &AppState) {
+    if let Some(task) = state
+        .preview
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .take()
+    {
+        task.cancel.cancel();
+    }
 }
 
 #[derive(Serialize)]
@@ -103,9 +123,14 @@ async fn save_project(
 ) -> Result<Project> {
     let _guard = state.settings.lock().await;
     require_paused(&state)?;
-    state
+    let previous_serial = state.registry.get(&id)?.serial;
+    let saved = state
         .registry
-        .update(&id, serial, allowed_tools, instruction_file, enabled)
+        .update(&id, serial, allowed_tools, instruction_file, enabled)?;
+    if saved.serial != previous_serial {
+        stop_preview_task(state.inner());
+    }
+    Ok(saved)
 }
 
 fn require_paused(state: &AppState) -> Result<()> {
@@ -115,6 +140,15 @@ fn require_paused(state: &AppState) -> Result<()> {
             "Pause the session before changing project access",
         ));
     }
+    Ok(())
+}
+
+#[tauri::command]
+async fn remove_project(state: State<'_, AppState>, id: String) -> Result<()> {
+    let _guard = state.settings.lock().await;
+    require_paused(&state)?;
+    state.registry.remove(&id)?;
+    stop_preview_task(state.inner());
     Ok(())
 }
 
@@ -333,6 +367,133 @@ async fn capture_preview(state: State<'_, AppState>, id: String) -> Result<Previ
     })
 }
 
+#[derive(Clone, Serialize)]
+struct PreviewFrame {
+    serial: String,
+    data_url: String,
+    elapsed_ms: f64,
+    encode_ms: f64,
+    sequence: u64,
+    width: u32,
+    height: u32,
+}
+
+async fn preview_loop<F>(
+    controller: Controller,
+    serial: String,
+    cancel: CancellationToken,
+    mut emit: F,
+) -> Result<()>
+where
+    F: FnMut(PreviewFrame),
+{
+    let mut stream = tokio::select! {
+        _ = cancel.cancelled() => return Ok(()),
+        result = controller.stream(Some(serial.clone()), 100) => result?,
+    };
+    let mut sequence = 0;
+    let mut previous = Instant::now();
+    loop {
+        let frame = tokio::select! {
+            _ = cancel.cancelled() => return Ok(()),
+            result = stream.next_frame(Duration::from_secs(10)) => match result? {
+                Some(frame) => frame,
+                None => return Err(Error::new("stream_ended", "The phone stopped the capture stream")),
+            },
+        };
+        let received = Instant::now();
+        let elapsed_ms = received.duration_since(previous).as_secs_f64() * 1000.0;
+        previous = received;
+        let started = Instant::now();
+        let image = tokio::task::spawn_blocking(move || {
+            capture::encode(
+                frame,
+                capture::Options {
+                    max_width: Some(720),
+                    max_height: Some(1280),
+                    format: capture::Format::Jpeg,
+                    quality: Some(80),
+                },
+            )
+        })
+        .await
+        .map_err(|error| Error::new("image_encoding", error.to_string()))??;
+        let encode_ms = started.elapsed().as_secs_f64() * 1000.0;
+        sequence += 1;
+        emit(PreviewFrame {
+            serial: serial.clone(),
+            data_url: format!(
+                "data:{};base64,{}",
+                image.mime_type,
+                base64::engine::general_purpose::STANDARD.encode(image.bytes)
+            ),
+            elapsed_ms,
+            encode_ms,
+            sequence,
+            width: image.width,
+            height: image.height,
+        });
+    }
+}
+
+#[tauri::command]
+async fn start_preview(
+    app: tauri::AppHandle,
+    state: State<'_, AppState>,
+    id: String,
+) -> Result<()> {
+    let project = state.registry.get(&id)?;
+    let serial = project
+        .serial
+        .ok_or_else(|| Error::new("device_required", "Select and save a device first"))?;
+    stop_preview_task(state.inner());
+    let generation = state.next_preview.fetch_add(1, Ordering::Relaxed);
+    let cancel = CancellationToken::new();
+    {
+        let mut preview = state
+            .preview
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
+        *preview = Some(PreviewTask {
+            generation,
+            cancel: cancel.clone(),
+        });
+    }
+    let controller = state.controller.clone();
+    let app_handle = app.clone();
+    let emit_handle = app.clone();
+    tauri::async_runtime::spawn(async move {
+        let result = preview_loop(controller, serial.clone(), cancel, move |frame| {
+            let _ = emit_handle.emit("preview-frame", frame);
+        })
+        .await;
+        if let Err(error) = result {
+            let _ = app_handle.emit(
+                "preview-error",
+                json!({"serial": serial, "code": error.code, "message": error.message}),
+            );
+        }
+        if let Some(state) = app_handle.try_state::<AppState>() {
+            let mut preview = state
+                .preview
+                .lock()
+                .unwrap_or_else(|error| error.into_inner());
+            if preview
+                .as_ref()
+                .is_some_and(|task| task.generation == generation)
+            {
+                *preview = None;
+            }
+        }
+    });
+    Ok(())
+}
+
+#[tauri::command]
+fn stop_preview(state: State<'_, AppState>) {
+    stop_preview_task(state.inner());
+}
+
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _, _| {
@@ -362,6 +523,8 @@ pub fn run() {
                 changes: Mutex::default(),
                 next_change: AtomicU64::new(1),
                 settings: tokio::sync::Mutex::new(()),
+                preview: Mutex::default(),
+                next_preview: AtomicU64::new(1),
             });
             Ok(())
         })
@@ -372,12 +535,14 @@ pub fn run() {
             ) && let Some(state) = window.try_state::<AppState>()
             {
                 state.host.shutdown();
+                stop_preview_task(state.inner());
             }
         })
         .invoke_handler(tauri::generate_handler![
             snapshot,
             choose_project,
             save_project,
+            remove_project,
             devices,
             pair_companion,
             companion_status,
@@ -388,8 +553,86 @@ pub fn run() {
             pause,
             resume,
             decide,
-            capture_preview
+            capture_preview,
+            start_preview,
+            stop_preview
         ])
         .run(tauri::generate_context!())
         .expect("Andromeda could not start");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use image::ImageEncoder;
+    use std::time::Duration;
+    use tokio::{
+        io::{AsyncReadExt, AsyncWriteExt},
+        net::TcpListener,
+    };
+
+    async fn request(socket: &mut tokio::net::TcpStream) -> String {
+        let mut prefix = [0; 4];
+        socket.read_exact(&mut prefix).await.unwrap();
+        let length = usize::from_str_radix(std::str::from_utf8(&prefix).unwrap(), 16).unwrap();
+        let mut body = vec![0; length];
+        socket.read_exact(&mut body).await.unwrap();
+        String::from_utf8(body).unwrap()
+    }
+
+    fn png() -> Vec<u8> {
+        let mut bytes = Vec::new();
+        image::codecs::png::PngEncoder::new(&mut bytes)
+            .write_image(
+                &[
+                    255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+                ],
+                2,
+                2,
+                image::ExtendedColorType::Rgba8,
+            )
+            .unwrap();
+        bytes
+    }
+
+    #[tokio::test]
+    async fn preview_loop_encodes_a_stream_frame() {
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let frame = png();
+        let server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            assert_eq!(request(&mut socket).await, "host:transport:phone-A");
+            socket.write_all(b"OKAY").await.unwrap();
+            let service = request(&mut socket).await;
+            assert!(service.starts_with("shell,v2,raw:while true; do screencap -p"));
+            socket.write_all(b"OKAY").await.unwrap();
+            socket.write_u8(1).await.unwrap();
+            socket.write_u32_le(frame.len() as u32).await.unwrap();
+            socket.write_all(&frame).await.unwrap();
+            tokio::time::sleep(Duration::from_secs(5)).await;
+        });
+        let controller = Controller::new(Adb::new(address), None, false);
+        let cancel = CancellationToken::new();
+        let (sender, mut receiver) = tokio::sync::mpsc::unbounded_channel();
+        let task = tokio::spawn(preview_loop(
+            controller,
+            "phone-A".into(),
+            cancel.clone(),
+            move |frame| {
+                let _ = sender.send(frame);
+            },
+        ));
+        let frame = tokio::time::timeout(Duration::from_secs(2), receiver.recv())
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(frame.serial, "phone-A");
+        assert_eq!(frame.sequence, 1);
+        assert!(frame.width > 0 && frame.height > 0);
+        assert!(frame.data_url.starts_with("data:image/jpeg;base64,"));
+        cancel.cancel();
+        assert!(task.await.unwrap().is_ok());
+        server.abort();
+    }
 }
