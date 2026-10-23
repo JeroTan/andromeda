@@ -202,3 +202,32 @@ async fn persistent_stream_times_out_without_a_complete_frame() {
     assert_eq!(error.code, "stream_timeout");
     server.abort();
 }
+
+#[tokio::test]
+async fn persistent_stream_startup_has_a_deadline_even_when_adb_never_acknowledges() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let adb = Adb::new(listener.local_addr().unwrap());
+    let (connected, ready) = tokio::sync::oneshot::channel();
+    let server = tokio::spawn(async move {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        assert_eq!(
+            support::request(&mut socket).await,
+            "host:transport:phone-A"
+        );
+        let _ = connected.send(());
+        std::future::pending::<()>().await;
+    });
+    let startup = tokio::spawn(async move { adb.stream("phone-A", 0).await });
+    ready.await.unwrap();
+    tokio::time::pause();
+    tokio::time::advance(Duration::from_secs(11)).await;
+    let result = tokio::time::timeout(Duration::from_millis(1), startup)
+        .await
+        .expect("The stream startup must not wait indefinitely on the ADB handshake")
+        .unwrap();
+    match result {
+        Err(error) => assert_eq!(error.code, "stream_start_timeout"),
+        Ok(_) => panic!("A stalled handshake cannot open a stream"),
+    }
+    server.abort();
+}

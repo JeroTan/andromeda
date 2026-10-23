@@ -4,6 +4,8 @@ Changes should keep device control independent of the MCP adapter. Start with th
 
 Use conventional titles such as `feat: add companion gestures`, `fix: reject rotated coordinates`, or `docs: explain device setup`. Use corresponding branch names such as `feat/companion-gestures`.
 
+GitHub Actions is disabled at the operator's request because of hosted-run costs. Keep the workflow manual-only; re-enabling or dispatching it requires a new explicit user instruction. Validate changes locally and record any platform checks that remain unverified.
+
 Run `cargo fmt --check`, `cargo clippy --all-targets -- -D warnings`, and `cargo test --all-targets`. Tests belong at the public MCP interface, reusable device API, or companion protocol. A simulated ADB server can exercise framing and failure behavior. Use an authorized device for Android behavior; do not describe a fixture as a physical test.
 
 Validate full batches before the first input. Bound device output, durations and concurrency. Treat action failures as uncertain outcomes; do not retry input automatically. Avoid logging text, UI content, screenshots, pairing secrets or device identifiers. Keep stdout reserved for MCP messages.

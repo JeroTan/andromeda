@@ -71,3 +71,14 @@ test("reports a missing desktop build", { skip }, () => {
   assert.equal(result.status, 1);
   assert.match(result.stderr, /no desktop executable found/);
 });
+
+test("passes desktop flags through without interpreting them as launcher flags", { skip }, () => {
+  const fixture = fakeDesktop('#!/bin/sh\nprintf "%s" "$*" > "$MARKER"\n');
+  const marker = join(fixture.directory, "desktop-flags.txt");
+  const result = run(["--", "--help", "--version", "--print-path"], {
+    ANDROMEDA_DESKTOP_BIN: fixture.path,
+    MARKER: marker,
+  });
+  assert.equal(result.status, 0);
+  assert.equal(readFileSync(marker, "utf8"), "--help --version --print-path");
+});

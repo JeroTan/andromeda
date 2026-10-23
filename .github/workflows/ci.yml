@@ -1,8 +1,6 @@
 name: CI
 on:
-  push:
-    branches: [main]
-  pull_request:
+  # Operator requested manual execution only because hosted runs consume quota.
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "device_model": "OnePlus CPH2653",
+  "android_version": "16",
+  "api_level": 36,
+  "screen": {
+    "width": 1080,
+    "height": 2376,
+    "rotation": 0
+  },
+  "transport": "USB",
+  "host_os": "Darwin",
+  "host_arch": "arm64",
+  "workload": "alternating native raw/PNG screencap through external adb exec-out",
+  "adb_version": [
+    "Android Debug Bridge version 1.0.41",
+    "Version 37.0.1-15733141"
+  ],
+  "warmup_samples": 0,
+  "samples_per_format": 3,
+  "samples": [
+    {
+      "format": "raw",
+      "sample": 0,
+      "elapsed_ms": 708.598,
+      "bytes": 10264336,
+      "header": [
+        1080,
+        2376,
+        1,
+        1
+      ]
+    },
+    {
+      "format": "png",
+      "sample": 0,
+      "elapsed_ms": 1054.456,
+      "bytes": 1245883
+    },
+    {
+      "format": "raw",
+      "sample": 1,
+      "elapsed_ms": 726.168,
+      "bytes": 10264336,
+      "header": [
+        1080,
+        2376,
+        1,
+        1
+      ]
+    },
+    {
+      "format": "png",
+      "sample": 1,
+      "elapsed_ms": 1031.627,
+      "bytes": 1256319
+    },
+    {
+      "format": "raw",
+      "sample": 2,
+      "elapsed_ms": 678.682,
+      "bytes": 10264336,
+      "header": [
+        1080,
+        2376,
+        1,
+        1
+      ]
+    },
+    {
+      "format": "png",
+      "sample": 2,
+      "elapsed_ms": 1160.475,
+      "bytes": 1250368
+    }
+  ],
+  "limitations": [
+    "Exploratory current dynamic screen, not matched pixels or a controlled thermal/power run.",
+    "Includes adb process startup and device capture/transfer; excludes image processing, MCP transport and model time.",
+    "No image pixels, device serials or account content are retained.",
+    "These samples do not establish sub-500 ms capture or a product comparison."
+  ]
+}

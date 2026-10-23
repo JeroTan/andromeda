@@ -102,7 +102,7 @@ At code head `151cd43`, [PR CI run 39759622974](https://github.com/JeroTan/andro
 
 [PR #2](https://github.com/JeroTan/andromeda/pull/2) merged as `5b3f8cd` after all seven jobs passed at `7ba7c17` in run 39762860792. Its feature branch was deleted locally and remotely, and the acceptance app process was closed. Phone bridge implementation continues on `feat/android-companion`; no release has been published.
 
-Phone PR #3 is open at `b496246`. Core and desktop checks passed its first run; Android setup failed because its action requested the removed `tools` SDK package. The workflow now installs `platform-tools` explicitly. A listener lifecycle race found during standards review was fixed with coordinated socket ownership and final cleanup; five emulator disable/re-enable cycles passed through the public ADB companion protocol. The reviewer agents exhausted their account allowance before completing their final reports, so final review remains open.
+Phone PR #3 originally opened before the follow-up integration. Its initial Android setup failed because the action requested the removed `tools` SDK package. The workflow now installs `platform-tools` explicitly. A listener lifecycle race found during standards review was fixed with coordinated socket ownership and final cleanup; five emulator disable/re-enable cycles passed through the public ADB companion protocol. The reviewer agents exhausted their account allowance before completing their final reports, so final review remains open.
 
 Physical acceptance on 2026-10-23 passed on the connected OnePlus: paired after the owner granted accessibility, dispatched two concurrent pointers for 450 ms, inserted exact Unicode text, cleared the test text and stopped the session. Subsequent companion input returned `session_inactive`. See [physical evidence](evidence/physical-companion-2026-10-23.json). Physical session timer, landscape/rotation and partial TalkBack checks were repeated on the final build; see [physical UI evidence](evidence/physical-ui-2026-10-23.json). Both review agents resumed after reset and verified their fixes; see [companion review](evidence/companion-review.md). CI remains pending.
 
@@ -165,8 +165,8 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 
 ### 7. PR review and merge — needs a push/review decision
 
-- The current `feat/android-companion` branch is ahead of `origin/feat/android-companion` by one commit; all work in this session is uncommitted. PR #3 is open at `b496246`.
-- Push/update the branch, run the full PR CI (core, desktop, launcher and Android emulator jobs), complete both review axes and merge with a conventional title. Do not merge until the physical/accessibility gates above are either passed or explicitly waived.
+- The phone/capture/desktop integration is committed on `feat/android-companion` and tracked in PR #3. Hosted Actions is disabled by the operator; use the latest local validation and review records below.
+- Update the branch with review fixes, complete both review axes and record local validation before merge. Keep full physical accessibility and release gates open until verified. Hosted platform reruns require a new explicit operator instruction.
 
 ### 8. Cleanup — needs a keep/remove decision
 
@@ -184,3 +184,13 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - Verified the long-view tool on the physical game's skill list, and used bounded existing batches to continue the unfinished career. Detailed daily completion is recorded separately after verifying the remaining mission state.
 - Corrected the handoff's expiry claim: the existing smoke checks timer selection/persistence and manual Stop, not a full elapsed-time expiry.
 - These changes and the inherited changes still require full PR CI and review; no release-completion claim is made.
+
+
+## Local validation and CI policy on 2026-10-23
+
+- The operator requested that hosted Actions stop because of costs. No queued/running runs remained at cancellation time; workflow `CI` was then confirmed `disabled_manually`. The YAML now has only `workflow_dispatch`. Re-enabling or running it requires a new explicit operator instruction.
+- The last hosted run, 39910602068 at `216b19d`, passed launcher, all three desktop packages, and Rust on Linux stable/MSRV and macOS. Windows failed two codec tests because oversized debug fixtures exceeded tool deadlines; those fixtures now use a small image while retaining pixel/dimension/scaling assertions. Android failed during emulator boot, before the smoke script ran. Neither failure is relabeled as a hosted pass.
+- Review fixes add a deadline covering stream startup, generation-fenced preview events, event registration before startup, cancellation checks before emission, fractional FPS and correct launcher passthrough flags. Stop also invalidates a superseded native startup.
+- Local `cargo test --locked --workspace --all-targets` passes after these fixes, as do the optional AVIF checks, desktop build/Clippy and six launcher checks. Native Windows and the failed hosted emulator boot have not been rerun. GitHub Actions stays disabled.
+- The user completed Umamusume dailies personally and ended that automation scope. No further game actions are authorized by that completed task.
+- See [capture investigation](research/low-latency-capture.md) for measured limits and the proposed video backend. Native screenrecord did not produce usable frames and required an operator restart to clear two stalled test processes; the restart was verified. No low-latency success is claimed.

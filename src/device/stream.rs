@@ -32,9 +32,17 @@ impl Adb {
                 interval_ms as f64 / 1000.0
             )
         };
-        let socket = self
-            .service(serial, &format!("shell,v2,raw:{command}"))
-            .await?;
+        let socket = tokio::time::timeout(
+            Duration::from_secs(10),
+            self.service(serial, &format!("shell,v2,raw:{command}")),
+        )
+        .await
+        .map_err(|_| {
+            Error::new(
+                "stream_start_timeout",
+                "Opening the capture stream exceeded its 10-second ADB handshake deadline",
+            )
+        })??;
         Ok(ScreenStream {
             shell: ShellStream {
                 socket,

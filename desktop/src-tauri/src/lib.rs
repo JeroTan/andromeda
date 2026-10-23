@@ -40,12 +40,12 @@ struct AppState {
 }
 
 fn stop_preview_task(state: &AppState) {
-    if let Some(task) = state
+    let mut preview = state
         .preview
         .lock()
-        .unwrap_or_else(|e| e.into_inner())
-        .take()
-    {
+        .unwrap_or_else(|error| error.into_inner());
+    state.next_preview.fetch_add(1, Ordering::SeqCst);
+    if let Some(task) = preview.take() {
         task.cancel.cancel();
     }
 }
@@ -369,6 +369,7 @@ async fn capture_preview(state: State<'_, AppState>, id: String) -> Result<Previ
 
 #[derive(Clone, Serialize)]
 struct PreviewFrame {
+    generation: String,
     serial: String,
     data_url: String,
     elapsed_ms: f64,
@@ -382,6 +383,7 @@ async fn preview_loop<F>(
     controller: Controller,
     serial: String,
     cancel: CancellationToken,
+    generation: String,
     mut emit: F,
 ) -> Result<()>
 where
@@ -419,8 +421,12 @@ where
         .await
         .map_err(|error| Error::new("image_encoding", error.to_string()))??;
         let encode_ms = started.elapsed().as_secs_f64() * 1000.0;
+        if cancel.is_cancelled() {
+            return Ok(());
+        }
         sequence += 1;
         emit(PreviewFrame {
+            generation: generation.clone(),
             serial: serial.clone(),
             data_url: format!(
                 "data:{};base64,{}",
@@ -441,21 +447,42 @@ async fn start_preview(
     app: tauri::AppHandle,
     state: State<'_, AppState>,
     id: String,
+    generation: String,
 ) -> Result<()> {
+    let requested_generation = state.next_preview.load(Ordering::SeqCst);
+    if generation.is_empty()
+        || generation.len() > 64
+        || !generation
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-')
+    {
+        return Err(Error::invalid(
+            "Preview generation must be a bounded request identifier",
+        ));
+    }
     let project = state.registry.get(&id)?;
     let serial = project
         .serial
         .ok_or_else(|| Error::new("device_required", "Select and save a device first"))?;
-    stop_preview_task(state.inner());
-    let generation = state.next_preview.fetch_add(1, Ordering::Relaxed);
     let cancel = CancellationToken::new();
+    let task_generation;
     {
         let mut preview = state
             .preview
             .lock()
             .unwrap_or_else(|error| error.into_inner());
+        if state.next_preview.load(Ordering::SeqCst) != requested_generation {
+            return Err(Error::new(
+                "cancelled",
+                "Preview startup was superseded by a stop or a newer request",
+            ));
+        }
+        if let Some(previous) = preview.take() {
+            previous.cancel.cancel();
+        }
+        task_generation = state.next_preview.fetch_add(1, Ordering::SeqCst);
         *preview = Some(PreviewTask {
-            generation,
+            generation: task_generation,
             cancel: cancel.clone(),
         });
     }
@@ -463,16 +490,29 @@ async fn start_preview(
     let app_handle = app.clone();
     let emit_handle = app.clone();
     tauri::async_runtime::spawn(async move {
-        let result = preview_loop(controller, serial.clone(), cancel, move |frame| {
-            let _ = emit_handle.emit("preview-frame", frame);
-        })
+        let frame_cancel = cancel.clone();
+        let result = preview_loop(
+            controller,
+            serial.clone(),
+            cancel.clone(),
+            generation.clone(),
+            move |frame| {
+                if let Some(state) = emit_handle.try_state::<AppState>() {
+                    let current = state
+                        .preview
+                        .lock()
+                        .unwrap_or_else(|error| error.into_inner());
+                    if !frame_cancel.is_cancelled()
+                        && current
+                            .as_ref()
+                            .is_some_and(|task| task.generation == task_generation)
+                    {
+                        let _ = emit_handle.emit("preview-frame", frame);
+                    }
+                }
+            },
+        )
         .await;
-        if let Err(error) = result {
-            let _ = app_handle.emit(
-                "preview-error",
-                json!({"serial": serial, "code": error.code, "message": error.message}),
-            );
-        }
         if let Some(state) = app_handle.try_state::<AppState>() {
             let mut preview = state
                 .preview
@@ -480,8 +520,13 @@ async fn start_preview(
                 .unwrap_or_else(|error| error.into_inner());
             if preview
                 .as_ref()
-                .is_some_and(|task| task.generation == generation)
+                .is_some_and(|task| task.generation == task_generation)
             {
+                if !cancel.is_cancelled()
+                    && let Err(error) = result
+                {
+                    let _ = app_handle.emit("preview-error", json!({"generation":generation,"serial": serial, "code": error.code, "message": error.message}));
+                }
                 *preview = None;
             }
         }
@@ -619,6 +664,7 @@ mod tests {
             controller,
             "phone-A".into(),
             cancel.clone(),
+            "test-preview".into(),
             move |frame| {
                 let _ = sender.send(frame);
             },
@@ -629,6 +675,7 @@ mod tests {
             .unwrap();
         assert_eq!(frame.serial, "phone-A");
         assert_eq!(frame.sequence, 1);
+        assert_eq!(frame.generation, "test-preview");
         assert!(frame.width > 0 && frame.height > 0);
         assert!(frame.data_url.starts_with("data:image/jpeg;base64,"));
         cancel.cancel();

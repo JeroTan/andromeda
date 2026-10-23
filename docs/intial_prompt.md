@@ -607,3 +607,7 @@ Build an interface that lets your AI figure out the rest.
 - Investigate adaptive held gestures as a separate controller capability: one owner per device, explicit bounded gesture lease, continuation updates, a local expiry/watchdog and release on Stop/disconnect. Planning agents may propose updates; the local controller owns precise timing and arbitration. Do not use model or subagent response time as an input-timing guarantee. This remains a planned capability until implemented and tested through the public companion protocol.
 
 - Support compressed screen output using lossy/lossless WebP and an optional AVIF encoder. Measure payload size and processing cost on the same source. Offer automatic selection among compatible PNG/JPEG/WebP encodings, reporting the chosen MIME type; never choose AVIF automatically for ordinary vision clients. Preserve image/native coordinate mapping. Keep lossless output explicit and document codec-specific quality settings and client compatibility.
+
+### Testing policy updated on 2026-10-23
+
+The operator cancelled GitHub Actions because of hosted-run costs. Keep Actions disabled and the workflow manual-only until the operator explicitly asks to enable or run it. Use appropriate local checks, including the available Android Studio/emulator, and clearly distinguish local validation from unverified platform checks. This overrides the earlier preference for full PR suites on GitHub.

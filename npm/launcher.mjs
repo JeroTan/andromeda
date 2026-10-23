@@ -113,11 +113,14 @@ function resolveDesktop() {
 }
 
 const args = process.argv.slice(2);
-if (args.includes("--help") || args.includes("-h")) {
+const separator = args.indexOf("--");
+const launcherArgs = separator === -1 ? args : args.slice(0, separator);
+const passthrough = separator === -1 ? [] : args.slice(separator + 1);
+if (launcherArgs.includes("--help") || launcherArgs.includes("-h")) {
   help();
   process.exit(0);
 }
-if (args.includes("--version") || args.includes("-v")) {
+if (launcherArgs.includes("--version") || launcherArgs.includes("-v")) {
   console.log(packageJson.version);
   process.exit(0);
 }
@@ -132,13 +135,11 @@ Build the interface first:
 Or set ANDROMEDA_DESKTOP_BIN to an absolute executable path.`);
   process.exit(1);
 }
-if (args.includes("--print-path")) {
+if (launcherArgs.includes("--print-path")) {
   console.log(desktop);
   process.exit(0);
 }
-const separator = args.indexOf("--");
-const passthrough = separator === -1 ? [] : args.slice(separator + 1);
-const unexpected = separator === -1 ? args : args.slice(0, separator);
+const unexpected = launcherArgs;
 if (unexpected.length > 0) {
   console.error(`andromeda: unexpected arguments: ${unexpected.join(" ")}\n`);
   help();

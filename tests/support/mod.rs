@@ -44,6 +44,11 @@ impl DeviceFixture {
         let address = listener.local_addr().unwrap();
         let commands = Arc::new(Mutex::new(Vec::new()));
         let observed = commands.clone();
+        let dimensions = png
+            .as_ref()
+            .map(|bytes| image::load_from_memory(bytes).unwrap())
+            .map(|image| (image.width(), image.height()))
+            .unwrap_or((1080, 2400));
         let task = tokio::spawn(async move {
             while let Ok((mut socket, _)) = listener.accept().await {
                 let service = request(&mut socket).await;
@@ -63,7 +68,7 @@ impl DeviceFixture {
                 observed.lock().unwrap().push(command.clone());
                 socket.write_all(b"OKAY").await.unwrap();
                 let output=match command.as_str() {
-                    "wm size && dumpsys input"=>format!("Physical size: 1080x2400\nSurfaceOrientation: {rotation}\n"),
+                    "wm size && dumpsys input"=>format!("Physical size: {}x{}\nSurfaceOrientation: {rotation}\n", dimensions.0, dimensions.1),
                     command if command.contains("uiautomator dump")=>"<?xml version=\"1.0\"?><hierarchy rotation=\"0\"><node text=\"Settings\" enabled=\"true\" bounds=\"[0,0][1080,100]\"><node text=\"secret\" password=\"true\"/><node text=\"Display &amp; brightness\" resource-id=\"android:id/title\" enabled=\"true\"/></node></hierarchy>".into(),
                     _=>String::new(),
                 };

@@ -51,12 +51,18 @@ type Change = {
 type Instructions = { path: string; content: string | null; starter: string };
 type Preview = { data_url: string; elapsed_ms: number; serial: string };
 type PreviewFrame = Preview & {
+  generation: string;
   encode_ms: number;
   sequence: number;
   width: number;
   height: number;
 };
-type PreviewError = { serial: string; code: string; message: string };
+type PreviewError = {
+  generation: string;
+  serial: string;
+  code: string;
+  message: string;
+};
 type DialogState =
   | { kind: "connection"; client: string; change: Change }
   | { kind: "instructions"; project: Project; document: Instructions }
@@ -209,7 +215,8 @@ function App() {
   const [bridgeStatus, setBridgeStatus] = useState("");
   const previewGeneration = useRef(0);
   const liveRef = useRef(false);
-  liveRef.current = live;
+  const liveGeneration = useRef<string | null>(null);
+  const previewEventsReady = useRef<Promise<void>>(Promise.resolve());
   const serialRef = useRef<string | null>(null);
   const [theme, setTheme] = useState(
     () => localStorage.getItem("andromeda-theme") || "light",
@@ -274,6 +281,8 @@ function App() {
   useEffect(() => {
     setDraft(data?.projects.find((p) => p.id === selected) || null);
     setPreview(null);
+    liveRef.current = false;
+    liveGeneration.current = null;
     setLive(false);
     setLiveError("");
     setBridgeStatus("");
@@ -283,23 +292,45 @@ function App() {
   useEffect(() => {
     let disposed = false;
     const unlisteners: Array<() => void> = [];
+    const registrations: Array<Promise<void>> = [];
     function register<T>(name: string, handler: (payload: T) => void) {
-      void listen<T>(name, (event) => {
-        if (!disposed) handler(event.payload);
-      }).then((unlisten) => {
-        if (disposed) unlisten();
-        else unlisteners.push(unlisten);
-      });
+      registrations.push(
+        listen<T>(name, (event) => {
+          if (!disposed) handler(event.payload);
+        }).then((unlisten) => {
+          if (disposed) unlisten();
+          else unlisteners.push(unlisten);
+        }),
+      );
     }
     register<PreviewFrame>("preview-frame", (frame) => {
-      if (!liveRef.current || frame.serial !== serialRef.current) return;
+      if (
+        !liveRef.current ||
+        frame.generation !== liveGeneration.current ||
+        frame.serial !== serialRef.current
+      )
+        return;
       setPreview(frame);
       setLiveError("");
+      if (frame.sequence === 1)
+        setNotice("Live preview started. It runs until you stop it.");
     });
     register<PreviewError>("preview-error", (error) => {
-      if (!liveRef.current || error.serial !== serialRef.current) return;
+      if (
+        !liveRef.current ||
+        error.generation !== liveGeneration.current ||
+        error.serial !== serialRef.current
+      )
+        return;
+      liveRef.current = false;
+      liveGeneration.current = null;
       setLive(false);
+      setNotice("");
       setLiveError(error.message);
+    });
+    previewEventsReady.current = Promise.all(registrations).then(() => {});
+    void previewEventsReady.current.catch((error) => {
+      if (!disposed) setError(message(error));
     });
     return () => {
       disposed = true;
@@ -308,6 +339,8 @@ function App() {
   }, []);
   useEffect(
     () => () => {
+      liveGeneration.current = null;
+      liveRef.current = false;
       void invoke("stop_preview").catch(() => {});
     },
     [],
@@ -355,6 +388,7 @@ function App() {
         previewGeneration.current += 1;
         setPreview(null);
         liveRef.current = false;
+        liveGeneration.current = null;
         setLive(false);
         setLiveError("");
       }
@@ -387,22 +421,37 @@ function App() {
   }
   async function startLive() {
     if (!project?.serial) return;
+    const generation = Array.from(
+      crypto.getRandomValues(new Uint8Array(16)),
+      (byte) => byte.toString(16).padStart(2, "0"),
+    ).join("");
     setBusy("live");
     setError("");
-    setNotice("");
+    setNotice("Starting live preview…");
+    setPreview(null);
     setLiveError("");
+    // Accept matching errors/frames before native startup can emit an event.
+    liveGeneration.current = generation;
+    liveRef.current = true;
+    setLive(true);
     try {
-      await invoke("start_preview", { id: project.id });
-      liveRef.current = true;
-      setLive(true);
-      setNotice("Live preview started. It runs until you stop it.");
+      await previewEventsReady.current;
+      if (liveGeneration.current !== generation || !liveRef.current) return;
+      await invoke("start_preview", { id: project.id, generation });
     } catch (error) {
-      setError(message(error));
+      if (liveGeneration.current === generation) {
+        liveGeneration.current = null;
+        liveRef.current = false;
+        setLive(false);
+        setNotice("");
+        setError(message(error));
+      }
     } finally {
       setBusy("");
     }
   }
   async function stopLive() {
+    liveGeneration.current = null;
     liveRef.current = false;
     setLive(false);
     await invoke("stop_preview").catch(() => {});
@@ -971,7 +1020,7 @@ function App() {
                         <p className="field-hint" role="status">
                           {live ? "Live" : "Snapshot"} · {preview.serial} ·{" "}
                           {live
-                            ? `${Math.max(1, Math.round(1000 / Math.max(preview.elapsed_ms, 1)))} fps`
+                            ? `${(1000 / Math.max(preview.elapsed_ms, 1)).toFixed(2)} fps`
                             : `${Math.round(preview.elapsed_ms)} ms`}
                         </p>
                       </>
@@ -1169,6 +1218,8 @@ function App() {
                       }
                       previewGeneration.current += 1;
                       setPreview(null);
+                      liveGeneration.current = null;
+                      liveRef.current = false;
                       setLive(false);
                       setLiveError("");
                       setDialog(null);

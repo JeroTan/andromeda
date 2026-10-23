@@ -5,7 +5,7 @@ use tokio_util::sync::CancellationToken;
 mod support;
 
 async fn server() -> (support::DeviceFixture, Server) {
-    let pixels = image::RgbaImage::from_pixel(1080, 2400, image::Rgba([23, 45, 67, 255]));
+    let pixels = image::RgbaImage::from_pixel(108, 240, image::Rgba([23, 45, 67, 255]));
     let mut png = std::io::Cursor::new(Vec::new());
     pixels.write_to(&mut png, image::ImageFormat::Png).unwrap();
     let fixture = support::DeviceFixture::with_capture(png.into_inner()).await;
@@ -37,8 +37,8 @@ async fn webp_capture_is_a_decodable_lossless_mcp_image_with_native_coordinates(
         .decode(&image.data)
         .unwrap();
     let decoded = image::load_from_memory(&bytes).unwrap().to_rgba8();
-    assert_eq!(decoded.dimensions(), (1080, 2400));
-    assert_eq!(decoded.get_pixel(500, 1000).0, [23, 45, 67, 255]);
+    assert_eq!(decoded.dimensions(), (108, 240));
+    assert_eq!(decoded.get_pixel(50, 100).0, [23, 45, 67, 255]);
     assert_eq!(content["data"]["scale_to_screen"]["x"], 1.0);
 }
 
@@ -50,7 +50,7 @@ async fn automatic_capture_chooses_the_smallest_compatible_encoding() {
         let result = server
             .call(
                 "adm_get_view",
-                json!({"image":{"format":format,"max_width":360,"quality":80}}),
+                json!({"image":{"format":format,"max_width":36,"quality":80}}),
                 CancellationToken::new(),
             )
             .await;
@@ -64,7 +64,7 @@ async fn automatic_capture_chooses_the_smallest_compatible_encoding() {
     let result = server
         .call(
             "adm_get_view",
-            json!({"image":{"format":"auto","max_width":360,"quality":80}}),
+            json!({"image":{"format":"auto","max_width":36,"quality":80}}),
             CancellationToken::new(),
         )
         .await;
@@ -138,7 +138,7 @@ async fn lossy_webp_honors_the_requested_dimensions_and_returns_valid_pixels() {
     let result = server
         .call(
             "adm_get_view",
-            json!({"image":{"format":"webp","max_width":360,"quality":80}}),
+            json!({"image":{"format":"webp","max_width":36,"quality":80}}),
             CancellationToken::new(),
         )
         .await;
@@ -154,8 +154,8 @@ async fn lossy_webp_honors_the_requested_dimensions_and_returns_valid_pixels() {
         .decode(&image.data)
         .unwrap();
     let pixels = image::load_from_memory(&bytes).unwrap().to_rgba8();
-    assert_eq!(pixels.dimensions(), (360, 800));
-    for (actual, expected) in pixels.get_pixel(180, 400).0.iter().zip([23u8, 45, 67, 255]) {
+    assert_eq!(pixels.dimensions(), (36, 80));
+    for (actual, expected) in pixels.get_pixel(18, 40).0.iter().zip([23u8, 45, 67, 255]) {
         assert!(actual.abs_diff(expected) <= 8);
     }
     assert_eq!(content["data"]["scale_to_screen"]["x"], 3.0);
