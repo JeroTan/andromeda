@@ -1,0 +1,34 @@
+{
+  "phone_stop_overrode_older_resume": true,
+  "counter_floor_above_200": true,
+  "fresh_desktop_start_arms_phone_without_tap": true,
+  "heartbeat_loss_paused_seconds": 4.249,
+  "input_after_heartbeat_loss_rejected": true,
+  "date": "2026-10-23",
+  "source_commit": "ca671b3",
+  "platforms": {
+    "desktop": "macOS arm64 development bundle",
+    "phone": "OnePlus CPH2653, Android 16/API 36, USB"
+  },
+  "installed_desktop_updated": true,
+  "installed_phone_updated": true,
+  "existing_accessibility_grant_reused": true,
+  "pairing_repaired_once": true,
+  "physical_checks": {
+    "desktop_start_automatically_armed_phone": true,
+    "phone_pause_mirrored_to_desktop": true,
+    "paused_managed_mcp_input_error": "project_paused",
+    "phone_resume_mirrored_to_desktop": true,
+    "desktop_stop_mirrored_to_phone": true,
+    "stopped_managed_mcp_input_error": "project_stopped",
+    "allowed_mcp_home_key_without_approval": true,
+    "single_home_key_round_trip_ms": 44.9
+  },
+  "limits": [
+    "One Home-key sample is acceptance evidence, not a latency benchmark.",
+    "No game actions, native screenrecord or hosted CI runs.",
+    "Windows/Linux native UI and full human TalkBack traversal were not tested for this change.",
+    "Optional 15-minute timer expiry was not waited out."
+  ],
+  "screenshots_committed": false
+}
