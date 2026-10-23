@@ -42,13 +42,13 @@ The agent receives an image or accessible UI nodes, chooses an action, then obse
 | --- | --- |
 | Observe | `adm_list_devices`, `adm_get_device_info`, `adm_get_view`, `adm_get_ui_tree`, `adm_list_apps` |
 | Interact | `adm_touch`, `adm_touch_many`, `adm_swipe`, `adm_swipe_many`, `adm_press_key`, `adm_type_text` |
-| Coordinate | `adm_multi_touch`, `adm_launch_app`, `adm_open_uri`, `adm_wait_for`, `adm_batch_actions`, `adm_stop` |
+| Coordinate | `adm_multi_touch`, `adm_launch_app`, `adm_open_uri`, `adm_wait_for`, `adm_batch_actions`, `adm_get_long_view`, `adm_stop` |
 
 Coordinates use native screen pixels, with `(0, 0)` at the top left of the current orientation. Capture results include dimensions and scale factors. Touch and swipe calls require observed geometry and reject a changed size or rotation.
 
 ## Performance and reliability
 
-The device layer opens ADB services directly, without launching a host `adb` process for each tool call. Requests have deadlines and bounded output. `adm_stop` cancels active work, and failed input is never retried automatically. Screenshots can be scaled and encoded as PNG or JPEG.
+The device layer opens ADB services directly, without launching a host `adb` process for each tool call. Requests have deadlines and bounded output. `adm_stop` cancels active work, and failed input is never retried automatically. Screenshots support PNG, JPEG, lossy/lossless WebP and automatic compatible size selection. AVIF is an optional build feature for compatible clients/exports. The scrolling-view tool collects a bounded list scan; reobserve before using coordinates from earlier pages.
 
 The capture, persistent-stream and input benchmark harness, plus Android 17 emulator and OnePlus physical baselines, are in [benchmarks](benchmarks/README.md). Matched open-source comparisons remain future work. There is no claim that Andromeda is the fastest Android MCP implementation.
 

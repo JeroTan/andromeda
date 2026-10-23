@@ -30,7 +30,7 @@ pub struct Options {
     pub max_height: Option<u32>,
     #[serde(default)]
     pub format: Format,
-    /// JPEG quality 1..=100. Defaults to 80.
+    /// JPEG/WebP/AVIF quality 1..=100, default 80. Lossless formats ignore it.
     pub quality: Option<u8>,
 }
 
@@ -49,7 +49,7 @@ impl Options {
             || self.quality.is_some_and(|q| q == 0 || q > 100)
         {
             return Err(Error::invalid(
-                "Image dimensions must be 1..=8192 and JPEG quality 1..=100",
+                "Image dimensions must be 1..=8192 and quality 1..=100",
             ));
         }
         Ok(())

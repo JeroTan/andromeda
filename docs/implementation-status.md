@@ -21,7 +21,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 
 - [x] Accessibility trees and UI/visual waiting
 - [x] Explicit persistent screen streaming (desktop live preview over one shell-v2 capture loop; MCP remains request/response)
-- [x] Screenshot resizing/compression (PNG/JPEG, bounded dimensions and JPEG quality)
+- [x] Screenshot resizing/compression (PNG/JPEG/WebP/auto and optional AVIF, bounded dimensions and quality)
 - [x] Rotation rejection and disconnect/reconnect behavior
 - [x] Cancellation, action logs, permissions and human approval controls
 - [x] Companion APK build and emulator permission/UI validation (physical evidence recorded below; release checks remain open)
@@ -72,7 +72,7 @@ The core was merged through [PR #1](https://github.com/JeroTan/andromeda/pull/1)
 
 Repository and instruction files were inspected; no prior implementation, coding standards, issues or PRs needed reconciliation. Agent instruction files were empty. The triage skill's issue-label workflow does not apply to the supplied specification.
 
-The merged core contains 16 tools. The companion branch adds `adm_multi_touch` as the seventeenth and integrates Unicode input, pairing and the phone UI. This branch is not yet reviewed or merged. Persistent capture and the schema-v2 benchmark harness are implemented; matched open-source comparisons, remaining client/device checks and the final release remain in scope and are not complete. Desktop additions have separate platform/UX gates. The full goal remains active.
+The merged core contains 16 tools. PR #3 adds `adm_multi_touch` and `adm_get_long_view` (18 total), Unicode input, pairing, the phone UI, persistent capture and compressed output. Both review axes found preview/launcher defects; the fixes passed their follow-up reviews. Local validation is recorded below. Matched open-source comparisons, remaining client/device checks and final release packaging remain incomplete; desktop additions retain platform/UX gates. The overall release scope is not complete.
 
 ## User additions and workflow preferences
 
@@ -194,3 +194,5 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - Local `cargo test --locked --workspace --all-targets` passes after these fixes, as do the optional AVIF checks, desktop build/Clippy and six launcher checks. Native Windows and the failed hosted emulator boot have not been rerun. GitHub Actions stays disabled.
 - The user completed Umamusume dailies personally and ended that automation scope. No further game actions are authorized by that completed task.
 - See [capture investigation](research/low-latency-capture.md) for measured limits and the proposed video backend. Native screenrecord did not produce usable frames and required an operator restart to clear two stalled test processes; the restart was verified. No low-latency success is claimed.
+
+- Follow-up Standards and Spec reviews of `216b19d` → `60285e9` confirmed the preview/launcher fixes with no actionable findings. They were read-only reviews and did not run CI or phone actions.

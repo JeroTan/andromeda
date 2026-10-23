@@ -18,3 +18,5 @@ The initial reviewer runs exhausted their usage allowance. Both resumed after re
 ## Follow-up review of `216b19d`
 
 Both review axes identified preview lifecycle issues in the inherited integration: unbounded startup, immediate errors racing UI startup, and stale events affecting a replacement stream. Spec review also found a minimum-1-FPS display that overstated slow capture; standards review found launcher flags consumed after `--`. The follow-up fixes add a startup deadline and public device-API regression, per-preview event identities, event-listener readiness, cancellation/owner checks, fractional frame rates and a public launcher regression. Current local workspace tests pass. Hosted Actions is disabled at the operator's request; platform failures from the last run are recorded rather than reported as resolved remotely.
+
+The final Standards and Spec passes reviewed `216b19d` → `60285e9` independently and found no actionable regressions. Both confirmed startup bounds, event identity/listener readiness, cancellation ownership, fractional FPS and launcher flag handling. They performed no device actions or CI runs.

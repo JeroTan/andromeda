@@ -300,7 +300,7 @@ pub fn tools() -> Vec<Tool> {
         ),
         define::<View>(
             "adm_get_view",
-            "Capture the screen as PNG or JPEG. Coordinates use native screen pixels; multiply scaled-image coordinates by scale_to_screen.",
+            "Capture as PNG (default), JPEG, WebP or smallest-compatible auto. Use image.format=auto and max_width=720 to reduce payloads; webp_lossless preserves pixels. Optional AVIF requires a compatible client/build and is excluded from auto. Coordinates use native screen pixels; multiply scaled-image coordinates by scale_to_screen.",
             true,
         ),
         define::<LongView>(
