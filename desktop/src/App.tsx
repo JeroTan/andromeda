@@ -19,20 +19,22 @@ type Project = {
   enabled: boolean;
 };
 type Tool = { name: string; description: string; read_only: boolean };
-type Approval = {
-  id: number;
-  project_name: string;
-  project_root: string;
-  serial: string | null;
-  tool: string;
-  arguments: unknown;
-  expires_at_ms: number;
+type ProjectSession = {
+  project_id: string;
+  state: "running" | "paused" | "stopped";
+  generation: number;
+};
+type BridgeStatus = {
+  serial: string;
+  connected: boolean;
+  code: string | null;
+  message: string;
 };
 type Snapshot = {
   projects: Project[];
-  paused: boolean;
+  sessions: ProjectSession[];
+  bridges: BridgeStatus[];
   pause_generation: number;
-  approvals: Approval[];
   connections: {
     project_id: string;
     clients: number;
@@ -66,8 +68,7 @@ type PreviewError = {
 type DialogState =
   | { kind: "connection"; client: string; change: Change }
   | { kind: "instructions"; project: Project; document: Instructions }
-  | { kind: "remove"; project: Project }
-  | { kind: "approval"; approval: Approval };
+  | { kind: "remove"; project: Project };
 
 const label = (tool: string) => tool.replace("adm_", "").replace(/_/g, " ");
 const message = (error: unknown) =>
@@ -212,7 +213,6 @@ function App() {
   const [preview, setPreview] = useState<Preview | null>(null);
   const [live, setLive] = useState(false);
   const [liveError, setLiveError] = useState("");
-  const [bridgeStatus, setBridgeStatus] = useState("");
   const previewGeneration = useRef(0);
   const liveRef = useRef(false);
   const liveGeneration = useRef<string | null>(null);
@@ -221,7 +221,6 @@ function App() {
   const [theme, setTheme] = useState(
     () => localStorage.getItem("andromeda-theme") || "light",
   );
-  const [now, setNow] = useState(Date.now());
   const selectedRef = useRef(selected);
   selectedRef.current = selected;
   const project = data?.projects.find((p) => p.id === selected);
@@ -234,7 +233,25 @@ function App() {
     project &&
     JSON.stringify(draft) !== JSON.stringify(project)
   );
-  const paused = data?.paused ?? true;
+  const session = data?.sessions.find((entry) => entry.project_id === selected);
+  const paused = session?.state !== "running";
+  const bridge = data?.bridges.find(
+    (entry) => entry.serial === project?.serial,
+  );
+  const runningCount =
+    data?.sessions.filter((entry) => entry.state === "running").length || 0;
+  async function controlProject(action: ProjectSession["state"]) {
+    if (!project || !session || !data) return;
+    await run("session", async () => {
+      await invoke("project_session", {
+        id: project.id,
+        action,
+        generation: session.generation,
+        globalGeneration: data.pause_generation,
+      });
+      setNotice("");
+    });
+  }
 
   const refresh = useCallback(async () => {
     const state = await invoke<Snapshot>("snapshot");
@@ -266,7 +283,6 @@ function App() {
       } finally {
         running = false;
       }
-      if (active) setNow(Date.now());
     };
     void tick();
     void refreshDevices();
@@ -285,7 +301,6 @@ function App() {
     liveGeneration.current = null;
     setLive(false);
     setLiveError("");
-    setBridgeStatus("");
     previewGeneration.current += 1;
     void invoke("stop_preview").catch(() => {});
   }, [selected]);
@@ -466,26 +481,22 @@ function App() {
       });
   }
   async function stop() {
+    setNotice("Stopping all projects…");
     liveGeneration.current = null;
     liveRef.current = false;
     setLive(false);
     setPreview(null);
     previewGeneration.current += 1;
     try {
-      const count = await invoke<number>("pause");
+      const count = await invoke<number>("emergency_stop");
       setNotice(
-        `Input paused. ${count} managed request${count === 1 ? "" : "s"} cancelled.`,
+        `All projects stopped. ${count} managed request${count === 1 ? "" : "s"} cancelled.`,
       );
       await refresh();
     } catch (error) {
       setError(message(error));
     }
   }
-  const activeApproval =
-    dialog?.kind === "approval"
-      ? data?.approvals.find((a) => a.id === dialog.approval.id)
-      : undefined;
-
   return (
     <div className="app-shell">
       <a className="skip-link" href="#workspace">
@@ -499,16 +510,6 @@ function App() {
           ANDROMEDA<span className="edition">CONTROL / 01</span>
         </div>
         <div className="top-actions">
-          {!!data?.approvals.length && (
-            <button
-              className="primary"
-              onClick={() =>
-                setDialog({ kind: "approval", approval: data.approvals[0] })
-              }
-            >
-              Review {data.approvals.length}
-            </button>
-          )}
           <span className="local-label">ON YOUR COMPUTER</span>
           <button
             className="icon-button"
@@ -519,7 +520,7 @@ function App() {
           </button>
           <button className="stop-button" onClick={() => void stop()}>
             <Icon name="stop" />
-            Stop &amp; pause
+            Stop all projects
           </button>
         </div>
       </header>
@@ -551,38 +552,21 @@ function App() {
             <Orbit />
           </div>
           <aside className="session panel">
-            <span className="eyebrow">THE CONTROLS STAY WITH YOU</span>
+            <span className="eyebrow">PROJECT SESSIONS</span>
             <div className="session-symbol" aria-hidden="true">
-              {paused ? "Ⅱ" : "↗"}
+              ↗
             </div>
-            <h2>{paused ? "Take your time." : "You’re in control."}</h2>
+            <h2>
+              {runningCount
+                ? `${runningCount} running.`
+                : "Ready when you are."}
+            </h2>
             <p>
-              {paused
-                ? "Input is paused. Your agent can use the observation tools you allow."
-                : "Each input request needs your approval here before it reaches the phone."}
+              Start a project once. Its allowed tools run without repeated
+              approval prompts. Each project has its own Pause and Stop.
             </p>
-            <button
-              className="session-action"
-              disabled={!!busy || !data}
-              onClick={() =>
-                paused
-                  ? void run("resume", async () => {
-                      await invoke("resume", {
-                        generation: data?.pause_generation,
-                      });
-                      setNotice(
-                        "Session ready. Input requests will appear for your approval.",
-                      );
-                    })
-                  : void stop()
-              }
-            >
-              {paused ? "Resume session" : "Pause session"}
-              <Icon name={paused ? "arrow" : "stop"} />
-            </button>
             <span className="status">
-              <span className={`status-dot ${paused ? "" : "ready"}`} />
-              {paused ? "INPUT PAUSED" : "AWAITING YOUR APPROVAL"}
+              {runningCount ? "AUTOMATION RUNNING" : "NO RUNNING PROJECTS"}
             </span>
           </aside>
         </section>
@@ -599,32 +583,6 @@ function App() {
             </p>
           )}
         </div>
-        {!!data?.approvals.length && (
-          <section
-            className="approval-banner"
-            aria-label="Requests awaiting approval"
-          >
-            <div>
-              <strong>
-                {data.approvals.length} request
-                {data.approvals.length === 1 ? "" : "s"} waiting
-              </strong>
-              <span>
-                {data.approvals[0].project_name} ·{" "}
-                {label(data.approvals[0].tool)}
-              </span>
-            </div>
-            <button
-              className="primary"
-              onClick={() =>
-                setDialog({ kind: "approval", approval: data.approvals[0] })
-              }
-            >
-              Review request
-              <Icon name="arrow" />
-            </button>
-          </section>
-        )}
         <section className="workspace-grid">
           <aside className="projects panel">
             <div className="section-heading">
@@ -651,7 +609,9 @@ function App() {
                     <strong>{item.name}</strong>
                     <span>
                       {item.enabled
-                        ? "Project access enabled"
+                        ? data?.sessions.find(
+                            (entry) => entry.project_id === item.id,
+                          )?.state || "stopped"
                         : "Access disabled"}
                     </span>
                   </span>
@@ -726,6 +686,51 @@ function App() {
                     </span>
                   </div>
                   <p className="project-path">{project.root}</p>
+                  <div
+                    className="project-session"
+                    aria-label={`${project.name} session`}
+                  >
+                    <div role="status" aria-live="polite">
+                      <strong>
+                        {session?.state === "running"
+                          ? "Running · allowed actions execute automatically"
+                          : session?.state === "paused"
+                            ? "Paused · resume when ready"
+                            : "Stopped · start this project when ready"}
+                      </strong>
+                      <p className="field-hint">
+                        {bridge?.connected
+                          ? "Phone and desktop connected · session status synchronized"
+                          : bridge?.code === "companion_not_paired"
+                            ? "USB controls available. Pair the optional phone bridge once for synchronized phone controls, multi-touch and Unicode."
+                            : bridge?.message || "Checking phone bridge…"}
+                      </p>
+                    </div>
+                    <div className="form-actions">
+                      <button
+                        className="primary"
+                        disabled={
+                          !!busy || dirty || !project.enabled || !project.serial
+                        }
+                        onClick={() =>
+                          void controlProject(paused ? "running" : "paused")
+                        }
+                      >
+                        {session?.state === "running"
+                          ? "Pause project"
+                          : session?.state === "paused"
+                            ? "Resume project"
+                            : "Start project"}
+                      </button>
+                      <button
+                        className="secondary"
+                        disabled={!!busy || session?.state === "stopped"}
+                        onClick={() => void controlProject("stopped")}
+                      >
+                        Stop project
+                      </button>
+                    </div>
+                  </div>
                   <form
                     onSubmit={(event) => {
                       event.preventDefault();
@@ -850,8 +855,9 @@ function App() {
                           ))}
                         </div>
                         <p className="field-hint">
-                          Stop is always available. Enabled input tools still
-                          require your approval for each request.
+                          Start this project once to run these allowed tools
+                          automatically. Pause or Stop affects only this
+                          project.
                         </p>
                       </details>
                       <label className="check-row enable-project">
@@ -870,7 +876,7 @@ function App() {
                     </fieldset>
                     {!paused && (
                       <p className="field-hint">
-                        Pause the session to edit or remove project access.
+                        Pause this project to edit or remove its access.
                       </p>
                     )}
                     <div className="form-actions">
@@ -906,7 +912,7 @@ function App() {
                         disabled={!!busy || dirty || !paused}
                         title={
                           !paused
-                            ? "Pause the session before removing this project"
+                            ? "Pause this project before removing it"
                             : undefined
                         }
                       >
@@ -959,7 +965,8 @@ function App() {
                       <p className="field-hint">
                         For multi-touch and Unicode, open Andromeda on the
                         phone, enable its accessibility service, then choose
-                        Pair this computer.
+                        Pair this computer. Once paired, project controls stay
+                        synchronized automatically.
                       </p>
                       <div className="form-actions">
                         <button
@@ -972,35 +979,17 @@ function App() {
                               await invoke("pair_companion", {
                                 id: project.id,
                               });
-                              setBridgeStatus(
-                                "Paired. Start a session on the phone.",
+                              setNotice(
+                                "Phone bridge paired. Start the project here; no separate phone Start is needed.",
                               );
                             })
                           }
                         >
                           Pair this phone
                         </button>
-                        <button
-                          className="text-button"
-                          disabled={!!busy || !project.serial || dirty}
-                          onClick={() =>
-                            void run("bridge-status", async () => {
-                              const result = await invoke<{
-                                session_active: boolean;
-                              }>("companion_status", { id: project.id });
-                              setBridgeStatus(
-                                result.session_active
-                                  ? "Phone session active"
-                                  : "Paired · phone session stopped",
-                              );
-                            })
-                          }
-                        >
-                          Check bridge
-                        </button>
                       </div>
                       <p className="field-hint" role="status">
-                        {bridgeStatus}
+                        {bridge?.message || "Checking phone bridge…"}
                       </p>
                     </details>
                   </div>
@@ -1290,63 +1279,6 @@ function App() {
                   onClick={() => setDialog(null)}
                 >
                   Cancel
-                </button>
-              </div>
-            </>
-          )}
-          {dialog.kind === "approval" && (
-            <>
-              <span className="eyebrow">{dialog.approval.project_name}</span>
-              <p className="path-block">{dialog.approval.project_root}</p>
-              <h3 className="request-name">{label(dialog.approval.tool)}</h3>
-              <p>
-                Device: <span className="mono">{dialog.approval.serial}</span>
-              </p>
-              <pre>{JSON.stringify(dialog.approval.arguments, null, 2)}</pre>
-              <p className="field-hint">
-                Approval applies only to this exact request. Check its effect
-                before allowing it. Input already accepted by Android may finish
-                after Stop.
-              </p>
-              <p role="status">
-                {activeApproval
-                  ? `Expires in ${Math.max(0, Math.ceil((activeApproval.expires_at_ms - now) / 1000))} seconds`
-                  : "This request ended or was cancelled."}
-              </p>
-              <div className="form-actions">
-                <button
-                  className="primary"
-                  disabled={!!busy || !activeApproval || paused}
-                  onClick={() =>
-                    void run("approve", async () => {
-                      await invoke("decide", {
-                        id: dialog.approval.id,
-                        allow: true,
-                      });
-                      setDialog(null);
-                      setNotice(
-                        "Request approved. Check the resulting device state.",
-                      );
-                    })
-                  }
-                >
-                  Allow once
-                </button>
-                <button
-                  className="secondary"
-                  disabled={!!busy || !activeApproval}
-                  onClick={() =>
-                    void run("deny", async () => {
-                      await invoke("decide", {
-                        id: dialog.approval.id,
-                        allow: false,
-                      });
-                      setDialog(null);
-                      setNotice("Request declined.");
-                    })
-                  }
-                >
-                  Decline
                 </button>
               </div>
             </>

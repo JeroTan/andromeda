@@ -112,7 +112,7 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
                 .ok_or("Choose --device explicitly when pairing")?;
             companion.pair(serial).await?;
             println!(
-                "{{\"success\":true,\"paired\":true,\"next\":\"Start a session on the phone\"}}"
+                "{{\"success\":true,\"paired\":true,\"next\":\"Start your desktop project, or use Connection controls for a standalone session\"}}"
             );
             return Ok(ExitCode::SUCCESS);
         }

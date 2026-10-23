@@ -127,12 +127,13 @@ impl Controller {
         default_serial: Option<String>,
         allow_control: bool,
     ) -> Self {
+        let owner = owner.into();
         Self {
             inner: self.inner.clone(),
             default_serial,
             allow_control,
-            owner: Some(Arc::from(owner.into())),
-            companion: self.companion.clone(),
+            owner: Some(Arc::from(owner.clone())),
+            companion: self.companion.clone().map(|bridge| bridge.scoped(owner)),
         }
     }
 
@@ -176,6 +177,9 @@ impl Controller {
             store,
         ));
         self
+    }
+    pub(crate) fn companion_bridge(&self) -> Option<crate::companion::Companion> {
+        self.companion.clone()
     }
     fn companion(&self) -> Result<&crate::companion::Companion> {
         self.companion.as_ref().ok_or_else(|| {

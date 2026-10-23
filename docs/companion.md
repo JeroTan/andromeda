@@ -1,6 +1,6 @@
 # Android companion
 
-The optional phone app supplies synchronized multi-touch and Unicode text input. The desktop app remains the place to choose projects, connect agents, review input requests and pause automation. The phone app handles Android's accessibility permission, pairing and a session that stays active until you stop it.
+The optional phone app supplies synchronized multi-touch and Unicode text input. The desktop app remains the place to choose projects, connect agents, start and manage project sessions. The phone app handles Android's accessibility permission, pairing and synchronized project controls.
 
 ## Build and install a development APK
 
@@ -25,7 +25,11 @@ andromeda --device YOUR_SERIAL pair
 andromeda --device YOUR_SERIAL companion-status
 ```
 
-Pairing is initiated from the phone each time a new computer is trusted. A fresh pairing replaces the previous credential. Start a session on the phone when you want to use its accessibility tools. Sessions have no time limit by default. In **Settings → Session → Session timer**, choose **Off**, **15 minutes**, **30 minutes** or **1 hour**. The choice is saved and applies to the next session; it does not change a running session. Android service interruption or restarting the phone also stops the session. Stop from the phone at any time. The desktop **Stop & pause** cancels managed requests; it also keeps new managed input paused until you resume. Stopping one project's MCP work does not revoke the phone's pairing.
+Pairing is initiated from the phone when trusting a computer. A fresh pairing replaces its previous credential; healthy existing pairing is reused. Start your project once on the desktop. The phone arms that project automatically and displays its Running, Paused or Stopped state. There is no second phone Start. Pause/Resume and Stop on the phone update the same project on desktop; other projects continue. Start stopped projects on desktop, where the directory/device/tool scope is visible. **Stop all phone projects** ends every project on that phone; desktop **Stop all projects** is the global emergency stop.
+
+Sessions have no time limit by default. In **Settings → Session → Session timer**, choose **Off**, **15 minutes**, **30 minutes** or **1 hour**. The saved choice applies when the bridge next becomes active. A timer expiry ends the phone's projects and is synchronized to desktop. Android service interruption or restarting the phone stops its sessions. Lost contact pauses paired projects rather than silently resuming later. Heartbeats report desktop connectivity separately from saved pairing; losing a heartbeat is not a session time limit.
+
+For direct CLI/SDK use without the desktop, **Connection controls → Start standalone session** retains the explicit phone-only authorization path. Desktop-managed automation uses the project Start button instead.
 
 **Forget this computer** on the phone revokes the current pairing. `andromeda --device YOUR_SERIAL unpair` removes the computer's saved credential and asks the phone to stop if reachable. If the phone is offline, use Forget this computer there later. Disabling Android accessibility stops the companion service.
 
@@ -39,4 +43,4 @@ The companion only accepts framed, authenticated requests forwarded through the 
 
 ## Verification
 
-The repo's Rust companion seam tests use a simulated ADB server for framing, credential storage, errors, validation and tool results. Android PR workflows build the local UI bundle, debug/release APKs and a debug instrumentation APK, then run an emulator UI check. An isolated Android 17 emulator additionally verified a real two-pointer, 450 ms gesture and Unicode insertion into the debug test pad. It also confirmed light/dark and large-text rendering. Physical device gestures, TalkBack task traversal and broader rotation checks remain in the release ledger.
+The repo's Rust companion seam tests use a simulated ADB server for framing, credential storage, errors, validation and tool results. The manually dispatched Android workflow can build the local UI bundle, debug/release APKs and a debug instrumentation APK, then run an emulator UI check. Hosted Actions remain disabled unless the operator explicitly requests a run. An isolated Android 17 emulator additionally verified a real two-pointer, 450 ms gesture and Unicode insertion into the debug test pad. It also confirmed light/dark and large-text rendering. Physical device gestures, TalkBack task traversal and broader rotation checks remain in the release ledger.
