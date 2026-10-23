@@ -219,6 +219,25 @@ impl Session {
         }
         Ok(result)
     }
+    pub fn bridge_failed(&self, project: &str) {
+        let mut control = self.control.lock().unwrap_or_else(|e| e.into_inner());
+        let Some(current) = control.projects.get_mut(project) else {
+            return;
+        };
+        if current.state == ProjectState::Stopped {
+            return;
+        }
+        current.state = ProjectState::Paused;
+        current.generation = current.generation.wrapping_add(1);
+        current.resume_epoch = current.resume_epoch.wrapping_add(1);
+        for active in control
+            .active
+            .values()
+            .filter(|active| active.project == project)
+        {
+            active.cancel.cancel();
+        }
+    }
     pub fn phone_event(
         &self,
         project: &str,

@@ -26,7 +26,13 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
     let last_sync = Arc::new(Mutex::new(json!({})));
     let phone_events = Arc::new(Mutex::new(Vec::<Value>::new()));
     let offline = Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let block_failure = Arc::new(std::sync::atomic::AtomicBool::new(false));
+    let failure_seen = Arc::new(tokio::sync::Notify::new());
+    let failure_release = Arc::new(tokio::sync::Semaphore::new(0));
     let peer = tokio::spawn({
+        let block_failure = block_failure.clone();
+        let failure_seen = failure_seen.clone();
+        let failure_release = failure_release.clone();
         let last_sync = last_sync.clone();
         let phone_events = phone_events.clone();
         let offline = offline.clone();
@@ -35,6 +41,9 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
                 let last_sync = last_sync.clone();
                 let phone_events = phone_events.clone();
                 let offline = offline.clone();
+                let block_failure = block_failure.clone();
+                let failure_seen = failure_seen.clone();
+                let failure_release = failure_release.clone();
                 tokio::spawn(async move {
                     assert_eq!(
                         support::request(&mut socket).await,
@@ -58,6 +67,11 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
                             assert_eq!(request["host_id"].as_str().unwrap().len(), 32);
                             request.as_object_mut().unwrap().remove("token");
                             *last_sync.lock().unwrap() = request;
+                            if block_failure.load(std::sync::atomic::Ordering::SeqCst) {
+                                failure_seen.notify_one();
+                                let _permit = failure_release.acquire().await.unwrap();
+                                return;
+                            }
                             if offline.load(std::sync::atomic::Ordering::SeqCst) {
                                 return;
                             }
@@ -96,12 +110,14 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
         clients.push(Client::new(registry.clone(), project.id.clone(), path).unwrap());
         projects.push(project);
     }
-    let host = Host::start(
-        registry,
-        Controller::new(Adb::new(address), None, true).with_companion(store),
-    )
-    .await
-    .unwrap();
+    let host = Arc::new(
+        Host::start(
+            registry,
+            Controller::new(Adb::new(address), None, true).with_companion(store),
+        )
+        .await
+        .unwrap(),
+    );
     for project in &projects {
         host.set_project_state(
             &project.id,
@@ -192,6 +208,32 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
         host.project_session(&projects[1].id).state,
         ProjectState::Paused,
         "Reconnecting never silently resumes input"
+    );
+    // A failure from an older in-flight snapshot must also fence a concurrent
+    // desktop Resume, rather than silently ignoring a generation mismatch.
+    block_failure.store(true, std::sync::atomic::Ordering::SeqCst);
+    let sync = tokio::spawn({
+        let host = host.clone();
+        async move { host.sync_phone_sessions().await }
+    });
+    tokio::time::timeout(std::time::Duration::from_secs(2), failure_seen.notified())
+        .await
+        .unwrap();
+    let b = host.project_session(&projects[1].id);
+    host.set_project_state(
+        &b.project_id,
+        ProjectState::Running,
+        b.generation,
+        host.pause_generation(),
+    )
+    .unwrap();
+    block_failure.store(false, std::sync::atomic::Ordering::SeqCst);
+    failure_release.add_permits(1);
+    let _ = sync.await.unwrap();
+    assert_eq!(
+        host.project_session(&projects[1].id).state,
+        ProjectState::Paused,
+        "A known bridge failure must fence concurrent Resume"
     );
     host.shutdown();
     peer.abort();

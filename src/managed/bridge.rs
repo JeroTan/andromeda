@@ -88,12 +88,13 @@ impl Bridge {
                     // losing contact pauses its projects until the operator resumes them.
                     if error.code != "companion_not_paired" {
                         for state in &states {
-                            if state["state"] != "stopped" {
-                                let _ = this.session.transition(
-                                    state["id"].as_str().unwrap_or_default(),
-                                    ProjectState::Paused,
-                                    state["generation"].as_u64(),
-                                );
+                            let id = state["id"].as_str().unwrap_or_default();
+                            if this.registry.get(id).is_ok_and(|project| {
+                                project.enabled && project.serial.as_deref() == Some(&serial)
+                            }) {
+                                // Fence current state, including Start/Resume accepted
+                                // while this request was in flight. Never revive Stop.
+                                this.session.bridge_failed(id);
                             }
                         }
                     }
