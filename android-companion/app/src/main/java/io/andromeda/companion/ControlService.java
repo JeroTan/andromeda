@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.LocalServerSocket;
 import android.net.LocalSocket;
+import android.net.LocalSocketAddress;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -40,20 +41,51 @@ public final class ControlService extends AccessibilityService {
     private final Set<LocalSocket> clients=ConcurrentHashMap.newKeySet();
     private final ThreadPoolExecutor workers=new ThreadPoolExecutor(4,4,30,TimeUnit.SECONDS,new ArrayBlockingQueue<>(4));
     private volatile LocalServerSocket listener;
+    private volatile boolean destroyed;
     private SharedPreferences preferences;
 
     @Override protected void onServiceConnected(){
         preferences=getSharedPreferences("pairing",MODE_PRIVATE);
-        instance=this;
-        new Thread(this::listen,"andromeda-adb").start();
+        destroyed=false;
+        bindEndpoint(0);
+    }
+    private void bindEndpoint(int attempt){
+        LocalServerSocket owned;
+        synchronized(ENDPOINT_LOCK){
+            if(destroyed)return;
+            // Android can call onServiceConnected again on this instance. Reuse the
+            // existing listener instead of racing it for the fixed name.
+            if(listener!=null){instance=this;return;}
+            try{owned=new LocalServerSocket("andromeda-v1");}
+            catch(Exception unavailable){
+                // The old accept thread may not have released the abstract name yet.
+                // Retry without clearing a healthy endpoint owned by another instance.
+                if(attempt<20)main.postDelayed(()->bindEndpoint(attempt+1),250);
+                return;
+            }
+            instance=this;
+            listener=owned;
+        }
+        new Thread(()->listen(owned),"andromeda-adb").start();
     }
     @Override public void onAccessibilityEvent(AccessibilityEvent event){}
     @Override public void onInterrupt(){stopSession();}
     @Override public void onDestroy(){
+        LocalServerSocket owned=null;
         synchronized(ENDPOINT_LOCK){
-            if(instance==this)instance=null;
-            try{if(listener!=null)listener.close();}catch(Exception ignored){}
-            listener=null;
+            destroyed=true;
+            if(instance==this){
+                instance=null;
+                owned=listener;
+                listener=null;
+            }
+        }
+        if(owned!=null){
+            // LocalServerSocket.close() does not reliably interrupt a blocked accept().
+            // Queue one client so the accept thread wakes, observes the cleared owner,
+            // and closes the listener before Android binds the replacement service.
+            try(LocalSocket wake=new LocalSocket()){wake.connect(new LocalSocketAddress("andromeda-v1"));}catch(Exception ignored){}
+            try{owned.close();}catch(Exception ignored){}
         }
         stopSession();pairingUntil=0;
         for(LocalSocket client:clients)close(client);
@@ -64,34 +96,31 @@ public final class ControlService extends AccessibilityService {
         if(preferences.getString("token","").isEmpty())return false;
         pairingUntil=0;
         generation.incrementAndGet();
-        armedUntil=SystemClock.elapsedRealtime()+15*60*1000;
+        int minutes=preferences.getInt("session_timer_minutes",0);
+        armedUntil=minutes==0?Long.MAX_VALUE:SystemClock.elapsedRealtime()+minutes*60_000L;
         return true;
     }
     public void stopSession(){armedUntil=0;pairingUntil=0;generation.incrementAndGet();}
     public boolean hasPairing(){return !preferences.getString("token","").isEmpty();}
     public int pairingSeconds(){return (int)Math.max(0,(pairingUntil-SystemClock.elapsedRealtime()+999)/1000);}
-    public int sessionSeconds(){return (int)Math.max(0,(armedUntil-SystemClock.elapsedRealtime()+999)/1000);}
+    public boolean ready(){return instance==this && listener!=null;}
+    public boolean sessionActive(){return armed();}
+    public int sessionSeconds(){return armedUntil==Long.MAX_VALUE?-1:(int)Math.max(0,(armedUntil-SystemClock.elapsedRealtime()+999)/1000);}
     public boolean sessionExpired(){return armedUntil>0 && armedUntil<=SystemClock.elapsedRealtime();}
     public int lastContactSeconds(){return lastAuthenticatedAt==0?-1:(int)Math.min(Integer.MAX_VALUE,(SystemClock.elapsedRealtime()-lastAuthenticatedAt)/1000);}
     public void forgetComputer(){stopSession();if(!preferences.edit().remove("token").commit())throw new IllegalStateException("Could not remove the pairing. Try again.");for(LocalSocket client:clients)close(client);}
     private boolean armed(){return armedUntil>SystemClock.elapsedRealtime();}
     public String statusText(){
         if(pairingUntil>SystemClock.elapsedRealtime())return "Pairing is open for 60 seconds";
-        if(armed())return "Session active. It expires 15 minutes after starting.";
+        if(armed())return armedUntil==Long.MAX_VALUE?"Session active until you stop it.":"Session active. Your selected timer will stop it automatically.";
         return preferences.getString("token","").isEmpty()?"Accessibility enabled. Pair a computer to continue.":"Computer paired. Session stopped.";
     }
 
-    private void listen(){
-        LocalServerSocket owned=null;
+    private void listen(LocalServerSocket owned){
         try{
-            synchronized(ENDPOINT_LOCK){
-                if(instance!=this)return;
-                owned=new LocalServerSocket("andromeda-v1");
-                listener=owned;
-            }
-            while(instance==this){
+            while(instance==this && listener==owned){
                 LocalSocket client=owned.accept();
-                if(instance!=this){close(client);break;}
+                if(instance!=this || listener!=owned){close(client);break;}
                 int uid=client.getPeerCredentials().getUid();
                 // adbd uses shell on production devices and root on test emulators.
                 if(uid!=2000 && uid!=0){close(client);continue;}
@@ -103,7 +132,7 @@ public final class ControlService extends AccessibilityService {
             if(instance==this)stopSession();
         }finally{
             synchronized(ENDPOINT_LOCK){
-                try{if(owned!=null)owned.close();}catch(Exception ignored){}
+                try{owned.close();}catch(Exception ignored){}
                 if(listener==owned)listener=null;
             }
         }
@@ -151,7 +180,7 @@ public final class ControlService extends AccessibilityService {
         byte[] expected=preferences.getString("token","").getBytes(StandardCharsets.UTF_8);
         if(expected.length!=64 || !MessageDigest.isEqual(expected,token.getBytes(StandardCharsets.UTF_8)))throw new Problem("unauthorized","Pair this computer again from the phone");
         lastAuthenticatedAt=SystemClock.elapsedRealtime();
-        if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("gesture_active",gestureActive.get()));
+        if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("session_seconds",sessionSeconds()).put("gesture_active",gestureActive.get()));
         if(method.equals("stop")){stopSession();return success(new JSONObject().put("stopped",true).put("note","Already dispatched Android input may finish"));}
         requireSession();long requestGeneration=generation.get();
         return switch(method){

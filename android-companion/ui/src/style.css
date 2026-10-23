@@ -199,18 +199,26 @@
   padding: 12px 0;
 }
 .step-number {
-  color: #5d5a66;
+  width: 36px;
+  height: 36px;
   border: 1px solid #5d5a66;
-  border-radius: 20px;
-  min-width: 36px;
-  min-height: 36px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.step-number-text {
+  color: #5d5a66;
+  line-height: 1.4;
   text-align: center;
-  padding: 6px;
 }
 .step-number.complete {
   background-color: #131316;
-  color: #f8f7f9;
   border-color: #131316;
+}
+.step-number.complete .step-number-text {
+  color: #f8f7f9;
 }
 .step-label {
   color: #131316;
@@ -295,11 +303,15 @@
   color: #17171c;
 }
 .dark .step-number {
-  color: #bbb6c6;
   border-color: #aaa2b8;
+}
+.dark .step-number-text {
+  color: #bbb6c6;
 }
 .dark .step-number.complete {
   background-color: #f4f1f8;
+}
+.dark .step-number.complete .step-number-text {
   color: #17171c;
 }
 .dark .status-dot {
@@ -310,4 +322,21 @@
 }
 .dark .error {
   color: #ffb4ab;
+}
+
+.topbar-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.settings-small {
+  min-height: 48px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.settings-small:active {
+  opacity: 0.65;
 }

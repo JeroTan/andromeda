@@ -2,6 +2,7 @@ package io.andromeda.companion;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Handler;
@@ -19,6 +20,8 @@ import java.util.Map;
 
 /** Presentation-only controls. Tokens and device input never cross this bridge. */
 public final class CompanionModule extends LynxModule {
+    /** Debug-only instrumentation hook; release builds ignore it. */
+    static volatile boolean testServiceDisconnected;
     private final Handler main = new Handler(Looper.getMainLooper());
     public CompanionModule(Context context) { super(context); }
 
@@ -29,20 +32,32 @@ public final class CompanionModule extends LynxModule {
             String error = null;
             try {
                 ControlService service = ControlService.instance;
-                if ("stop".equals(action)) {
+                if ("settings".equals(action) || "session-settings".equals(action) || "back".equals(action)) {
+                    MainActivity host = (MainActivity) activity();
+                    host.navigate("back".equals(action) ? ("session".equals(host.screen()) ? "settings" : "home") : "settings".equals(action) ? "settings" : "session");
+                } else if ("timer-off".equals(action) || "timer-15".equals(action) || "timer-30".equals(action) || "timer-60".equals(action)) {
+                    int minutes = "timer-off".equals(action) ? 0 : Integer.parseInt(action.substring(6));
+                    if (!mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).edit().putInt("session_timer_minutes", minutes).commit())
+                        throw new IllegalStateException("Could not save the session timer. Try again.");
+                } else if ("forget".equals(action)) {
+                    if (service != null) service.forgetComputer();
+                    else if (!mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).edit().remove("token").commit())
+                        throw new IllegalStateException("Could not remove the pairing. Try again.");
+                } else if ("stop".equals(action)) {
                     if (service != null) service.stopSession();
-                } else if ("accessibility".equals(action)) {
-                    Activity activity = activity();
-                    activity.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+                } else if ("refresh".equals(action)) {
+                    // Return a fresh snapshot; Android owns accessibility service binding.
+                } else if ("accessibility".equals(action) || "accessibility-settings".equals(action)) {
+                    if ("accessibility-settings".equals(action) || !accessibilityEnabled())
+                        activity().startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
                 } else if ("diagnostics".equals(action) && BuildConfig.DEBUG) {
                     Activity activity = activity();
                     activity.startActivity(new Intent().setClassName(activity, "io.andromeda.companion.ProbeActivity"));
                 } else {
-                    if (service == null) throw new IllegalStateException("Enable Andromeda in Accessibility settings first.");
+                    if (service == null || !service.ready()) throw new IllegalStateException(accessibilityEnabled() ? "Accessibility permission is enabled. Android is still connecting the service; check again shortly." : "Enable Andromeda in Accessibility settings first.");
                     switch (action) {
                         case "pair" -> service.openPairing();
                         case "start" -> { if (!service.startSession()) throw new IllegalStateException("Pair your computer first."); }
-                        case "forget" -> service.forgetComputer();
                         case "disable" -> { service.stopSession(); service.disableSelf(); }
                         default -> throw new IllegalStateException("This control is unavailable.");
                     }
@@ -59,16 +74,28 @@ public final class CompanionModule extends LynxModule {
         return activity;
     }
 
+    private boolean accessibilityEnabled() {
+        ComponentName own = new ComponentName(mContext, ControlService.class);
+        String enabled = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        if (enabled == null) return false;
+        for (String entry : enabled.split(":")) {
+            if (own.equals(ComponentName.unflattenFromString(entry))) return true;
+        }
+        return false;
+    }
+
     private Map<String,Object> snapshot(String error) {
         Map<String,Object> status = new HashMap<>();
         ControlService service = ControlService.instance;
-        status.put("enabled", service != null);
-        status.put("paired", service != null && service.hasPairing());
-        status.put("session_active", service != null && service.sessionSeconds() > 0);
+        status.put("enabled", accessibilityEnabled());
+        status.put("service_ready", service != null && service.ready() && !(BuildConfig.DEBUG && testServiceDisconnected));
+        status.put("paired", !mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).getString("token", "").isEmpty());
+        status.put("session_active", service != null && service.sessionActive());
         status.put("session_expired", service != null && service.sessionExpired());
         status.put("last_contact_seconds", service == null ? -1 : service.lastContactSeconds());
         status.put("pairing_seconds", service == null ? 0 : service.pairingSeconds());
         status.put("session_seconds", service == null ? 0 : service.sessionSeconds());
+        status.put("timer_minutes", mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).getInt("session_timer_minutes", 0));
         status.put("dark", (mContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES);
         status.put("developer", BuildConfig.DEBUG);
         DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();

@@ -23,14 +23,32 @@ def ready():
             return json.loads(read(s,length))['error']['code']=='unauthorized'
     except (OSError,EOFError,KeyError):return False
 def await_state(expected):
-    end=time.monotonic()+5
+    end=time.monotonic()+20
     while time.monotonic()<end:
         if ready()==expected:return
-        time.sleep(.05)
+        time.sleep(.1)
     raise AssertionError(f'Endpoint ready state did not become {expected}')
+def app_focused():
+    try:
+        out=subprocess.check_output([adb,'-s',args.device,'shell','dumpsys','window'],text=True,stderr=subprocess.DEVNULL)
+        return 'mCurrentFocus' in out and 'io.andromeda.companion/io.andromeda.companion.MainActivity' in out
+    except subprocess.CalledProcessError:return False
+command('am','start','-S','-W','-a','android.intent.action.MAIN','-c','android.intent.category.LAUNCHER','-n','io.andromeda.companion/.MainActivity')
+end=time.monotonic()+30
+while time.monotonic()<end and not app_focused():time.sleep(.25)
+if not app_focused():raise AssertionError('Companion UI did not become active before the lifecycle check')
+time.sleep(1)
 for _ in range(5):
     command('settings','delete','secure','enabled_accessibility_services');await_state(False)
     command('settings','put','secure','enabled_accessibility_services','io.andromeda.companion/io.andromeda.companion.ControlService')
     command('settings','put','secure','accessibility_enabled','1');await_state(True)
 print('Five disable/re-enable cycles passed through the ADB companion protocol.')
+# Keep the permission entry while making the in-process service handle unavailable. Newer
+# Android images clear the enabled-service list when UiAutomation suppresses services, which
+# would make this a permission-off test rather than the transient reconnecting state.
+result=subprocess.check_output([adb,'-s',args.device,'shell','am','instrument','--user','0','-w','-e','scenario','permission-state','io.andromeda.companion.test/io.andromeda.companion.CompanionUiProbe'],text=True)
+assert 'INSTRUMENTATION_RESULT: permission_state=true' in result and 'INSTRUMENTATION_RESULT: status=passed' in result, 'Enabled permission was not recognized while the service was reconnecting: '+result
+print('Enabled permission remains recognized while the service handle is unavailable; no repeated setup prompt.')
 command('settings','delete','secure','enabled_accessibility_services')
+command('settings','put','secure','accessibility_enabled','1')
+command('am','force-stop','io.andromeda.companion')
