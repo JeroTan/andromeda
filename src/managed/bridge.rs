@@ -75,7 +75,7 @@ impl Bridge {
         for project in projects.iter().filter(|p| p.enabled) {
             if let Some(serial) = &project.serial {
                 let state = self.session.project(&project.id);
-                devices.entry(serial.clone()).or_default().push(json!({"id":project.id,"name":project.name,"state":state.state,"generation":state.generation,"session_id":state.session_id,"phone_ack":state.phone_ack}));
+                devices.entry(serial.clone()).or_default().push(json!({"id":project.id,"name":project.name,"state":state.state,"generation":state.generation,"session_id":state.session_id,"phone_ack":state.phone_ack,"resume_epoch":state.resume_epoch}));
             }
         }
         let mut workers = tokio::task::JoinSet::new();
@@ -88,7 +88,7 @@ impl Bridge {
                     // losing contact pauses its projects until the operator resumes them.
                     if error.code != "companion_not_paired" {
                         for state in &states {
-                            if state["state"] == "running" {
+                            if state["state"] != "stopped" {
                                 let _ = this.session.transition(
                                     state["id"].as_str().unwrap_or_default(),
                                     ProjectState::Paused,
@@ -187,7 +187,11 @@ impl Bridge {
             };
             // Acknowledge exact phone events, not just host generations: a later
             // phone Stop/Pause can arrive after an earlier Resume was applied.
-            self.session.phone_event(id, state, session_id, event_id);
+            let Some(expected_resume_epoch) = event["resume_epoch"].as_u64() else {
+                continue;
+            };
+            self.session
+                .phone_event(id, state, session_id, event_id, expected_resume_epoch);
             if state == ProjectState::Running
                 && self.session.project(id).state == ProjectState::Running
             {

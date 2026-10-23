@@ -121,7 +121,7 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
     );
     let a = host.project_session(&projects[0].id);
     *phone_events.lock().unwrap() = vec![
-        json!({"project_id":a.project_id,"state":"paused","generation":a.generation,"session_id":a.session_id,"event_id":1}),
+        json!({"project_id":a.project_id,"state":"paused","generation":a.generation,"session_id":a.session_id,"event_id":1,"resume_epoch":a.resume_epoch}),
     ];
     host.sync_phone_sessions().await.unwrap();
     assert_eq!(
@@ -151,7 +151,7 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
     )
     .unwrap();
     *phone_events.lock().unwrap() = vec![
-        json!({"project_id":paused.project_id,"state":"stopped","generation":paused.generation,"session_id":paused.session_id,"event_id":2}),
+        json!({"project_id":paused.project_id,"state":"stopped","generation":paused.generation,"session_id":paused.session_id,"event_id":2,"resume_epoch":paused.resume_epoch}),
     ];
     host.sync_phone_sessions().await.unwrap();
     assert_eq!(
@@ -161,13 +161,25 @@ async fn phone_and_desktop_share_project_sessions_without_a_second_start() {
     // An old phone Resume must never resurrect a later desktop Stop.
     host.stop_project(&projects[0].id);
     *phone_events.lock().unwrap() = vec![
-        json!({"project_id":a.project_id,"state":"running","generation":a.generation,"session_id":a.session_id,"event_id":1}),
+        json!({"project_id":a.project_id,"state":"running","generation":a.generation,"session_id":a.session_id,"event_id":1,"resume_epoch":a.resume_epoch}),
     ];
     host.sync_phone_sessions().await.unwrap();
     assert_eq!(
         host.project_session(&projects[0].id).state,
         ProjectState::Stopped
     );
+    let b = host.project_session(&projects[1].id);
+    host.set_project_state(
+        &b.project_id,
+        ProjectState::Paused,
+        b.generation,
+        host.pause_generation(),
+    )
+    .unwrap();
+    let b = host.project_session(&projects[1].id);
+    *phone_events.lock().unwrap() = vec![
+        json!({"project_id":b.project_id,"state":"running","generation":b.generation,"session_id":b.session_id,"event_id":42,"resume_epoch":b.resume_epoch}),
+    ];
     offline.store(true, std::sync::atomic::Ordering::SeqCst);
     assert!(host.sync_phone_sessions().await.is_err());
     assert_eq!(

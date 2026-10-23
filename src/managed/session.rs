@@ -26,6 +26,7 @@ pub struct ProjectSession {
     pub generation: u64,
     pub session_id: u64,
     pub phone_ack: u64,
+    pub resume_epoch: u64,
 }
 impl ProjectSession {
     fn stopped(id: &str) -> Self {
@@ -35,6 +36,7 @@ impl ProjectSession {
             generation: 0,
             session_id: 0,
             phone_ack: 0,
+            resume_epoch: 0,
         }
     }
 }
@@ -199,6 +201,9 @@ impl Session {
         let fresh_start = current.state == ProjectState::Stopped && state == ProjectState::Running;
         current.state = state;
         current.generation = current.generation.wrapping_add(1);
+        if state != ProjectState::Running {
+            current.resume_epoch = current.resume_epoch.wrapping_add(1);
+        }
         if fresh_start {
             current.session_id = current.generation;
         }
@@ -214,7 +219,14 @@ impl Session {
         }
         Ok(result)
     }
-    pub fn phone_event(&self, project: &str, state: ProjectState, session_id: u64, event_id: u64) {
+    pub fn phone_event(
+        &self,
+        project: &str,
+        state: ProjectState,
+        session_id: u64,
+        event_id: u64,
+        expected_resume_epoch: u64,
+    ) {
         let mut control = self.control.lock().unwrap_or_else(|e| e.into_inner());
         let Some(current) = control.projects.get_mut(project) else {
             return;
@@ -223,6 +235,9 @@ impl Session {
             return;
         }
         current.phone_ack = event_id;
+        if state == ProjectState::Running && current.resume_epoch != expected_resume_epoch {
+            return;
+        }
         // A stopped session can only be started by the desktop operator.
         if current.state == ProjectState::Stopped && state != ProjectState::Stopped {
             return;
@@ -292,6 +307,7 @@ impl Session {
         for project in control.projects.values_mut() {
             project.state = ProjectState::Stopped;
             project.generation = project.generation.wrapping_add(1);
+            project.resume_epoch = project.resume_epoch.wrapping_add(1);
         }
         for operation in control.active.values() {
             operation.cancel.cancel();

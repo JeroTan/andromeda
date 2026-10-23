@@ -52,8 +52,8 @@ public final class ControlService extends AccessibilityService {
     private final AtomicLong nextPhoneEvent=new AtomicLong();
     private final Map<String, JSONObject> phoneEvents = new LinkedHashMap<>();
     private static final class ManagedProject {
-        String id, name, state; long hostGeneration, sessionId, phoneAck, revision;
-        ManagedProject(String id, String name, String state, long hostGeneration, long sessionId, long phoneAck) { this.id=id; this.name=name; this.state=state; this.hostGeneration=hostGeneration; this.sessionId=sessionId; this.phoneAck=phoneAck; }
+        String id, name, state; long hostGeneration, sessionId, phoneAck, resumeEpoch, revision;
+        ManagedProject(String id, String name, String state, long hostGeneration, long sessionId, long phoneAck, long resumeEpoch) { this.id=id; this.name=name; this.state=state; this.hostGeneration=hostGeneration; this.sessionId=sessionId; this.phoneAck=phoneAck; this.resumeEpoch=resumeEpoch; }
     }
     private record RequestLease(long global, String project, long revision, boolean readOnly) {}
     private final Runnable sessionWatchdog = new Runnable() {
@@ -81,7 +81,7 @@ public final class ControlService extends AccessibilityService {
         if (project == null || (!"paused".equals(state) && !"stopped".equals(state) && !"running".equals(state))) return;
         if ("running".equals(state) && (!"paused".equals(project.state) || !desktopConnected())) return;
         project.state = state; project.revision++;
-        try { phoneEvents.put(id,new JSONObject().put("project_id",id).put("state",state).put("generation",project.hostGeneration).put("session_id",project.sessionId).put("event_id",nextPhoneEvent.incrementAndGet())); } catch(JSONException ignored) {}
+        try { phoneEvents.put(id,new JSONObject().put("project_id",id).put("state",state).put("generation",project.hostGeneration).put("session_id",project.sessionId).put("event_id",nextPhoneEvent.incrementAndGet()).put("resume_epoch",project.resumeEpoch)); } catch(JSONException ignored) {}
         updateManagedArm();
     }
     private void updateManagedArm() {
@@ -104,8 +104,12 @@ public final class ControlService extends AccessibilityService {
             long hostGeneration=value.getLong("generation"); if(hostGeneration<0)throw new Problem("invalid_request","Invalid session generation");
             long sessionId=value.getLong("session_id"); if(sessionId<0)throw new Problem("invalid_request","Invalid session identifier");
             long phoneAck=value.getLong("phone_ack"); if(phoneAck<0)throw new Problem("invalid_request","Invalid phone event acknowledgement");
-            next.put(id,new ManagedProject(id,name,state,hostGeneration,sessionId,phoneAck));
+            long resumeEpoch=value.getLong("resume_epoch"); if(resumeEpoch<0)throw new Problem("invalid_request","Invalid resume epoch");
+            next.put(id,new ManagedProject(id,name,state,hostGeneration,sessionId,phoneAck,resumeEpoch));
         }
+        // Android can recreate this service while the desktop retains acknowledgements.
+        // New phone events must remain greater than every validated incoming ACK.
+        for(ManagedProject project:next.values())nextPhoneEvent.accumulateAndGet(project.phoneAck,Math::max);
         if(!desktopHost.equals(host)) { stopSession(); managedProjects.clear(); phoneEvents.clear(); desktopHost=host; }
         for(ManagedProject project:next.values()) {
             ManagedProject previous=managedProjects.get(project.id);
@@ -113,8 +117,10 @@ public final class ControlService extends AccessibilityService {
             if(event!=null && event.getLong("session_id")==project.sessionId && event.getLong("event_id")>project.phoneAck) {
                 // Keep the newest phone action until the desktop acknowledges that
                 // exact event. An older Resume response cannot erase a newer Stop.
-                if("stopped".equals(project.state) && !"stopped".equals(event.getString("state")))phoneEvents.remove(project.id);
-                else project.state=event.getString("state");
+                String desired=event.getString("state");
+                if("stopped".equals(project.state) && !"stopped".equals(desired))phoneEvents.remove(project.id);
+                else if("running".equals(desired) && event.getLong("resume_epoch")!=project.resumeEpoch)phoneEvents.remove(project.id);
+                else project.state=desired;
             } else phoneEvents.remove(project.id);
             if(previous!=null)project.revision=previous.revision+(previous.state.equals(project.state) && previous.sessionId==project.sessionId?0:1);
         }
