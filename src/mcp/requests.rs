@@ -29,6 +29,17 @@ request!(View {
     #[serde(default)]
     image: capture::Options
 });
+request!(LongView {
+    screen: Screen,
+    viewport: capture::Viewport,
+    swipe: Swipe,
+    #[serde(default = "capture::default_pages")]
+    max_pages: u8,
+    #[serde(default = "capture::default_settle_ms")]
+    settle_ms: u64,
+    #[serde(default)]
+    image: capture::Options
+});
 request!(Apps {
     #[serde(default)]
     include_system: bool

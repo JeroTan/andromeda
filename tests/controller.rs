@@ -1,7 +1,7 @@
 use andromeda::{
     actions::{Controller, Operation, RunOptions},
-    device::Adb,
-    input::{Action, Key},
+    device::{Adb, Screen},
+    input::{Action, Key, Point, Swipe},
 };
 
 #[test]
@@ -71,6 +71,109 @@ async fn rotation_change_rejects_tap_before_android_receives_input() {
             .iter()
             .any(|command| command.starts_with("input"))
     );
+}
+
+#[test]
+fn a_zero_distance_swipe_is_a_long_press_command() {
+    let action = Action::Swipe {
+        swipe: Swipe {
+            from: Point { x: 500, y: 1000 },
+            to: Point { x: 500, y: 1000 },
+            duration_ms: 800,
+        },
+        screen: Screen {
+            width: 1080,
+            height: 2400,
+            rotation: 0,
+        },
+    };
+    assert_eq!(
+        action.shell_command().unwrap().as_deref(),
+        Some("input swipe 500 1000 500 1000 800")
+    );
+}
+
+#[tokio::test]
+async fn timed_swipe_and_pause_are_dispatched_in_order() {
+    let fixture = support::DeviceFixture::start(0).await;
+    let controller = Controller::new(Adb::new(fixture.address), Some("phone-A".into()), true);
+    let report = controller
+        .run(
+            Operation::Actions {
+                actions: vec![
+                    Action::Swipe {
+                        swipe: Swipe {
+                            from: Point { x: 100, y: 200 },
+                            to: Point { x: 300, y: 400 },
+                            duration_ms: 450,
+                        },
+                        screen: Screen {
+                            width: 1080,
+                            height: 2400,
+                            rotation: 0,
+                        },
+                    },
+                    Action::Pause { duration_ms: 10 },
+                    Action::PressKey { key: Key::Home },
+                ],
+                interval_ms: 0,
+            },
+            RunOptions::default(),
+            CancellationToken::new(),
+        )
+        .await;
+    assert!(report.result.is_ok());
+    let commands = fixture.commands.lock().unwrap();
+    let swipe = commands
+        .iter()
+        .position(|command| command == "input swipe 100 200 300 400 450")
+        .expect("swipe duration must reach Android");
+    let home = commands
+        .iter()
+        .position(|command| command == "input keyevent 3")
+        .expect("home key must follow the swipe");
+    assert!(swipe < home);
+    assert!(
+        !commands
+            .iter()
+            .any(|command| command.starts_with("input") && command.contains("Pause"))
+    );
+}
+
+#[tokio::test]
+async fn a_failed_transport_does_not_poison_the_next_request() {
+    use tokio::{io::AsyncWriteExt, net::TcpListener};
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let server = tokio::spawn(async move {
+        let (mut first, _) = listener.accept().await.unwrap();
+        assert_eq!(support::request(&mut first).await, "host:devices-l");
+        drop(first);
+        let (mut second, _) = listener.accept().await.unwrap();
+        assert_eq!(support::request(&mut second).await, "host:devices-l");
+        second.write_all(b"OKAY0000").await.unwrap();
+    });
+    let controller = Controller::new(Adb::new(address), None, false);
+    let first = controller
+        .run(
+            Operation::ListDevices,
+            RunOptions::default(),
+            CancellationToken::new(),
+        )
+        .await;
+    assert!(first.result.is_err());
+    let second = controller
+        .run(
+            Operation::ListDevices,
+            RunOptions::default(),
+            CancellationToken::new(),
+        )
+        .await;
+    assert_eq!(
+        second.result.unwrap().data["devices"],
+        serde_json::json!([])
+    );
+    server.await.unwrap();
 }
 
 #[tokio::test]

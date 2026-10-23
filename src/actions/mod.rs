@@ -1,3 +1,4 @@
+mod long_view;
 use crate::{
     accessibility, capture,
     device::{Adb, Screen},
@@ -41,6 +42,7 @@ pub enum Operation {
     ListDevices,
     DeviceInfo,
     View(capture::Options),
+    LongView(capture::Scroll),
     UiTree,
     ListApps {
         include_system: bool,
@@ -151,6 +153,23 @@ impl Controller {
         }
     }
 
+    /// Open a persistent capture stream for the selected device.
+    pub async fn stream(
+        &self,
+        serial: Option<String>,
+        interval_ms: u64,
+    ) -> Result<crate::device::ScreenStream> {
+        let serial = serial
+            .or_else(|| self.default_serial.clone())
+            .ok_or_else(|| {
+                Error::new(
+                    "device_required",
+                    "Choose a serial from adm_list_devices or set --device. Devices are never selected implicitly.",
+                )
+            })?;
+        self.inner.adb.stream(&serial, interval_ms).await
+    }
+
     pub fn with_companion(mut self, store: crate::companion::Store) -> Self {
         self.companion = Some(crate::companion::Companion::new(
             self.inner.adb.clone(),
@@ -252,13 +271,21 @@ impl Controller {
     }
 
     async fn perform(&self, operation: Operation, serial: Option<String>) -> Result<Output> {
-        if matches!(operation, Operation::Actions { .. }) && self.is_paused() {
+        if matches!(
+            operation,
+            Operation::Actions { .. } | Operation::LongView(_)
+        ) && self.is_paused()
+        {
             return Err(Error::new(
                 "control_paused",
                 "Device input is paused by the operator in the desktop app",
             ));
         }
-        if matches!(operation, Operation::Actions { .. }) && !self.allow_control {
+        if matches!(
+            operation,
+            Operation::Actions { .. } | Operation::LongView(_)
+        ) && !self.allow_control
+        {
             return Err(Error::new(
                 "control_disabled",
                 "Input is disabled. The operator must restart with --allow-control to authorize device control.",
@@ -301,6 +328,7 @@ impl Controller {
                 packages.sort_unstable();
                 Ok(Output::data(json!({"packages":packages})))
             }
+            Operation::LongView(options) => self.long_view(&serial, options).await,
             Operation::View(options) => {
                 options.validate()?;
                 let permit = self
@@ -310,12 +338,20 @@ impl Controller {
                     .acquire_owned()
                     .await
                     .map_err(|_| Error::new("shutdown", "Image processor closed"))?;
+                let geometry_started = Instant::now();
                 let screen = self.inner.adb.screen(&serial).await?;
+                let geometry_before_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
+                let capture_started = Instant::now();
                 let png = self.inner.adb.shell(&serial, "screencap -p").await?;
+                let capture_ms = capture_started.elapsed().as_secs_f64() * 1000.0;
+                let geometry_started = Instant::now();
                 self.inner.adb.ensure_screen(&serial, screen).await?;
-                let image = tokio::task::spawn_blocking(move || {
+                let geometry_after_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
+                let (image, image_processing_ms) = tokio::task::spawn_blocking(move || {
                     let _permit = permit;
+                    let started = Instant::now();
                     capture::encode(png, options)
+                        .map(|image| (image, started.elapsed().as_secs_f64() * 1000.0))
                 })
                 .await
                 .map_err(|e| Error::new("image_encoding", e.to_string()))??;
@@ -326,7 +362,7 @@ impl Controller {
                     ));
                 }
                 Ok(Output {
-                    data: json!({"serial":serial,"screen":screen,"image_width":image.width,"image_height":image.height,"scale_to_screen":{"x":screen.width as f64/image.width as f64,"y":screen.height as f64/image.height as f64},"bytes":image.bytes.len()}),
+                    data: json!({"serial":serial,"screen":screen,"image_width":image.width,"image_height":image.height,"scale_to_screen":{"x":screen.width as f64/image.width as f64,"y":screen.height as f64/image.height as f64},"bytes":image.bytes.len(),"mime_type":image.mime_type,"timings":{"geometry_before_ms":geometry_before_ms,"capture_ms":capture_ms,"geometry_after_ms":geometry_after_ms,"image_processing_ms":image_processing_ms}}),
                     image: Some(image),
                 })
             }

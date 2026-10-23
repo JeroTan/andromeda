@@ -99,6 +99,21 @@ fn route(name: &str, args: Value) -> Result<(Operation, RunOptions)> {
             let p = parse::<Target>(args)?;
             (Operation::UiTree, p.options())
         }
+        "adm_get_long_view" => {
+            let p = parse::<LongView>(args)?;
+            let options = p.options();
+            (
+                Operation::LongView(crate::capture::Scroll {
+                    screen: p.screen,
+                    viewport: p.viewport,
+                    swipe: p.swipe,
+                    max_pages: p.max_pages,
+                    settle_ms: p.settle_ms,
+                    image: p.image,
+                }),
+                options,
+            )
+        }
         "adm_get_view" => {
             let p = parse::<View>(args)?;
             let options = p.options();
@@ -287,6 +302,11 @@ pub fn tools() -> Vec<Tool> {
             "adm_get_view",
             "Capture the screen as PNG or JPEG. Coordinates use native screen pixels; multiply scaled-image coordinates by scale_to_screen.",
             true,
+        ),
+        define::<LongView>(
+            "adm_get_long_view",
+            "Capture a bounded scrolling area as a paged long image. Scrolls the phone, requires input authorization. Supply viewport and swipe inside it; max_pages 1..=8, settle_ms 0..=3000, default image width 720, at most 1024. Stops at unchanged viewport or page limit. Overlapping pages are historical; reobserve before tapping. The list stays at its final position.",
+            false,
         ),
         define::<Target>(
             "adm_get_ui_tree",

@@ -34,6 +34,12 @@ impl DeviceFixture {
         Self::with_ui_rotation(rotation, rotation).await
     }
     pub async fn with_ui_rotation(rotation: u8, ui_rotation: u8) -> Self {
+        Self::with_capture_output(rotation, ui_rotation, None).await
+    }
+    pub async fn with_capture(png: Vec<u8>) -> Self {
+        Self::with_capture_output(0, 0, Some(png)).await
+    }
+    async fn with_capture_output(rotation: u8, ui_rotation: u8, png: Option<Vec<u8>>) -> Self {
         let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
         let address = listener.local_addr().unwrap();
         let commands = Arc::new(Mutex::new(Vec::new()));
@@ -65,9 +71,14 @@ impl DeviceFixture {
                     "<hierarchy rotation=\"0\">",
                     &format!("<hierarchy rotation=\"{ui_rotation}\">"),
                 );
+                let output = if command == "screencap -p" {
+                    png.clone().unwrap_or_default()
+                } else {
+                    output.into_bytes()
+                };
                 socket.write_u8(1).await.unwrap();
                 socket.write_u32_le(output.len() as u32).await.unwrap();
-                socket.write_all(output.as_bytes()).await.unwrap();
+                socket.write_all(&output).await.unwrap();
                 socket.write_all(&[3, 1, 0, 0, 0, 0]).await.unwrap();
             }
         });

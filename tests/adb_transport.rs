@@ -1,9 +1,32 @@
 use andromeda::device::Adb;
+use image::ImageEncoder;
+use std::time::Duration;
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::TcpListener,
 };
 mod support;
+
+fn test_png() -> Vec<u8> {
+    let mut bytes = Vec::new();
+    image::codecs::png::PngEncoder::new(&mut bytes)
+        .write_image(
+            &[
+                255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 255, 255,
+            ],
+            2,
+            2,
+            image::ExtendedColorType::Rgba8,
+        )
+        .unwrap();
+    bytes
+}
+
+async fn send_shell_chunk(socket: &mut tokio::net::TcpStream, bytes: &[u8]) {
+    socket.write_u8(1).await.unwrap();
+    socket.write_u32_le(bytes.len() as u32).await.unwrap();
+    socket.write_all(bytes).await.unwrap();
+}
 
 #[tokio::test]
 async fn launch_failure_preserves_android_stdout_diagnostics() {
@@ -82,4 +105,100 @@ async fn discovery_preserves_authorization_state_and_device_identity() {
     assert_eq!(devices[0].serial, "phone-A");
     assert_eq!(devices[1].state, "unauthorized");
     server.await.unwrap();
+}
+
+#[tokio::test]
+async fn persistent_stream_returns_complete_png_frames_across_chunks() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let adb = Adb::new(listener.local_addr().unwrap());
+    let png = test_png();
+    let expected = png.clone();
+    let server = tokio::spawn(async move {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        assert_eq!(
+            support::request(&mut socket).await,
+            "host:transport:phone-A"
+        );
+        socket.write_all(b"OKAY").await.unwrap();
+        let service = support::request(&mut socket).await;
+        assert!(service.starts_with("shell,v2,raw:while true; do screencap -p"));
+        socket.write_all(b"OKAY").await.unwrap();
+        send_shell_chunk(&mut socket, b"shell banner\n").await;
+        for chunk in png.chunks(7) {
+            send_shell_chunk(&mut socket, chunk).await;
+        }
+        for chunk in png.chunks(11) {
+            send_shell_chunk(&mut socket, chunk).await;
+        }
+        socket.write_all(&[3, 1, 0, 0, 0, 0]).await.unwrap();
+    });
+    let mut stream = adb.stream("phone-A", 0).await.unwrap();
+    assert_eq!(
+        stream
+            .next_frame(Duration::from_secs(1))
+            .await
+            .unwrap()
+            .unwrap(),
+        expected
+    );
+    assert_eq!(
+        stream
+            .next_frame(Duration::from_secs(1))
+            .await
+            .unwrap()
+            .unwrap(),
+        expected
+    );
+    assert!(
+        stream
+            .next_frame(Duration::from_secs(1))
+            .await
+            .unwrap()
+            .is_none()
+    );
+    server.await.unwrap();
+}
+
+#[tokio::test]
+async fn persistent_stream_rejects_an_oversized_png_chunk() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let adb = Adb::new(listener.local_addr().unwrap());
+    let server = tokio::spawn(async move {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        let mut frame = b"\x89PNG\r\n\x1a\n".to_vec();
+        frame.extend_from_slice(&u32::MAX.to_be_bytes());
+        frame.extend_from_slice(b"IHDR");
+        send_shell_chunk(&mut socket, &frame).await;
+        tokio::time::sleep(Duration::from_secs(1)).await;
+    });
+    let mut stream = adb.stream("phone-A", 0).await.unwrap();
+    let error = stream.next_frame(Duration::from_secs(1)).await.unwrap_err();
+    assert_eq!(error.code, "invalid_stream_frame");
+    server.abort();
+}
+
+#[tokio::test]
+async fn persistent_stream_times_out_without_a_complete_frame() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let adb = Adb::new(listener.local_addr().unwrap());
+    let server = tokio::spawn(async move {
+        let (mut socket, _) = listener.accept().await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        support::request(&mut socket).await;
+        socket.write_all(b"OKAY").await.unwrap();
+        send_shell_chunk(&mut socket, b"not a frame").await;
+        tokio::time::sleep(Duration::from_secs(1)).await;
+    });
+    let mut stream = adb.stream("phone-A", 0).await.unwrap();
+    let error = stream
+        .next_frame(Duration::from_millis(20))
+        .await
+        .unwrap_err();
+    assert_eq!(error.code, "stream_timeout");
+    server.abort();
 }

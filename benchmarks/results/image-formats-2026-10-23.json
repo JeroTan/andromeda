@@ -1,0 +1,79 @@
+{
+  "host_arch": "aarch64",
+  "host_os": "macos",
+  "limitations": [
+    "Fixed-source offline decode/resize/encode only; excludes Android capture, MCP upload and model thinking.",
+    "Quality numbers are codec-specific; these are not matched-perceptual-quality comparisons. WebP is lossless; JPEG and AVIF are lossy.",
+    "Auto compares PNG/JPEG/WebP bytes only. AVIF is opt-in and excluded from auto because ordinary vision clients do not list it as supported.",
+    "Smaller encoded files reduce transport bytes, not necessarily image token counts; image dimensions still matter."
+  ],
+  "max_width": 720,
+  "profile": "release",
+  "quality": 80,
+  "samples_per_format": 3,
+  "schema_version": 1,
+  "source_height": 2376,
+  "source_width": 1080,
+  "workloads": [
+    {
+      "bytes": 661366,
+      "format": "png",
+      "mime_type": "image/png",
+      "p50_ms": 23.830333,
+      "p95_ms": 25.309874999999998,
+      "processing_ms": [
+        23.474249999999998,
+        23.830333,
+        25.309874999999998
+      ]
+    },
+    {
+      "bytes": 135712,
+      "format": "jpeg",
+      "mime_type": "image/jpeg",
+      "p50_ms": 25.674458,
+      "p95_ms": 25.843167,
+      "processing_ms": [
+        25.575625000000002,
+        25.674458,
+        25.843167
+      ]
+    },
+    {
+      "bytes": 640032,
+      "format": "webp_lossless",
+      "mime_type": "image/webp",
+      "p50_ms": 23.948708,
+      "p95_ms": 23.981458,
+      "processing_ms": [
+        23.578625,
+        23.948708,
+        23.981458
+      ]
+    },
+    {
+      "bytes": 135712,
+      "format": "auto_compatible",
+      "mime_type": "image/jpeg",
+      "p50_ms": 33.998625,
+      "p95_ms": 34.075709,
+      "processing_ms": [
+        33.91675,
+        33.998625,
+        34.075709
+      ]
+    },
+    {
+      "bytes": 68894,
+      "format": "avif_speed_10",
+      "mime_type": "image/avif",
+      "p50_ms": 304.67720799999995,
+      "p95_ms": 308.840833,
+      "processing_ms": [
+        303.751708,
+        304.67720799999995,
+        308.840833
+      ]
+    }
+  ]
+}

@@ -14,7 +14,9 @@ Run `andromeda tools` for the complete machine-readable input schemas. All tools
 | `adm_get_ui_tree` | None | Flat node array with parent IDs, labels, package, class, bounds and interaction flags |
 | `adm_list_apps` | `include_system: bool = false` | Sorted package names |
 
-Image formats are `png` and `jpeg`. Size limits preserve aspect ratio and never upscale. Requested dimensions accept 1–8192 pixels; JPEG quality accepts 1–100 and defaults to 80. PNG is the default. Password nodes have empty text and descriptions; other private content may remain visible.
+Image formats are `png`, `jpeg`, `webp`, `webp_lossless`, `auto` and optional `avif`. Size limits preserve aspect ratio and never upscale. Requested dimensions accept 1–8192 pixels; `quality` accepts 1–100 and defaults to 80 for JPEG, lossy WebP and AVIF. PNG and lossless WebP preserve the resized pixels. PNG remains the default. `auto` encodes PNG, JPEG at the requested quality, lossy WebP at that quality and lossless WebP, then returns the smallest byte count with its actual MIME type. Quality settings are not perceptually equivalent across codecs. Auto excludes AVIF for client compatibility. AVIF requires a build with `--features avif` and an AVIF-capable client/exporter; ordinary OpenAI/Claude vision clients do not list it as supported. Password nodes have empty text and descriptions; other private content may remain visible.
+
+`adm_get_view` reports `timings.geometry_before_ms`, `capture_ms`, `geometry_after_ms` and `image_processing_ms`, plus the chosen `mime_type`. Capture includes Android's PNG production and ADB transport; image processing includes decoding, resizing and encoding. These timings do not include client upload or model thinking. Compression reduces bytes; it does not necessarily reduce image tokens, which also depend on image dimensions.
 
 `screen` is `{ "width": 1080, "height": 2400, "rotation": 0 }`. Rotation is a clockwise quarter-turn from the device's natural orientation. Dimensions and coordinates are native display pixels in that orientation. Multiply coordinates measured in a scaled image by the returned `scale_to_screen.x` and `.y`.
 
@@ -32,7 +34,7 @@ Image formats are `png` and `jpeg`. Size limits preserve aspect ratio and never 
 | `adm_open_uri` | `uri` | Common arguments |
 | `adm_batch_actions` | `actions: [...]` | `interval_ms = 0` |
 
-Input needs operator authorization with `--allow-control`. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. These sequences are sequential. Simultaneous multi-touch is available through `adm_multi_touch` with an active companion session.
+Input needs operator authorization with `--allow-control`. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. A long press is an `adm_swipe` with identical `from` and `to` points and the desired duration. These sequences are sequential. Simultaneous multi-touch is available through `adm_multi_touch` with an active companion session.
 
 Keys: `home`, `back`, `recents`, `enter`, `delete`, `tab`, `escape`, `volume_up`, `volume_down`, `power`, `wakeup`.
 
@@ -84,3 +86,27 @@ No tool treats a dispatched action as a verified task. Successful input returns 
 `adm_multi_touch` accepts `{ "screen": { "width": 1080, "height": 2400, "rotation": 0 }, "strokes": [{ "points": [{ "x": 300, "y": 700 }, { "x": 380, "y": 1050 }], "start_ms": 0, "duration_ms": 450 }] }`. Use 1–10 strokes, 1–128 points per stroke and a 10-second maximum end time. A phone-side session and pairing are required. Check the returned `companion_results` and then observe the device.
 
 `adm_type_text` adds optional `backend` (`auto`, `adb`, `companion`) and `mode` (`insert`, `replace`). Auto chooses ADB for printable ASCII insertions and the companion for Unicode, `%`, or replacement. The companion confirms the focused field shows the requested text before it reports `verified: true` for text itself; the overall input tool still reports `verified: false` until the intended app outcome is observed.
+
+## Scrolling capture
+
+`adm_get_long_view` scrolls a selected list and returns one tall image containing bounded viewport observations. It requires input authorization and, for managed projects, approval like other input tools. Example:
+
+```json
+{
+  "screen": {"width": 1080, "height": 2376, "rotation": 0},
+  "viewport": {"x": 20, "y": 830, "width": 1040, "height": 1150},
+  "swipe": {"from": {"x": 540, "y": 1840}, "to": {"x": 540, "y": 940}, "duration_ms": 300},
+  "max_pages": 4,
+  "settle_ms": 300,
+  "image": {"format": "jpeg", "max_width": 720},
+  "timeout_ms": 30000
+}
+```
+
+Both swipe endpoints must be inside the viewport. Choose the actual scrolling region, excluding animated headers and sticky controls. `max_pages` accepts 1–8 (default 4); `settle_ms` accepts 0–3000 (default 300). Output width is at most 1024 (default 720), and total height at most 8192. Per-page scaling reserves room for the requested page limit. The loop stops at the page limit or when a captured viewport repeats; a repeat can also mean a failed scroll or loading screen, so it does not prove the end of the list. Geometry is checked before scrolling and around every capture; Stop, cancellation, pause and deadlines interrupt the loop.
+
+`pages` maps each tile to its image offset and native viewport scale. Tiles may overlap and are not a seamless stitched screenshot. The list stays at the final position. Earlier pages are historical observations: get a fresh view before tapping an item. The tool does not promise to discover all content in an unbounded list.
+
+## Image-format compatibility and measurements
+
+For routine chat screenshots, try `{"image":{"format":"auto","max_width":720,"quality":80}}`. Choose `webp_lossless` when exact resized pixels matter. AVIF is an explicit export/compatible-client option, not an automatic chat candidate. Supported image types are documented by [OpenAI](https://developers.openai.com/api/docs/guides/images-vision) and [Claude](https://platform.claude.com/docs/en/build-with-claude/vision). See the [codec comparison](../benchmarks/README.md) for measured bytes and processing time rather than assuming one format always wins.
