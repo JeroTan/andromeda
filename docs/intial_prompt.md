@@ -615,3 +615,7 @@ The operator cancelled GitHub Actions because of hosted-run costs. Keep Actions 
 ## Project session correction — 2026-10-23
 
 The user replaced per-action desktop approval with one explicit project Start. Implement [seamless project sessions](specs/seamless-project-sessions.md): independent project Pause/Resume and Stop, a global emergency stop, and synchronized phone/desktop status without a second phone Start. Previously saved directory/device/tool restrictions still apply to every request. This supersedes generic per-action managed approval requirements, including scrolling capture; agent-client sensitive-action approvals remain separate. Keep hosted Actions disabled.
+
+## Preview acceptance decision — 2026-10-24
+
+The operator explicitly chose: “Defer broader accessibility checks for this preview.” Full human TalkBack navigation and broader desktop screen-reader coverage are deferred for the 0.1.2 preview and do not block closing this preview-delivery task. Windows-native testing was already deferred. Existing scoped accessibility and keyboard evidence remains valid; the deferred checks are unverified, not passed. The published preview retains its unsigned-desktop and wider-platform qualifications.
