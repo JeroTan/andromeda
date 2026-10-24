@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="512" android:viewportHeight="512">
+    <!-- The desktop orbital mark, inset for Android's adaptive icon masks. -->
+    <group android:pivotX="256" android:pivotY="256" android:scaleX="0.68" android:scaleY="0.68">
+        <group android:pivotX="256" android:pivotY="256" android:rotation="-30">
+            <path android:fillColor="#00000000" android:strokeColor="#F6F2F8"
+                android:strokeWidth="9"
+                android:pathData="M57,256 A199,96 0,1 0,455,256 A199,96 0,1 0,57,256" />
+            <path android:pathData="M225,181 L287,181 A75,75 0,0 1,362,256 A75,75 0,0 1,287,331 L225,331 A75,75 0,0 1,150,256 A75,75 0,0 1,225,181 Z">
+                <aapt:attr name="android:fillColor">
+                    <gradient android:startX="150" android:startY="181"
+                        android:endX="362" android:endY="331" android:type="linear">
+                        <item android:offset="0" android:color="#FFDBAB" />
+                        <item android:offset="0.5" android:color="#EFA99E" />
+                        <item android:offset="1" android:color="#8CBCE5" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+            <path android:fillColor="#00000000" android:strokeColor="#F6F2F8"
+                android:strokeWidth="9" android:pathData="M57,256 A199,96 0,0 0,455,256" />
+        </group>
+        <path android:fillColor="#00000000" android:strokeColor="#F6F2F8"
+            android:strokeWidth="9" android:strokeLineCap="round"
+            android:pathData="M374,89 L374,147 M345,118 L403,118 M353,97 L395,139 M353,139 L395,97" />
+    </group>
+</vector>
