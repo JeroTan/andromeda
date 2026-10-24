@@ -18,6 +18,10 @@ The user superseded the earlier per-action approval/global Resume design with [s
 
 Local verification passed the 52-test Rust workspace suite, all-feature Clippy, desktop/frontend/package builds, phone UI/APK builds and two review axes after fixes. Public MCP/ADB tests cover independent project cancellation, later Stop versus stale Resume, loss/reconnect fencing, and a concurrent Resume during a failed bridge sync. Physical checks verified desktop Start → phone Running, phone Pause/Resume → desktop state, desktop Stop → phone Stopped, and rejection of paused/stopped MCP input. One harmless Home-key request executed without approval. Phone Stop also survived a deliberately older Resume acknowledgment, and heartbeat loss paused the phone after 4.249 seconds. These are scoped acceptance results, not a general latency benchmark. See [evidence](evidence/seamless-sessions-2026-10-23.json). Hosted Actions stayed disabled; this does not close the remaining release gates.
 
+## Agent-visible project state — 2026-10-24
+
+Managed device information now reports the requesting project's `project_state` and combines that state with its input policy and global control state for `control_enabled`. A paused project previously reported true when another project was running, even though its input was correctly rejected. The public MCP regression failed before the fix and passes after it. Text and structured results agree; the tool catalog also explains that managed Stop ends the project session. The full Rust suite, strict all-feature Clippy, release app build and both review axes pass. Installed macOS/physical-phone checks verified Stopped/Running/Paused responses, then restored Running and its on-demand preview. See [evidence](evidence/project-control-status-2026-10-24.json).
+
 ## Phase 1: Core Android MCP server
 
 - [x] Rust library and executable; Tokio and rmcp stdio transport
