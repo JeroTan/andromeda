@@ -147,7 +147,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 
 ### 1. Claude Code acceptance — passed on 2026-10-24
 
-- Claude Code 2.1.299 completed the actual Settings observe/toggle/restore flow over standalone MCP with explicit ordinary input authorization. Independent Android reads verified Dark (2) → Light (1) → Dark (2); harness restoration was unnecessary. It returned to the Andromeda screen after the test. See [client evidence](evidence/claude-acceptance-2026-10-24.json).
+- Claude Code 2.1.299 completed the actual Settings observe/toggle/restore flow over standalone MCP with explicit ordinary input authorization. Independent Android reads verified Dark (2) → Light (1) → Dark (2); harness restoration was unnecessary. The harness returned to Andromeda afterward. See [client evidence](evidence/claude-acceptance-2026-10-24.json).
 - The stream recorded eight attempted tool calls: four screenshots, two successful theme taps and two client-denied optional pause/wait calls. The agent recovered using screenshots. The denials came from the intentionally narrow Claude allowlist, not Andromeda approval; they remain in the evidence. No human confirmation was requested during this run.
 - Client elapsed time was 19.85 seconds; harness wall time was 21.59 seconds. Usage and per-call spans are retained, including null touch timings that this parser did not capture. The client's API duration includes more than pure thinking; this one run does not provide an exact transport/model decomposition or a benchmark distribution.
 
