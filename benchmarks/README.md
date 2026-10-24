@@ -82,4 +82,14 @@ On 2026-10-24, an Android API 37 emulator using SwiftShader and a static Androme
 | JPEG, width 720, quality 80 | 170.91 / 173.68 | 52.43 / 55.63 | 51.37 / 52.67 | 168.96 / 172.16 |
 | WebP, width 720, quality 80 | 196.01 / 200.76 | 92.81 / 94.78 | 92.13 / 93.07 | 194.68 / 198.38 |
 
-All 240 measured requests succeeded. Raw [forward](results/accessibility-emulator-2026-10-24-forward.json) and [reverse](results/accessibility-emulator-2026-10-24-reverse.json) reports include timing components, bytes and artifact hashes. These results support an improvement on this emulator; they do not establish physical-phone latency, perceptual equivalence, model response time, live-preview performance or superiority over another product. Physical capability-upgrade and timing checks remain open.
+All 240 measured requests succeeded. Raw [forward](results/accessibility-emulator-2026-10-24-forward.json) and [reverse](results/accessibility-emulator-2026-10-24-reverse.json) reports include timing components, bytes and artifact hashes. These results support an improvement on this emulator; they do not establish physical-phone latency, perceptual equivalence, model response time, live-preview performance or superiority over another product. Physical capability-upgrade and timing checks were subsequently completed below.
+
+The same protocol on the physical OnePlus CPH2653 (Android 16/API 36, USB, static Andromeda screen) produced these results after its bridge update. The existing accessibility grant and pairing survived the update.
+
+| Requested image | ADB first | Companion second | Companion first | ADB second |
+|---|---:|---:|---:|---:|
+| Native PNG | 428.03 / 470.00 | 264.99 / 311.10 | 262.49 / 273.11 | 430.12 / 453.73 |
+| JPEG, width 720, quality 80 | 461.26 / 486.73 | 79.78 / 90.91 | 72.92 / 91.07 | 457.65 / 482.61 |
+| WebP, width 720, quality 80 | 495.21 / 537.87 | 199.74 / 212.71 | 199.66 / 210.55 | 499.68 / 511.23 |
+
+All 240 physical requests succeeded; see [forward](results/accessibility-oneplus-2026-10-24-forward.json) and [reverse](results/accessibility-oneplus-2026-10-24-reverse.json) metadata. The installed release desktop's managed MCP connection also returned a companion image, and its on-demand preview displayed 94 ms in one acceptance observation. These measurements establish an improvement for this phone/build/screen. They are not general latency guarantees or measurements of model reasoning, live video, game completion, perceptual equivalence or other products.

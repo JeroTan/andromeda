@@ -1,0 +1,35 @@
+{
+  "installed_managed_mcp": true,
+  "capture_backend": "companion",
+  "image_width": 720,
+  "image_height": 1584,
+  "bytes": 72077,
+  "elapsed_ms": 73.477792,
+  "permission_regranted": false,
+  "paired_again": false,
+  "game_actions": 0,
+  "source_commit": "0cdea931ac5b4af204b4cce7163c542f01548c9d",
+  "device": {
+    "model": "OnePlus CPH2653",
+    "android": "16",
+    "api": 36,
+    "screen": [
+      1080,
+      2376
+    ],
+    "transport": "USB"
+  },
+  "installed_desktop_profile": "release",
+  "desktop_preview_ms_single_observation": 94,
+  "project_running_on_phone_and_desktop": true,
+  "separate_project_pause_and_stop_visible": true,
+  "phone_image_visually_inspected": true,
+  "images_retained_in_git": false,
+  "server_binary_sha256": "d097e03df1ad59307431abeda1ec114dd20bb33d1057527c3771fcc77c0ebad6",
+  "apk_sha256": "1625fbdcc44809ae4e7231dab37ae866ec7c95fee2ce656ac916530164f79b54",
+  "limitations": [
+    "Managed capture and preview values are acceptance samples, not benchmark distributions.",
+    "New installed build retains existing session controls; the broader state-transition evidence is in seamless-sessions-2026-10-23.json.",
+    "Model thinking, remote upload and game workflows were not measured."
+  ]
+}
