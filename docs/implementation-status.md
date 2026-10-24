@@ -58,8 +58,8 @@ The full 15-minute emulator timer check passed with the real clock and authentic
 
 - [x] Reproducible capture, persistent-stream and Home-key input harness with environment metadata
 - [x] Screenshot/input p50/p95, stream frame rate and host CPU/RSS on an emulator and a physical phone
-- [ ] Gesture accuracy, completion/recovery, model/tool overhead and further measured optimization
-- [ ] Representative open-source alternatives compared under matching conditions
+- [x] Gesture endpoint accuracy, deterministic completion/recovery, real-client overhead and measured capture optimization (scoped evidence below)
+- [x] Two representative open-source alternatives compared on matched native-PNG output (modes/limits recorded)
 - [x] Publish raw measurements and limitations without unsupported speed claims
 
 ## Phase 5: Open-source release
@@ -169,20 +169,20 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - **Landscape:** passed on the OnePlus CPH2653 on 2026-10-23; rotation 1 produced 2376×1080 bounds and the companion UI remained usable. The phone was restored to portrait 0/0. Focus-order verification in landscape still needs the same human TalkBack pass.
 - **Rotation rejection:** covered by API-level tests. Physical rotation now uses `settings put system accelerometer_rotation 0` plus `settings put system user_rotation 1`; this produced rotation 1 and 2376×1080 bounds, and both settings were restored to 0. Do not leave rotation or accessibility settings changed.
 
-### 3. Gesture accuracy, completion and recovery — needs scripted scenarios
+### 3. Gesture accuracy, completion and recovery — scoped measurements recorded
 
-- The harness currently measures capture, persistent-stream frames and a Home-key input dispatch. It does not measure whether a tap/swipe hit the intended control, whether a multi-step task completed, or whether the agent recovered from a wrong screen.
-- Add a small set of deterministic Settings tasks (open a page, toggle, restore; dismiss a dialog; recover from a wrong screen) and record success rate, retries, wall time and final-state verification. Keep model behavior separate from transport latency.
+- The native debug pad verified 48/48 gesture endpoint samples on both the emulator and physical OnePlus, including taps, swipes, two simultaneous fingers and screenshot-to-action sequences. Maximum endpoint error was 0 px; physical ADB swipe-duration error reached 11 ms. Six deterministic dialog completion/Back-recovery tasks passed per device without input retries. Actual Android event traces and observation-retry counts are retained in [benchmarks](../benchmarks/README.md#native-gesture-endpoints-and-deterministic-recovery).
+- These controlled fixtures measure endpoint arrival and deterministic recovery, not arbitrary-app success, full intermediate trajectories or other pointer counts. The separate Claude Settings toggle/restore run provides real-client evidence; model behavior remains separate from transport timings.
 
 ### 4. Model/tool overhead — one real client run recorded
 
 - The Claude Settings run above records client token/cache usage, eight attempted tool calls, errors, per-call spans and end-to-end time. Its capture requests took 69–110 ms inside the server; overall task time remained about 22 seconds. Null touch timing and client/API boundaries prevent an exact computation-versus-transport split. More tasks/repeated runs are needed for a distribution.
 - Do not compare these numbers to another product unless the model, prompt, device, transport, thermal state and task are matched.
 
-### 5. Representative open-source comparisons — not started
+### 5. Representative open-source comparisons — native-PNG comparison recorded
 
-- Select comparable local Android-control tools and document why each is comparable. Run matched device/transport/build/task measurements; include failures, not only successful latency.
-- The current README and benchmark report deliberately make no speed claim against other products. This gate stays open until raw comparable results exist.
+- Pinned Mobile Next 1.0.12 and MetaMask 0.5.0 were compared with Andromeda on the same physical USB phone, static screen and native PNG dimensions. All 160 capture samples and 80 Home-acknowledgement samples succeeded. Andromeda companion capture measured 175–196 ms median; its forced ADB path 372–384 ms, MetaMask default ADB 435–441 ms and Mobile Next explicitly selected ADB compatibility mode 500–505 ms. See [raw results and limitations](../benchmarks/README.md#matched-open-source-native-png-comparison).
+- Mobile Next default JPEG/mobilecli performance was not measured. This is a specific output-matched comparison, not a default-product ranking. Input had one ordering, child-process resource use is excluded, and no fastest-product or general reliability claim is established.
 
 ### 6. Release packaging and artifact verification — release work
 

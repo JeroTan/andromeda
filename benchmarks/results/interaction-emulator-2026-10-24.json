@@ -1,0 +1,2632 @@
+{
+  "schema_version": 1,
+  "device_serial_retained": false,
+  "images_retained": false,
+  "server_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6",
+  "profile": "release",
+  "host_os": "Darwin",
+  "host_arch": "arm64",
+  "emulator": true,
+  "samples_per_workload": 12,
+  "warmup_per_workload": 0,
+  "workloads": [
+    {
+      "name": "tap",
+      "samples": [
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 18.035749992122874,
+          "verified_wall_ms": 138.11612498830073,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1133,
+              "end_x": 282,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.143875011242926,
+          "verified_wall_ms": 131.96587498532608,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1133,
+              "end_x": 540,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.032125004334375,
+          "verified_wall_ms": 126.3062919897493,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1133,
+              "end_x": 798,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.35479198396206,
+          "verified_wall_ms": 123.60183300916106,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1526,
+              "end_x": 282,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 16.777791985077783,
+          "verified_wall_ms": 41.02041601436213,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1526,
+              "end_x": 540,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.80375000089407,
+          "verified_wall_ms": 134.639124997193,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1526,
+              "end_x": 798,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 19.228999997721985,
+          "verified_wall_ms": 57.279291009763256,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1919,
+              "end_x": 282,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 19.248541997512802,
+          "verified_wall_ms": 140.592125011608,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1919,
+              "end_x": 540,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.73754201713018,
+          "verified_wall_ms": 128.32974997581914,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1919,
+              "end_x": 798,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.48429102008231,
+          "verified_wall_ms": 44.729875022312626,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1133,
+              "end_x": 282,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 18.32754199858755,
+          "verified_wall_ms": 136.33412498165853,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1133,
+              "end_x": 540,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 17.019207996781915,
+          "verified_wall_ms": 131.28737499937415,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1133,
+              "end_x": 798,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        }
+      ],
+      "complete": true,
+      "completed": 12,
+      "endpoint_within_2px": 12,
+      "max_endpoint_error_px": 0.0,
+      "p50_mcp_ms": 17.48429102008231,
+      "p95_mcp_ms": 19.248541997512802
+    },
+    {
+      "name": "swipe",
+      "samples": [
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 250
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 284.07558298204094,
+          "verified_wall_ms": 405.27625000686385,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            262
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 262,
+              "samples": 17
+            }
+          ],
+          "duration_errors_ms": [
+            12
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 500
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 555.0602079892997,
+          "verified_wall_ms": 594.0817920200061,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            536
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 536,
+              "samples": 28
+            }
+          ],
+          "duration_errors_ms": [
+            36
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 1000
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1040.2714579831809,
+          "verified_wall_ms": 1077.4346249818336,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1018
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1018,
+              "samples": 63
+            }
+          ],
+          "duration_errors_ms": [
+            18
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 250
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 273.49504199810326,
+          "verified_wall_ms": 393.9467500022147,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            251
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 251,
+              "samples": 17
+            }
+          ],
+          "duration_errors_ms": [
+            1
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 500
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 534.7687499888707,
+          "verified_wall_ms": 653.7748330156319,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            512
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 512,
+              "samples": 32
+            }
+          ],
+          "duration_errors_ms": [
+            12
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 1000
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1023.1511250021867,
+          "verified_wall_ms": 1137.1924589911941,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1001
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 1001,
+              "samples": 62
+            }
+          ],
+          "duration_errors_ms": [
+            1
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 250
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 282.3255830153357,
+          "verified_wall_ms": 393.7490419775713,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            261
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 261,
+              "samples": 17
+            }
+          ],
+          "duration_errors_ms": [
+            11
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 500
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 533.7596249883063,
+          "verified_wall_ms": 651.7278749961406,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            511
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 511,
+              "samples": 32
+            }
+          ],
+          "duration_errors_ms": [
+            11
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 1000
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1023.5614580160473,
+          "verified_wall_ms": 1139.390042022569,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1001
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1001,
+              "samples": 62
+            }
+          ],
+          "duration_errors_ms": [
+            1
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 250
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 276.1731249920558,
+          "verified_wall_ms": 392.76595899718814,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            254
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 254,
+              "samples": 17
+            }
+          ],
+          "duration_errors_ms": [
+            4
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 368,
+                "y": 1264
+              },
+              "to": {
+                "x": 712,
+                "y": 1788
+              },
+              "duration_ms": 500
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 529.4089170056395,
+          "verified_wall_ms": 650.7412080245558,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            506
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 506,
+              "samples": 32
+            }
+          ],
+          "duration_errors_ms": [
+            6
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_swipe",
+          "requested_arguments": {
+            "swipe": {
+              "from": {
+                "x": 712,
+                "y": 1788
+              },
+              "to": {
+                "x": 368,
+                "y": 1264
+              },
+              "duration_ms": 1000
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1038.8799159845803,
+          "verified_wall_ms": 1159.911333990749,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1018
+          ],
+          "native_traces": [
+            {
+              "start_x": 712,
+              "start_y": 1788,
+              "end_x": 368,
+              "end_y": 1264,
+              "duration_ms": 1018,
+              "samples": 62
+            }
+          ],
+          "duration_errors_ms": [
+            18
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        }
+      ],
+      "complete": true,
+      "completed": 12,
+      "endpoint_within_2px": 12,
+      "max_endpoint_error_px": 0.0,
+      "p50_mcp_ms": 533.7596249883063,
+      "p95_mcp_ms": 1040.2714579831809
+    },
+    {
+      "name": "two_finger",
+      "samples": [
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 268.54433299740776,
+          "verified_wall_ms": 383.6375829996541,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            250,
+            250
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 17
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 17
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 513.4074579982553,
+          "verified_wall_ms": 634.5014160033315,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            500,
+            500
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 33
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 33
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1013.3013750019018,
+          "verified_wall_ms": 1143.5054590110667,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1000,
+            1000
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 60
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 60
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 268.7293750059325,
+          "verified_wall_ms": 381.3827089907136,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            250,
+            250
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 519.5467500016093,
+          "verified_wall_ms": 636.8142910068855,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            500,
+            500
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 32
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 32
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1023.3950420224573,
+          "verified_wall_ms": 1142.1529999934137,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1000,
+            1000
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 264.0533749945462,
+          "verified_wall_ms": 383.5762089875061,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            250,
+            250
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 518.3417090156581,
+          "verified_wall_ms": 638.7860840186477,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            500,
+            500
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 32
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 32
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1026.2832080188673,
+          "verified_wall_ms": 1143.0192920088302,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1000,
+            1000
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 250
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 274.0204579895362,
+          "verified_wall_ms": 394.2082499852404,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 250,
+          "observed_durations_ms": [
+            250,
+            250
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 250,
+              "samples": 18
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 500
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 527.8327080013696,
+          "verified_wall_ms": 653.7498749967199,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 500,
+          "observed_durations_ms": [
+            500,
+            500
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 33
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 500,
+              "samples": 33
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_multi_touch",
+          "requested_arguments": {
+            "strokes": [
+              {
+                "points": [
+                  {
+                    "x": 368,
+                    "y": 1264
+                  },
+                  {
+                    "x": 368,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              },
+              {
+                "points": [
+                  {
+                    "x": 712,
+                    "y": 1264
+                  },
+                  {
+                    "x": 712,
+                    "y": 1788
+                  }
+                ],
+                "start_ms": 0,
+                "duration_ms": 1000
+              }
+            ],
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "mcp_round_trip_ms": 1037.4389170028735,
+          "verified_wall_ms": 1152.8743329981808,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": 1000,
+          "observed_durations_ms": [
+            1000,
+            1000
+          ],
+          "native_traces": [
+            {
+              "start_x": 368,
+              "start_y": 1264,
+              "end_x": 368,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            },
+            {
+              "start_x": 712,
+              "start_y": 1264,
+              "end_x": 712,
+              "end_y": 1788,
+              "duration_ms": 1000,
+              "samples": 63
+            }
+          ],
+          "duration_errors_ms": [
+            0,
+            0
+          ],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        }
+      ],
+      "complete": true,
+      "completed": 12,
+      "endpoint_within_2px": 12,
+      "max_endpoint_error_px": 0.0,
+      "p50_mcp_ms": 518.3417090156581,
+      "p95_mcp_ms": 1037.4389170028735
+    },
+    {
+      "name": "capture_then_tap",
+      "samples": [
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 51.97612498886883,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 73.8814159994945,
+          "mcp_round_trip_ms": 21.881416003452614,
+          "verified_wall_ms": 189.14058298105374,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1133,
+              "end_x": 282,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 48.32266698940657,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 70.38541699876077,
+          "mcp_round_trip_ms": 22.040541982278228,
+          "verified_wall_ms": 187.6264589955099,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1133,
+              "end_x": 540,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 46.987540990812704,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 69.57600000896491,
+          "mcp_round_trip_ms": 22.561666002729908,
+          "verified_wall_ms": 175.2384580031503,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1133,
+              "end_x": 798,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 47.31862500193529,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 68.96141701145098,
+          "mcp_round_trip_ms": 21.613750024698675,
+          "verified_wall_ms": 188.45579199842177,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1526,
+              "end_x": 282,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 46.94420800660737,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 69.97308300924487,
+          "mcp_round_trip_ms": 23.005667026154697,
+          "verified_wall_ms": 185.57404199964367,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1526,
+              "end_x": 540,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1526
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 31.667167000705376,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 51.75833302200772,
+          "mcp_round_trip_ms": 20.0647079909686,
+          "verified_wall_ms": 163.52216599625535,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1526,
+              "end_x": 798,
+              "end_y": 1526,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 48.255792004056275,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 70.43783299741335,
+          "mcp_round_trip_ms": 22.15974999126047,
+          "verified_wall_ms": 183.62333299592137,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1919,
+              "end_x": 282,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 47.46954201254994,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 69.42491701920517,
+          "mcp_round_trip_ms": 21.934207994490862,
+          "verified_wall_ms": 182.3377080145292,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1919,
+              "end_x": 540,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1919
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 48.134082986507565,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 70.28983300551772,
+          "mcp_round_trip_ms": 22.120124980574474,
+          "verified_wall_ms": 181.03045798488893,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1919,
+              "end_x": 798,
+              "end_y": 1919,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 282,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 47.818041988648474,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 69.71191600314341,
+          "mcp_round_trip_ms": 21.867250005016103,
+          "verified_wall_ms": 112.63312501250766,
+          "observation_polls": 1,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 282,
+              "start_y": 1133,
+              "end_x": 282,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 540,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 48.35195900523104,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 71.13279198529199,
+          "mcp_round_trip_ms": 22.758125007385388,
+          "verified_wall_ms": 188.5515839967411,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 540,
+              "start_y": 1133,
+              "end_x": 540,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        },
+        {
+          "requested_tool": "adm_touch",
+          "requested_arguments": {
+            "point": {
+              "x": 798,
+              "y": 1133
+            },
+            "screen": {
+              "height": 2400,
+              "rotation": 0,
+              "width": 1080
+            }
+          },
+          "completed": true,
+          "capture_mcp_ms": 49.48112499550916,
+          "capture_backend": "companion",
+          "screenshot_to_action_ack_ms": 72.05154199618846,
+          "mcp_round_trip_ms": 22.544374980498105,
+          "verified_wall_ms": 187.78829197981395,
+          "observation_polls": 2,
+          "endpoint_errors_px": [
+            0.0,
+            0.0
+          ],
+          "requested_duration_ms": null,
+          "observed_durations_ms": [
+            0
+          ],
+          "native_traces": [
+            {
+              "start_x": 798,
+              "start_y": 1133,
+              "end_x": 798,
+              "end_y": 1133,
+              "duration_ms": 0,
+              "samples": 2
+            }
+          ],
+          "duration_errors_ms": [],
+          "endpoint_within_2px": true,
+          "completed_delta": 1
+        }
+      ],
+      "complete": true,
+      "completed": 12,
+      "endpoint_within_2px": 12,
+      "max_endpoint_error_px": 0.0,
+      "p50_mcp_ms": 22.040541982278228,
+      "p95_mcp_ms": 23.005667026154697
+    }
+  ],
+  "observation_retries": {
+    "ui_unavailable": 2
+  },
+  "limitations": [
+    "One explicit debug pad; results do not establish accuracy across arbitrary apps or OS versions.",
+    "Native MotionEvent endpoints and duration are measured by the debug view; diagnostics may add overhead.",
+    "MCP round trip includes dispatch and transport; verification polling and model thinking are excluded from it.",
+    "No retries for input. Observation polls may wait for completion. Input points stay inside the observed debug pad.",
+    "Dialog completion and Back-key recovery are deterministic test tasks, not model task success rates."
+  ],
+  "device": {
+    "model": "sdk_gphone64_arm64",
+    "manufacturer": "Google",
+    "android_version": "17",
+    "api_level": "37",
+    "screen": {
+      "height": 2400,
+      "rotation": 0,
+      "width": 1080
+    }
+  },
+  "apk_sha256": "5b6053197eff02b859c986c7edcebc49bb22721d99ce4145ded6360fbb833a9d",
+  "tasks": [
+    {
+      "kind": "open_close_dialog",
+      "completed": true,
+      "elapsed_ms": 610.3966659866273,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 2
+    },
+    {
+      "kind": "open_close_dialog",
+      "completed": true,
+      "elapsed_ms": 615.3957080096006,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 1
+    },
+    {
+      "kind": "open_close_dialog",
+      "completed": true,
+      "elapsed_ms": 577.3789579980075,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 1
+    },
+    {
+      "kind": "recover_with_back",
+      "completed": true,
+      "elapsed_ms": 447.9917920252774,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 1
+    },
+    {
+      "kind": "recover_with_back",
+      "completed": true,
+      "elapsed_ms": 450.00625000102445,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 1
+    },
+    {
+      "kind": "recover_with_back",
+      "completed": true,
+      "elapsed_ms": 562.1594999975059,
+      "input_retries": 0,
+      "dialog_observation_polls": 2,
+      "return_observation_polls": 1
+    }
+  ],
+  "completed_run": true,
+  "all_endpoints_within_2px": true,
+  "transport": "emulator",
+  "transport_verification": "Owned Android AVD connected through local ADB; emulator transport verified separately after the run.",
+  "source_commit": "fbd22b9",
+  "no_compilation_during_measurement": true
+}

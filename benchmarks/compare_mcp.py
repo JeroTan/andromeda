@@ -96,13 +96,14 @@ def main():
     info=json.loads(subprocess.check_output([str(server),'--device',args.device,'--state-dir',str(state),'call','adm_get_device_info'],text=True,timeout=15))['structuredContent']
     if not info['success']:raise RuntimeError('Cannot read native device geometry')
     screen=info['data']['screen'];dimensions=(screen['width'],screen['height'])
-    report={'schema_version':1,'screen':screen,'device':{key:info['data'][key] for key in ['model','manufacturer','android_version','api_level']},'surface':args.surface,'andromeda_profile':args.profile,'transport':args.transport,'host':{'os':platform.system(),'arch':platform.machine(),'node':subprocess.check_output(['node','--version'],text=True).strip()},'server_sha256':hashlib.sha256(server.read_bytes()).hexdigest(),'dependency_lock_sha256':hashlib.sha256(lockfile.read_bytes()).hexdigest(),'package_versions':pins,'samples':args.samples,'warmup':args.warmup,'interval_ms':400,'reverse':args.reverse,'battery_before':battery(),'allow_input':args.allow_input,'workloads':[],'limitations':[
+    report={'schema_version':1,'screen':screen,'device':{key:info['data'][key] for key in ['model','manufacturer','android_version','api_level']},'surface':args.surface,'andromeda_profile':args.profile,'transport':args.transport,'host':{'os':platform.system(),'os_release':platform.release(),'arch':platform.machine(),'node':subprocess.check_output(['node','--version'],text=True).strip()},'server_sha256':hashlib.sha256(server.read_bytes()).hexdigest(),'dependency_lock_sha256':hashlib.sha256(lockfile.read_bytes()).hexdigest(),'package_versions':pins,'samples':args.samples,'warmup':args.warmup,'interval_ms':400,'reverse':args.reverse,'battery_before':battery(),'allow_input':args.allow_input,'workloads':[],'limitations':[
         'Same requested native PNG dimensions and same device; intrinsic geometry checks, encoding, disk files and transport work differ.',
         'Mobile Next is explicitly in documented ADB compatibility mode, not its default JPEG/mobilecli backend. No claim about its default performance.',
         'MetaMask writes temporary host/phone PNGs as part of normal operation; host files are isolated and removed after each workload. Its own phone cleanup remains in timed work.',
         'MCP round trips include JSON/stdout parsing, not model reasoning, remote upload or original frame age. PNG checksum/decompression validation runs outside measured time.',
         'Home acknowledgement is not a gesture-accuracy or presentation-latency measurement. Captures precede any Home input.',
         'Sequential/reverse order exposes ordering variation; no thermal control or product-wide fastest claim.',
+        'ps CPU/RSS covers only the server process, uses lifetime averaging, and excludes adb/mobilecli children and the Python client.',
         'Telemetry disabled using Mobile Next published environment flag; only inspected local ADB paths are exercised.']}
     implementations=['andromeda_adb','andromeda_companion','mobile_next_adb_compat','metamask_adb']
     if args.reverse:implementations.reverse()
