@@ -1,5 +1,7 @@
 # Release audit: 0.1.1
 
+Snapshot for 0.1.1. The subsequent [0.1.2 artifact record](evidence/native-release-0.1.2.json), [publication receipt](evidence/release-publication-0.1.2.json) and [native keyboard checks](evidence/desktop-keyboard-2026-10-24.json) update packaging and focus behavior; full human accessibility acceptance remains open.
+
 Checked on 2026-10-24 against the [original specification](intial_prompt.md), its session/capture amendments, the working tree and GitHub. The native preview is published. This audit separates shipped implementation from checks that remain unverified; it does not certify every platform or accessibility path.
 
 ## Implementation and acceptance

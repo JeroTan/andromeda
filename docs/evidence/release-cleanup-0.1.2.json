@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-24",
+  "release": "v0.1.2",
+  "removed_reproducible_outputs": [
+    "target",
+    "android-companion/app/build",
+    "android-companion/.gradle",
+    "desktop/node_modules",
+    "android-companion/ui/node_modules",
+    ".scratch/v0.1.2-toolchain",
+    ".scratch/v0.1.2-windows-inspect",
+    ".scratch/v0.1.2-windows-previous",
+    ".scratch/v0.1.2-windows-notices",
+    ".scratch/v0.1.2-macos-notices",
+    ".scratch/v0.1.2-android-aligned.apk",
+    "dist/v0.1.1"
+  ],
+  "retained": [
+    "dist/v0.1.2 final packages and receipts",
+    "installed user apps and project state",
+    "private signing material outside repository",
+    "small build logs"
+  ],
+  "removed_task_installed_tools": [
+    "mingw-w64",
+    "makensis",
+    "sevenzip"
+  ],
+  "gradle_daemon_stop": "No Gradle daemons are running."
+}
