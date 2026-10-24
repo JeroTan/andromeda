@@ -65,8 +65,14 @@ type PreviewError = {
   code: string;
   message: string;
 };
+type AgentClient = "codex" | "claude" | "opencode";
+const clientNames: Record<AgentClient, string> = {
+  codex: "Codex",
+  claude: "Claude",
+  opencode: "OpenCode",
+};
 type DialogState =
-  | { kind: "connection"; client: string; change: Change }
+  | { kind: "connection"; client: AgentClient; change: Change }
   | { kind: "connection_result"; client: string; result: string }
   | { kind: "instructions"; project: Project; document: Instructions }
   | { kind: "remove"; project: Project };
@@ -421,7 +427,7 @@ function App() {
       );
     });
   }
-  async function connect(client: string) {
+  async function connect(client: AgentClient) {
     if (!project) return;
     await run("connect", async () => {
       const change = await invoke<Change>("preview_connection", {
@@ -993,6 +999,17 @@ function App() {
                         Connect Claude
                         <Icon name="arrow" />
                       </button>
+                      <button
+                        className="secondary"
+                        onClick={(event) => {
+                          dialogTrigger.current = event.currentTarget;
+                          void connect("opencode");
+                        }}
+                        disabled={!!busy || dirty}
+                      >
+                        Connect OpenCode
+                        <Icon name="arrow" />
+                      </button>
                     </div>
                     <p className="field-hint">
                       Keep this app open while your agent is connected.
@@ -1151,7 +1168,7 @@ function App() {
           onStop={() => void stop()}
           title={
             dialog.kind === "connection"
-              ? `Connect ${dialog.client === "codex" ? "Codex" : "Claude"}`
+              ? `Connect ${clientNames[dialog.client]}`
               : dialog.kind === "connection_result"
                 ? "Claude connection configured"
                 : dialog.kind === "instructions"
@@ -1183,7 +1200,9 @@ function App() {
               <p className="field-hint">
                 {dialog.client === "claude"
                   ? "This registers Andromeda in your private Claude setup for this project and checks the connection. Other projects and servers are preserved."
-                  : "Your other client settings are preserved. Reopen the project or reconnect MCP afterward; your client may ask you to trust this connection."}
+                  : dialog.client === "opencode"
+                    ? "For OpenCode 2. Saves this project's connection while preserving your settings and comments. Reopen OpenCode in this project to load Andromeda."
+                    : "Your other client settings are preserved. Reopen the project or reconnect MCP afterward; your client may ask you to trust this connection."}
               </p>
               {dialog.change.replaces_existing && (
                 <label className="check-row">

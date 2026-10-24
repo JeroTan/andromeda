@@ -2,7 +2,7 @@
 
 Andromeda uses stdio and the official Rust MCP SDK. The client starts the process and exchanges JSON-RPC messages over stdin/stdout. Logs go to stderr. There is no HTTP listener.
 
-Use the dedicated [Claude Code](claude-code.md) and [Codex](codex.md) guides. For Cursor or another client that accepts an `mcpServers` configuration, use:
+Use the dedicated [Claude Code](claude-code.md), [Codex](codex.md) and [OpenCode 2](opencode.md) guides. For Cursor or another client that accepts an `mcpServers` configuration, use:
 
 ```json
 {

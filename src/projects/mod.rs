@@ -1,6 +1,7 @@
 //! Project registration and authority shared by desktop setup and managed MCP.
 use crate::errors::{Error, Result};
 mod clients;
+mod opencode;
 pub use clients::{Client, ConfigChange};
 use serde::{Deserialize, Serialize};
 use std::{

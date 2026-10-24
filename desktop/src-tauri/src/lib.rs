@@ -307,7 +307,7 @@ async fn preview_connection(
             };
             (PendingConnection::Claude(plan), preview)
         }
-        Client::Codex => {
+        Client::Codex | Client::Opencode => {
             let change = state
                 .registry
                 .preview_client_config(&id, client, &server_path(&app)?)?;

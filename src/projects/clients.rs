@@ -11,6 +11,7 @@ use std::path::{Path, PathBuf};
 pub enum Client {
     Claude,
     Codex,
+    Opencode,
 }
 
 #[derive(Debug, Serialize)]
@@ -61,6 +62,7 @@ impl Registry {
             .map_err(|_| Error::new("invalid_config", "Client configuration must be UTF-8"))?
             .unwrap_or("");
         let (next, before, after, replaces_existing) = match client {
+            Client::Opencode => super::opencode::edit(text, server, &args)?,
             Client::Claude => {
                 let mut document: Value = if text.trim().is_empty() {
                     json!({})
@@ -207,6 +209,7 @@ fn config_path(root: &Path, client: Client) -> Result<PathBuf> {
     let relative = match client {
         Client::Claude => ".mcp.json",
         Client::Codex => ".codex/config.toml",
+        Client::Opencode => super::opencode::config_name(root)?,
     };
     let path = root.join(relative);
     if fs::symlink_metadata(&path).is_ok_and(|m| m.file_type().is_symlink()) {

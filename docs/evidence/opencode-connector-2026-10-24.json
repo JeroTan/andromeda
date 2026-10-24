@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-24",
+  "feature_source_commit": "49277c61891b26bca679530cbe0007122e5a60ff",
+  "client": "OpenCode 2.0.22",
+  "configuration_schema": "mcp.servers.andromeda; type local; executable and arguments in command array; per-server timeout object",
+  "native_ui": {
+    "platform": "macOS arm64 release build, isolated state/project",
+    "connect_button_exposed": true,
+    "correct_preview_title_and_project_path": true,
+    "save_succeeded": true,
+    "existing_comment_and_username_preserved": true,
+    "keyboard_focus_returned_to_connect_button": true
+  },
+  "client_acceptance": {
+    "server": "isolated OpenCode serve on loopback with temporary XDG config/data/cache/state",
+    "inspection": "GET /api/mcp; no location query, server default directory is the isolated project",
+    "result": [
+      {
+        "name": "andromeda",
+        "status": {
+          "status": "connected"
+        }
+      }
+    ],
+    "generated_by": "Native desktop Connect OpenCode -> Save connection",
+    "model_calls": 0,
+    "phone_actions": 0,
+    "real_project_configurations_changed": 0
+  },
+  "validation": {
+    "public_configuration_tests_passed": 9,
+    "rust_workspace_all_targets_tests_passed": 67,
+    "strict_workspace_clippy": "passed",
+    "typescript_vite": "passed",
+    "desktop_prettier": "passed",
+    "native_release_build": "passed",
+    "red_before_implementation": "unknown serialized client variant opencode; existing allowed variants were claude/codex"
+  },
+  "development_probe_corrections": [
+    "CLI mcp list does not accept --standalone; private-server API mode was used instead.",
+    "An immediate standalone MCP status read returned no servers before asynchronous initialization.",
+    "The HTTP location query must not be passed as a JSON string; default-server-directory request verified the configured connection."
+  ],
+  "limitations": [
+    "OpenCode 1 uses a different schema and requires migration; no automatic migration is claimed.",
+    "This verifies client connection, not a model-driven phone task or every tool call.",
+    "Published v0.1.2 installers predate this connector; this source/local desktop update does not replace immutable release assets.",
+    "Windows/Linux native UI acceptance and broader human accessibility remain deferred."
+  ],
+  "installed_mac_app": {
+    "local_update": true,
+    "connect_opencode_button_verified": true,
+    "existing_projects_retained": 2,
+    "projects_left_stopped": true,
+    "desktop_binary_sha256": "10898699bb77d261e96cca3fde71f895a49a5e69fc0cf88e75202865b87397f9",
+    "jsonc_parser_mit_notice_present": true
+  }
+}
