@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-24",
+  "removed_reproducible_build_outputs": [
+    "target",
+    "android-companion/app/build",
+    "android-companion/.gradle",
+    "desktop/node_modules",
+    "android-companion/ui/node_modules",
+    ".scratch/windows-official-toolchain",
+    ".scratch/windows-rust",
+    ".scratch/windows-rust-std.tar.xz",
+    ".scratch/notices-tools",
+    ".scratch/windows-installer-inspect",
+    ".scratch/windows-notices-v0.1.1",
+    ".scratch/macos-notices-v0.1.1",
+    ".scratch/native-notices-v0.1.1",
+    ".scratch/private-codec-reference.png",
+    "dist/v0.1.0"
+  ],
+  "retained": [
+    "dist/v0.1.1",
+    "installed macOS app",
+    "installed Android app and pairing",
+    "private release signing material outside repository",
+    "small local build logs"
+  ],
+  "unrelated_mounted_volumes": "left untouched",
+  "removed_task_installed_homebrew_packages": [
+    "mingw-w64 14.0.0_3",
+    "makensis 3.13",
+    "sevenzip 26.04"
+  ],
+  "hosted_actions": {
+    "workflow_id": 392504458,
+    "state": "disabled_manually",
+    "active_runs": 0
+  }
+}
