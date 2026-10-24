@@ -29,6 +29,7 @@ def main():
     parser.add_argument('--device', required=True)
     parser.add_argument('--adb', default='adb')
     parser.add_argument('--profile', choices=['debug','release'], required=True)
+    parser.add_argument('--transport', choices=['usb','emulator','tcp'], required=True)
     parser.add_argument('--samples', type=int, default=12)
     parser.add_argument('--allow-input', action='store_true', required=True)
     parser.add_argument('--output', type=pathlib.Path, required=True)
@@ -38,7 +39,7 @@ def main():
     server = args.server.resolve()
     peer = McpClient([str(server), '--device', args.device, '--state-dir', str(args.state_dir.resolve()), '--allow-control', 'serve'])
     report = {'schema_version': 1, 'device_serial_retained': False, 'images_retained': False,
-              'server_sha256': hashlib.sha256(server.read_bytes()).hexdigest(), 'profile': args.profile, 'host_os': platform.system(), 'host_arch': platform.machine(), 'emulator': args.device.startswith('emulator-'), 'samples_per_workload': args.samples, 'warmup_per_workload': 0,
+              'server_sha256': hashlib.sha256(server.read_bytes()).hexdigest(), 'profile': args.profile, 'transport': args.transport, 'host_os': platform.system(), 'host_arch': platform.machine(), 'emulator': args.device.startswith('emulator-'), 'samples_per_workload': args.samples, 'warmup_per_workload': 0,
               'workloads': [], 'observation_retries': {}, 'limitations': [
                   'One explicit debug pad; results do not establish accuracy across arbitrary apps or OS versions.',
                   'Native MotionEvent endpoints and duration are measured by the debug view; diagnostics may add overhead.',

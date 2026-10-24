@@ -64,6 +64,8 @@ def main():
     parser.add_argument('--packages', type=pathlib.Path, required=True, help='npm ci installation of benchmarks/comparison')
     parser.add_argument('--device', required=True)
     parser.add_argument('--adb', type=pathlib.Path, required=True)
+    parser.add_argument('--profile', choices=['debug','release'], required=True, help='Andromeda build profile')
+    parser.add_argument('--transport', choices=['usb','emulator','tcp'], required=True)
     parser.add_argument('--samples', type=int, default=20)
     parser.add_argument('--warmup', type=int, default=2)
     parser.add_argument('--reverse', action='store_true')
@@ -94,7 +96,7 @@ def main():
     info=json.loads(subprocess.check_output([str(server),'--device',args.device,'--state-dir',str(state),'call','adm_get_device_info'],text=True,timeout=15))['structuredContent']
     if not info['success']:raise RuntimeError('Cannot read native device geometry')
     screen=info['data']['screen'];dimensions=(screen['width'],screen['height'])
-    report={'schema_version':1,'screen':screen,'device':{key:info['data'][key] for key in ['model','manufacturer','android_version','api_level']},'surface':args.surface,'host':{'os':platform.system(),'arch':platform.machine(),'node':subprocess.check_output(['node','--version'],text=True).strip()},'server_sha256':hashlib.sha256(server.read_bytes()).hexdigest(),'dependency_lock_sha256':hashlib.sha256(lockfile.read_bytes()).hexdigest(),'package_versions':pins,'samples':args.samples,'warmup':args.warmup,'interval_ms':400,'reverse':args.reverse,'battery_before':battery(),'allow_input':args.allow_input,'workloads':[],'limitations':[
+    report={'schema_version':1,'screen':screen,'device':{key:info['data'][key] for key in ['model','manufacturer','android_version','api_level']},'surface':args.surface,'andromeda_profile':args.profile,'transport':args.transport,'host':{'os':platform.system(),'arch':platform.machine(),'node':subprocess.check_output(['node','--version'],text=True).strip()},'server_sha256':hashlib.sha256(server.read_bytes()).hexdigest(),'dependency_lock_sha256':hashlib.sha256(lockfile.read_bytes()).hexdigest(),'package_versions':pins,'samples':args.samples,'warmup':args.warmup,'interval_ms':400,'reverse':args.reverse,'battery_before':battery(),'allow_input':args.allow_input,'workloads':[],'limitations':[
         'Same requested native PNG dimensions and same device; intrinsic geometry checks, encoding, disk files and transport work differ.',
         'Mobile Next is explicitly in documented ADB compatibility mode, not its default JPEG/mobilecli backend. No claim about its default performance.',
         'MetaMask writes temporary host/phone PNGs as part of normal operation; host files are isolated and removed after each workload. Its own phone cleanup remains in timed work.',
@@ -171,7 +173,11 @@ def main():
         report['completed_run']=False;report['failure']=str(error)
         raise
     finally:
-        report['battery_after']=battery()
+        try:
+            report['battery_after']=battery()
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            report['battery_after']=None
+            report['battery_after_error']=type(error).__name__
         args.output.parent.mkdir(parents=True,exist_ok=True)
         with args.output.open('x') as file:json.dump(report,file,indent=2);file.write('\n')
 
