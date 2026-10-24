@@ -36,7 +36,7 @@ The operator explicitly deferred Windows-native testing and requested that curre
 
 Both native packages now contain collected original publisher notices, preserved license-by-reference statements, source associations and five corresponding MPL crate source archives. Exact Lynx source-JAR notices and PrimJS release notices supplement the earlier collection. Unresolved source-revision associations remain documented qualifications rather than invented prohibitions. The Android release APK is non-debuggable and has a dedicated release certificate; private signing material is stored outside the repository. Existing debug installs are not overwritten or uninstalled by this packaging work.
 
-Artifact evidence is in [native-release-0.1.0.json](evidence/native-release-0.1.0.json). Wider platform/human accessibility verification remains unproven. This preview publication does not require an npm login.
+The [v0.1.0 native preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0) was published at commit `966dcd3`; all four uploaded asset hashes match local files. See [publication evidence](evidence/release-publication-0.1.0.json). Artifact evidence is in [native-release-0.1.0.json](evidence/native-release-0.1.0.json). Wider platform/human accessibility verification remains unproven. This preview publication does not require an npm login.
 
 ## Phase 1: Core Android MCP server
 
@@ -79,7 +79,7 @@ Artifact evidence is in [native-release-0.1.0.json](evidence/native-release-0.1.
 - [x] Historical GitHub CI evidence on Windows, macOS and Linux (core/desktop); Actions now disabled and manual-only
 - [ ] Release packaging, third-party notices and artifact verification
 - [x] Reviewed feature PRs merged to main with conventional titles
-- [ ] v0.1.0 release published after acceptance gates pass
+- [x] v0.1.0 native preview published with operator-deferred checks and remaining platform qualifications
 - [ ] Temporary branches, build artifacts and processes cleaned up
 
 ## Agreed test boundaries
