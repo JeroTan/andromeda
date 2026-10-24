@@ -23,7 +23,7 @@ Local verification passed the 52-test Rust workspace suite, all-feature Clippy, 
 - [x] Rust library and executable; Tokio and rmcp stdio transport
 - [x] Device discovery, explicit selection, device information
 - [x] Screenshot capture, touch, swipe, keys, text
-- [ ] Real Android setting changed and verified through Claude Code
+- [x] Real Android setting changed and verified through Claude Code
 - [x] Real Android setting changed and verified through Codex
 
 ## Phase 2: Advanced interaction
@@ -145,11 +145,11 @@ Physical acceptance on 2026-10-23 passed on the connected OnePlus: paired after 
 
 These are the concrete items behind the unchecked boxes. Items marked **blocked** need a human, a device, credentials or a release decision; they are not missing controller code.
 
-### 1. Claude Code acceptance — blocked by client usage limit
+### 1. Claude Code acceptance — passed on 2026-10-24
 
-- The only remaining Phase 1 client gate. Codex acceptance passed; Claude Code 2.1.299 is authenticated but its weekly limit stopped the session before tool calls.
-- The client reported a reset at **2026-10-24 03:00 Asia/Manila**. Re-run the Settings dark-mode observe/toggle/restore flow with approval review enabled after that time.
-- Acceptance requires an actual Claude Code session, not a simulated MCP client. Record the tool calls and the before/after observations in the evidence ledger.
+- Claude Code 2.1.299 completed the actual Settings observe/toggle/restore flow over standalone MCP with explicit ordinary input authorization. Independent Android reads verified Dark (2) → Light (1) → Dark (2); harness restoration was unnecessary. It returned to the Andromeda screen after the test. See [client evidence](evidence/claude-acceptance-2026-10-24.json).
+- The stream recorded eight attempted tool calls: four screenshots, two successful theme taps and two client-denied optional pause/wait calls. The agent recovered using screenshots. The denials came from the intentionally narrow Claude allowlist, not Andromeda approval; they remain in the evidence. No human confirmation was requested during this run.
+- Client elapsed time was 19.85 seconds; harness wall time was 21.59 seconds. Usage and per-call spans are retained, including null touch timings that this parser did not capture. The client's API duration includes more than pure thinking; this one run does not provide an exact transport/model decomposition or a benchmark distribution.
 
 ### 2. Physical phone accessibility — needs a human TalkBack pass
 
@@ -162,9 +162,9 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - The harness currently measures capture, persistent-stream frames and a Home-key input dispatch. It does not measure whether a tap/swipe hit the intended control, whether a multi-step task completed, or whether the agent recovered from a wrong screen.
 - Add a small set of deterministic Settings tasks (open a page, toggle, restore; dismiss a dialog; recover from a wrong screen) and record success rate, retries, wall time and final-state verification. Keep model behavior separate from transport latency.
 
-### 4. Model/tool overhead — needs a real client/model run
+### 4. Model/tool overhead — one real client run recorded
 
-- Capture client-visible token counts, tool-call counts and end-to-end latency for the same task through at least one real model/client. The local harness measures host/device transport only.
+- The Claude Settings run above records client token/cache usage, eight attempted tool calls, errors, per-call spans and end-to-end time. Its capture requests took 69–110 ms inside the server; overall task time remained about 22 seconds. Null touch timing and client/API boundaries prevent an exact computation-versus-transport split. More tasks/repeated runs are needed for a distribution.
 - Do not compare these numbers to another product unless the model, prompt, device, transport, thermal state and task are matched.
 
 ### 5. Representative open-source comparisons — not started
