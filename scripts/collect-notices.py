@@ -43,7 +43,7 @@ def verified_files(archive_bytes, prefix, source):
     return result
 
 
-def collect(about, output):
+def collect(about, output, target):
     if output.exists():
         raise ValueError('Output exists; refusing to overwrite')
     version = subprocess.check_output([str(about), '--version'], text=True).strip()
@@ -52,7 +52,7 @@ def collect(about, output):
     with tempfile.TemporaryDirectory(prefix='andromeda-notices-') as directory:
         work = pathlib.Path(directory)
         raw = work / 'rust.json'
-        subprocess.run([str(about), 'generate', '--locked', '--fail', '--format', 'json', '--workspace', '--config', str(ROOT / 'release/about.toml'), '--output-file', str(raw)], cwd=ROOT, check=True)
+        subprocess.run([str(about), 'generate', '--locked', '--fail', '--format', 'json', '--workspace', '--target', target, '--config', str(ROOT / 'release/about.toml'), '--output-file', str(raw)], cwd=ROOT, check=True)
         generated = json.loads(raw.read_text())
         staged = work / 'notices'
         (staged / 'texts').mkdir(parents=True)
@@ -140,7 +140,7 @@ def collect(about, output):
             if not originals:
                 gaps.append({'component': f"{package['name']}@{package['version']}", 'reason': 'No packaged license/notice file found'})
         gaps.append({'component': 'desktop build output', 'reason': 'Reconcile generated runtime/helpers and embedded assets with this inventory before public release; runtime npm metadata alone is not proof of bundle contents.'})
-        inventory = {'schema_version': 1, 'complete': False, 'scope': 'macOS aarch64 Rust workspace default features, build dependencies retained, dev dependencies omitted; desktop npm runtime packages', 'collector': version, 'cargo_lock_sha256': digest((ROOT / 'Cargo.lock').read_bytes()), 'npm_lock_sha256': digest((ROOT / 'desktop/package-lock.json').read_bytes()), 'config_sha256': digest((ROOT / 'release/about.toml').read_bytes()), 'overrides_sha256': digest((ROOT / 'release/notice-overrides.json').read_bytes()), 'components': entries, 'review_gaps': gaps, 'limitations': ['This is a review candidate, not a legal-compliance conclusion or full-release approval.', 'Android/Lynx native artifacts and Windows/Linux target-specific closures require separate inventories.', 'MPL corresponding-source distribution and source-access instructions remain a public release requirement.']}
+        inventory = {'schema_version': 1, 'complete': False, 'target': target, 'scope': 'Rust workspace default features, build dependencies retained, dev dependencies omitted; desktop npm runtime packages', 'collector': version, 'cargo_lock_sha256': digest((ROOT / 'Cargo.lock').read_bytes()), 'npm_lock_sha256': digest((ROOT / 'desktop/package-lock.json').read_bytes()), 'config_sha256': digest((ROOT / 'release/about.toml').read_bytes()), 'overrides_sha256': digest((ROOT / 'release/notice-overrides.json').read_bytes()), 'components': entries, 'review_gaps': gaps, 'limitations': ['This is a review candidate, not a legal-compliance conclusion or full-release approval.', 'Android/Lynx native artifacts and Windows/Linux target-specific closures require separate inventories.', 'MPL corresponding-source distribution and source-access instructions remain a public release requirement.']}
         (staged / 'inventory.json').write_text(json.dumps(inventory, indent=2, sort_keys=True) + '\n')
         lines = ['Andromeda third-party notice review candidate', '', 'Completeness: pending; see inventory.json review_gaps.', 'Full collected texts are in texts/, addressed by SHA-256.', 'Original relative paths and source archive checksums are retained in inventory.json.', '']
         for entry in entries:
@@ -155,6 +155,7 @@ def collect(about, output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cargo-about', type=pathlib.Path, required=True)
+    parser.add_argument('--target', default='aarch64-apple-darwin', choices=['aarch64-apple-darwin','x86_64-apple-darwin','x86_64-pc-windows-gnu','x86_64-pc-windows-msvc','x86_64-unknown-linux-gnu','aarch64-unknown-linux-gnu'])
     parser.add_argument('--out', type=pathlib.Path, required=True)
     args = parser.parse_args()
-    print(json.dumps(collect(args.cargo_about.resolve(), args.out.resolve())))
+    print(json.dumps(collect(args.cargo_about.resolve(), args.out.resolve(), args.target)))
