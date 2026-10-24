@@ -17,3 +17,11 @@ desktop/src-tauri/target/
 desktop/src-tauri/binaries/
 desktop/src-tauri/Cargo.lock
 
+
+release/generated-notices/
+android-companion/app/src/main/assets/third-party-notices/
+desktop/src-tauri/notices/
+
+/dist/
+*.p12
+*.password

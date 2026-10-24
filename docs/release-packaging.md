@@ -79,3 +79,11 @@ cargo run --locked --example verify_session_timer -- \
 ```
 
 The probe uses the public controller/managed gateway, keeps authenticated heartbeats running, waits the full elapsed duration, checks phone expiry and desktop Stop, then verifies subsequent input is rejected. It does not accelerate a clock. The temporary registration is removed on normal/error return; the state directory remains the caller's responsibility. Restore Off through Settings and delete the disposable emulator/state after collecting metadata.
+
+## v0.1.0 preview publication
+
+The operator deferred Windows-native testing and asked to finish the existing native artifacts. npm publication is optional, not a release gate. The current preview ships the macOS arm64 DMG and signed Android APK; Windows EXE/Linux binaries are still pending. The Mac package is not Developer ID signed or notarized.
+
+Run `scripts/assemble-release-notices.py --macos-notices PATH_TO_COLLECTED_MACOS_NOTICES` after the collector to append the exact Lynx source-JAR notices, pinned PrimJS notices and corresponding MPL source archives. Copy the resulting directory to `android-companion/app/src/main/assets/third-party-notices/` before building the APK. Desktop packaging copies `release/generated-notices/` (or `ANDROMEDA_NOTICES_DIR`) into the app's resources. Generated directories are ignored by Git; source links, checksums and qualifications remain in the artifacts.
+
+Android release signing material is held privately outside the repository in the operator's Application Support directory. Preserve a secure backup of the keystore and its password file; future release APKs need the same key. Do not upload either file. The release APK is aligned and signed with Android build-tools, then verified with `apksigner verify`. It uses a different certificate from the development/debug app; migration details are in the release notes.

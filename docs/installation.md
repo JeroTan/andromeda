@@ -20,9 +20,9 @@ See [examples](examples.md) for safe observation, settings, batch, wait and comp
 
 `andromeda` starts the stdio server. `andromeda tools` prints tool schemas. `andromeda --device SERIAL call adm_get_device_info` runs a diagnostic call. Use an absolute executable path in client configuration when the client cannot find your Cargo bin directory.
 
-## Native installers in preparation
+## Native preview installers
 
-The release formats are Android APK (Lynx phone bridge), macOS DMG and Windows EXE installer; Linux packaging is also tracked. `@jrw/andromeda` is the selected optional npm launcher, currently unpublished. Do not install the unrelated bare `andromeda` npm package. See [release packaging](release-packaging.md) for local build and verification commands.
+Download the [v0.1.0 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0): a standalone Apple silicon Mac DMG and signed Android APK. Neither needs Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows EXE/Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
 
 ## Troubleshooting
 

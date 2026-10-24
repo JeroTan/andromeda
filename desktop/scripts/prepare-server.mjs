@@ -1,5 +1,12 @@
 import { execFileSync } from "node:child_process";
-import { copyFileSync, mkdirSync, chmodSync } from "node:fs";
+import {
+  copyFileSync,
+  mkdirSync,
+  chmodSync,
+  existsSync,
+  cpSync,
+  rmSync,
+} from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 const root = fileURLToPath(new URL("../../", import.meta.url));
@@ -27,3 +34,15 @@ copyFileSync(
 );
 if (!target.includes("windows"))
   chmodSync(join(destination, executable), 0o755);
+
+// Keep release notices inside the native bundle as well as download archives.
+const notices = join(root, "desktop", "src-tauri", "notices");
+rmSync(notices, { recursive: true, force: true });
+mkdirSync(notices, { recursive: true });
+for (const name of ["LICENSE", "LICENSE-MIT", "LICENSE-APACHE"])
+  copyFileSync(join(root, name), join(notices, name));
+const collectedNotices =
+  process.env.ANDROMEDA_NOTICES_DIR ||
+  join(root, "release", "generated-notices");
+if (existsSync(collectedNotices))
+  cpSync(collectedNotices, notices, { recursive: true });

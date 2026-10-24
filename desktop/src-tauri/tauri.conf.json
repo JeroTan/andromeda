@@ -34,7 +34,8 @@
       "icons/icon.ico"
     ],
     "resources": {
-      "binaries/": "bin/"
+      "binaries/": "bin/",
+      "notices/": "third-party-notices/"
     }
   }
 }
