@@ -619,3 +619,7 @@ The user replaced per-action desktop approval with one explicit project Start. I
 ## Preview acceptance decision — 2026-10-24
 
 The operator explicitly chose: “Defer broader accessibility checks for this preview.” Full human TalkBack navigation and broader desktop screen-reader coverage are deferred for the 0.1.2 preview and do not block closing this preview-delivery task. Windows-native testing was already deferred. Existing scoped accessibility and keyboard evidence remains valid; the deferred checks are unverified, not passed. The published preview retains its unsigned-desktop and wider-platform qualifications.
+
+## OpenCode connector — 2026-10-24
+
+Add Connect OpenCode to the desktop app, alongside Codex and Claude. Target the installed OpenCode 2 schema (`mcp.servers`, local command array), preserve existing project JSON/JSONC settings and comments, preview the entry, fence concurrent edits and keep existing project/device/tool authorization. Document the connection and verify it with the installed client.

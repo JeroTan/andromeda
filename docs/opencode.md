@@ -1,0 +1,25 @@
+# Add to OpenCode
+
+In Andromeda, select your saved project, choose **Connect OpenCode**, review the proposed connection, then choose **Save connection**. Open or reload OpenCode in that project and start the Andromeda project when you want to allow input. Keep Andromeda open while connected.
+
+This connector targets **OpenCode 2**, including the installed 2.0.22 client. It adds a local stdio server under `mcp.servers.andromeda`, using OpenCode's command array and per-server startup, catalog and execution timeouts. OpenCode 1 uses a different schema; migrate its configuration before using this connector. See the official [OpenCode 2 MCP guide](https://opencode.ai/v2/docs/mcp-servers/).
+
+Andromeda updates the highest-precedence existing configuration in the selected directory: `.opencode/opencode.jsonc`, `.opencode/opencode.json`, `opencode.jsonc`, then `opencode.json`. With no existing file, it creates `opencode.jsonc`. It preserves comments, unrelated settings and other servers. Replacing a different Andromeda entry requires confirmation in the desktop preview. External changes after preview require a fresh preview.
+
+Project configuration contains the executable path, private-state directory and project ID. Pairing credentials stay outside the project. The managed server validates the actual caller directory, allowed tools and selected device. Saving a connection does not start a stopped project or grant unrestricted input.
+
+To inspect the connection from the selected project:
+
+```sh
+opencode mcp list
+```
+
+If a running OpenCode instance retains its earlier configuration, run `opencode reload` from the project or reopen it. Higher-precedence system settings, nested project configs or explicit runtime overrides may change what OpenCode loads. See [configuration precedence](https://opencode.ai/v2/docs/config/).
+
+For a standalone server instead of desktop-managed access, use OpenCode 2's CLI:
+
+```sh
+opencode mcp add andromeda -- /absolute/path/to/andromeda --device YOUR_SERIAL --allow-control
+```
+
+The standalone command explicitly enables ordinary input and follows the client approval policy for sensitive actions. Omit `--allow-control` for observation-only use.
