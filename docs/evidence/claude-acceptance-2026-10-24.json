@@ -1,0 +1,236 @@
+{
+  "date": "2026-10-24",
+  "timezone": "Asia/Manila",
+  "client": "Claude Code 2.1.299",
+  "connection": "standalone stdio MCP with explicit ordinary input authorization",
+  "device": {
+    "model": "OnePlus CPH2653",
+    "android": 16,
+    "api": 36,
+    "transport": "USB"
+  },
+  "server_sha256": "d097e03df1ad59307431abeda1ec114dd20bb33d1057527c3771fcc77c0ebad6",
+  "test": "Observe Dark mode, switch to Light mode, observe, restore Dark mode and observe",
+  "outcome": "passed",
+  "baseline_night_mode": "2",
+  "final_night_mode": "2",
+  "restoration_by_harness_required": false,
+  "explicit_theme_taps": 2,
+  "verified_theme_transitions": 2,
+  "calls": [
+    {
+      "tool": "adm_get_view",
+      "arguments": {
+        "image": {
+          "format": "jpeg",
+          "max_width": 720,
+          "quality": 80
+        }
+      },
+      "client_reported_error": false,
+      "server_success": true,
+      "server_elapsed_ms": 109.743709,
+      "observed_tool_span_ms": 148.56133301509544,
+      "independent_system_night_mode": "2"
+    },
+    {
+      "tool": "adm_touch",
+      "arguments": {
+        "point": {
+          "x": 345,
+          "y": 927
+        },
+        "screen": {
+          "width": 1080,
+          "height": 2376,
+          "rotation": 0
+        }
+      },
+      "client_reported_error": false,
+      "server_success": null,
+      "server_elapsed_ms": null,
+      "observed_tool_span_ms": 127.48749999445863,
+      "independent_system_night_mode": "1"
+    },
+    {
+      "tool": "adm_get_view",
+      "arguments": {
+        "image": {
+          "format": "jpeg",
+          "max_width": 720,
+          "quality": 80
+        }
+      },
+      "client_reported_error": false,
+      "server_success": true,
+      "server_elapsed_ms": 69.311125,
+      "observed_tool_span_ms": 89.16666600271128,
+      "independent_system_night_mode": "1"
+    },
+    {
+      "tool": "adm_batch_actions",
+      "arguments": {
+        "actions": [
+          {
+            "action": "pause",
+            "duration_ms": 1500
+          }
+        ]
+      },
+      "client_reported_error": true,
+      "server_success": null,
+      "server_elapsed_ms": null,
+      "observed_tool_span_ms": 2.3685000196564943,
+      "independent_system_night_mode": "1"
+    },
+    {
+      "tool": "adm_get_view",
+      "arguments": {
+        "image": {
+          "format": "jpeg",
+          "max_width": 720,
+          "quality": 80
+        }
+      },
+      "client_reported_error": false,
+      "server_success": true,
+      "server_elapsed_ms": 87.31679100000001,
+      "observed_tool_span_ms": 109.6801669918932,
+      "independent_system_night_mode": "1"
+    },
+    {
+      "tool": "adm_touch",
+      "arguments": {
+        "point": {
+          "x": 733,
+          "y": 927
+        },
+        "screen": {
+          "width": 1080,
+          "height": 2376,
+          "rotation": 0
+        }
+      },
+      "client_reported_error": false,
+      "server_success": null,
+      "server_elapsed_ms": null,
+      "observed_tool_span_ms": 89.29920897935517,
+      "independent_system_night_mode": "2"
+    },
+    {
+      "tool": "adm_wait_for",
+      "arguments": {
+        "condition": {
+          "kind": "pixel",
+          "point": {
+            "x": 540,
+            "y": 1150
+          },
+          "rgb": [
+            30,
+            30,
+            30
+          ],
+          "tolerance": 30,
+          "screen": {
+            "width": 1080,
+            "height": 2376,
+            "rotation": 0
+          }
+        },
+        "timeout_ms": 5000
+      },
+      "client_reported_error": true,
+      "server_success": null,
+      "server_elapsed_ms": null,
+      "observed_tool_span_ms": 3.0644999933429062,
+      "independent_system_night_mode": "2"
+    },
+    {
+      "tool": "adm_get_view",
+      "arguments": {
+        "image": {
+          "format": "jpeg",
+          "max_width": 720,
+          "quality": 80
+        }
+      },
+      "client_reported_error": false,
+      "server_success": true,
+      "server_elapsed_ms": 89.50945899999999,
+      "observed_tool_span_ms": 97.45670799748041,
+      "independent_system_night_mode": "2"
+    }
+  ],
+  "attempted_tool_calls": 8,
+  "client_denied_calls": 2,
+  "denied_tools": [
+    "adm_batch_actions",
+    "adm_wait_for"
+  ],
+  "client_elapsed_ms": 19854,
+  "client_api_duration_ms": 19381,
+  "harness_wall_ms": 21589.37029101071,
+  "client_num_turns": 9,
+  "client_usage": {
+    "input_tokens": 12,
+    "cache_creation_input_tokens": 23378,
+    "cache_read_input_tokens": 91432,
+    "output_tokens": 1309,
+    "output_tokens_details": {
+      "thinking_tokens": 46
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23378,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 492,
+        "cache_read_input_tokens": 21484,
+        "cache_creation_input_tokens": 1894,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1894
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "model_usage": {
+    "claude-opus-5-5": {
+      "inputTokens": 12,
+      "outputTokens": 1309,
+      "cacheReadInputTokens": 91432,
+      "cacheCreationInputTokens": 23378,
+      "webSearchRequests": 0,
+      "costUSD": 0.2315384,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 46,
+      "canonicalModel": "claude-opus-5-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "images_retained": false,
+  "limitations": [
+    "One real client/task/device run, not a latency distribution or product comparison.",
+    "The deliberately narrow client allowlist denied optional batch-pause and pixel-wait calls before Andromeda execution; the agent recovered using screenshots. These were Claude policy denials, not Andromeda approval prompts.",
+    "Android ui_night_mode reads after each result independently verified 2 (Dark), 1 (Light), and 2 (Dark). Theme animations can settle after the setting changes.",
+    "Touch result timing was not captured by this parser; null does not mean failure. Successful Android mode changes independently verify both taps.",
+    "Observed tool spans include stream delivery/parsing and scheduling; client API duration is not pure model computation. No exact model-versus-transport decomposition is claimed.",
+    "Model costUSD is the client list-price estimate, not evidence of an extra subscription charge.",
+    "Raw screenshots, raw client logs and client prose are excluded. The client prose miscounted calls; recorded count comes from streamed tool_use events.",
+    "Harness opened the Display page before the client and returned to Andromeda afterward. The client gate covers observation and theme toggling; other navigation/recovery scenarios remain open."
+  ]
+}

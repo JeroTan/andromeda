@@ -267,11 +267,16 @@ async fn project_pause_and_stop_are_isolated_and_stale_start_cannot_undo_stop() 
     let call = |client: Client, name: &str, args| {
         let name = name.to_owned();
         async move {
-            client
+            let result = client
                 .call(name, args, tokio_util::sync::CancellationToken::new())
-                .await
-                .structured_content
-                .unwrap()
+                .await;
+            let status = result.structured_content.unwrap();
+            if status["success"] == true {
+                let text = result.content.iter().find_map(|c| c.as_text()).unwrap();
+                let text_status: serde_json::Value = serde_json::from_str(&text.text).unwrap();
+                assert_eq!(text_status["data"], status["data"]);
+            }
+            status
         }
     };
     assert_eq!(
@@ -282,8 +287,12 @@ async fn project_pause_and_stop_are_isolated_and_stale_start_cannot_undo_stop() 
         call(clients[1].clone(), "adm_press_key", json!({"key":"home"})).await["success"],
         true
     );
+    let paused_info = call(clients[0].clone(), "adm_get_device_info", json!({})).await;
+    assert_eq!(paused_info["success"], true);
+    assert_eq!(paused_info["data"]["control_enabled"], false);
+    assert_eq!(paused_info["data"]["project_state"], "paused");
     assert_eq!(
-        call(clients[0].clone(), "adm_get_device_info", json!({})).await["success"],
+        call(clients[1].clone(), "adm_get_device_info", json!({})).await["data"]["control_enabled"],
         true
     );
     let earlier = host.project_session(&a.project_id);
@@ -302,6 +311,10 @@ async fn project_pause_and_stop_are_isolated_and_stale_start_cannot_undo_stop() 
     assert_eq!(
         call(clients[0].clone(), "adm_press_key", json!({"key":"home"})).await["error"]["code"],
         "project_stopped"
+    );
+    assert_eq!(
+        call(clients[0].clone(), "adm_get_device_info", json!({})).await["data"]["control_enabled"],
+        false
     );
     let b = host.project_session(&projects[1].id);
     let epoch = host.pause_generation();

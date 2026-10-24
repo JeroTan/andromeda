@@ -4,6 +4,7 @@ User-authorized change, 2026-10-23. This supersedes the desktop's earlier per-ac
 
 - Configure and save project directory, device and allowed tools once. Start the project once; allowed requests execute immediately, without an Andromeda approval prompt or approval timeout. Agent-client policies for sensitive actions remain independent.
 - Each project has Stopped, Running and Paused states, with Start, Pause/Resume and Stop controls. Pausing/stopping cancels its work and prevents new input. Observation remains available. Other projects continue.
+- Managed device information reports the requesting project's state and whether its input is currently enabled. Paused/stopped projects must not report enabled input because another project is running. Structured and text results agree.
 - Global Stop all projects is an emergency stop. Older Start/Resume or phone events cannot undo a later Stop. Input already accepted by Android may finish; never automatically retry input.
 - Pair the optional phone bridge once. Saved pairing and authenticated desktop connectivity must be shown separately. Reuse healthy pairing. A computer missing its credential must report this honestly; never claim an end-to-end connection merely because the phone retained a key.
 - Starting a desktop project starts its phone session without another Start on the phone. Show per-project state on both screens. Phone Pause/Resume and Stop change the same project. Starting a stopped project remains on desktop where scope is visible.

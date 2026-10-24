@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-24",
+  "source_code_commit": "9979822",
+  "regression": "Paused project A reported control_enabled=true while project B was running, despite A input being correctly rejected.",
+  "public_mcp_regression": {
+    "before": "failed: true != false",
+    "after": "passed; paused/stopped A false, running B true; input isolation retained; text/data agree"
+  },
+  "installed_mac_phone_observations": [
+    {
+      "project_state": "stopped",
+      "control_enabled": false,
+      "text_matches_structured": true,
+      "elapsed_ms": 121.551334,
+      "installed_binary_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6"
+    },
+    {
+      "project_state": "running",
+      "control_enabled": true,
+      "text_matches_structured": true,
+      "elapsed_ms": 53.082334,
+      "installed_binary_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6"
+    },
+    {
+      "project_state": "paused",
+      "control_enabled": false,
+      "text_matches_structured": true,
+      "elapsed_ms": 94.177833,
+      "installed_binary_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6"
+    }
+  ],
+  "final_desktop_state": "running",
+  "phone_desktop_connected": true,
+  "final_preview_single_observation_ms": 111,
+  "limitations": [
+    "Multi-project admission/status regression uses simulated ADB through the public managed MCP boundary.",
+    "Installed macOS/physical-phone checks cover one project in Stopped, Running and Paused states, with its prior Running state restored.",
+    "Control state is sampled at response time; it is not a grant for a future request."
+  ]
+}
