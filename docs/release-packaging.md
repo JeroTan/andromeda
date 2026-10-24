@@ -1,6 +1,6 @@
 # Release packaging
 
-The native deliverables are an Android **APK** containing the Lynx phone interface, a macOS **DMG**, and a Windows **EXE installer**. The desktop UI uses Tauri with the Rust controller. Linux also needs a validated package. The optional npm launcher is `@jrw/andromeda`; platform packages use `@jrw/desktop-<platform>-<arch>`. The unrelated bare npm package `andromeda` must not be used to install this project.
+The native deliverables are an Android **APK** containing the Lynx phone interface, a macOS **DMG**, and a Windows **EXE installer**. The desktop UI uses Tauri with the Rust controller. Linux source/package builds have historical CI evidence; current Linux native UI acceptance remains unverified. The optional npm launcher is `@jrw/andromeda`; platform packages use `@jrw/desktop-<platform>-<arch>`. The unrelated bare npm package `andromeda` must not be used to install this project.
 
 ## Native builds
 
@@ -24,7 +24,7 @@ cd android-companion
 
 The current Gradle release output is `app/build/outputs/apk/release/app-release-unsigned.apk`. It still needs the project's release signing configuration. The existing debug APK is for local acceptance, not the public release. An npm package does not replace this APK or either desktop installer.
 
-GitHub Actions remains disabled and manual-only. Changing its configured package targets does not authorize a run. Windows NSIS and current Linux installer validation remain open; historical MSI checks do not establish EXE acceptance.
+GitHub Actions remains disabled and manual-only. Changing its configured package targets does not authorize a run. Windows NSIS is cross-built and its payload inspected; Windows execution is deferred by the operator. Current Linux installer/UI validation remains open. Historical MSI checks do not establish current EXE acceptance.
 
 ## Notice collection and local npm staging
 
@@ -62,12 +62,9 @@ npm install --prefix .scratch/package-check --ignore-scripts --offline --no-audi
 
 The selected npm scope still needs authenticated ownership/publishing access on the release host. Publishing is pending; neither tarball staging nor a registry 404 proves scope ownership.
 
-## Remaining release checks
+## Preview qualifications
 
-- Resolve notice gaps, supply corresponding MPL source and reconcile generated UI/native code. Integrate the final notice bundle into every native installer/APK; a candidate alongside npm packages does not complete the DMG/APK gate.
-- Configure release signing for Android, macOS signing/notarization, and the Windows signing decision.
-- Build/run the current Windows EXE and Linux packages on their native systems, including accessibility and scaling checks.
-- Verify final checksums and a cold launch of each signed/distributable artifact, then publish platform packages, installers and v0.1.0 only after the remaining product acceptance gates pass.
+The APK is signed with the private release identity. Desktop packages are unsigned, and macOS is not notarized. Windows runtime testing is deferred; wider native-platform/accessibility checks are not represented as passes. Collected notices and corresponding MPL archives ship inside the packages, with remaining source-provenance qualifications preserved. npm publication stays optional. See the current release audit and publication receipts for the artifact checks already completed.
 
 ## Full-duration timer acceptance
 
@@ -82,7 +79,7 @@ The probe uses the public controller/managed gateway, keeps authenticated heartb
 
 ## v0.1.0 preview publication
 
-The operator deferred Windows-native testing and asked to finish the existing native artifacts. npm publication is optional, not a release gate. The current preview ships the macOS arm64 DMG and signed Android APK; Windows EXE/Linux binaries are still pending. The Mac package is not Developer ID signed or notarized.
+The operator deferred Windows-native testing and asked to finish the existing native artifacts. npm publication is optional, not a release gate. That first preview shipped the macOS arm64 DMG and signed Android APK. The later 0.1.1 release added the Windows EXE; Linux downloads are not shipped. The Mac package is not Developer ID signed or notarized.
 
 Run `scripts/assemble-release-notices.py --macos-notices PATH_TO_COLLECTED_MACOS_NOTICES` after the collector to append the exact Lynx source-JAR notices, pinned PrimJS notices and corresponding MPL source archives. Copy the resulting directory to `android-companion/app/src/main/assets/third-party-notices/` before building the APK. Desktop packaging copies `release/generated-notices/` (or `ANDROMEDA_NOTICES_DIR`) into the app's resources. Generated directories are ignored by Git; source links, checksums and qualifications remain in the artifacts.
 

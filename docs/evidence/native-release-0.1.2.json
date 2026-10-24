@@ -1,0 +1,48 @@
+{
+  "version": "0.1.2",
+  "channel": "preview",
+  "source_commit": "333761535aa785f4690be365d52fc47cfd0606e3",
+  "available_platforms": [
+    "macOS arm64",
+    "Windows x64",
+    "Android"
+  ],
+  "mcp_tool_count": 18,
+  "android_signature_schemes": [
+    "v2",
+    "v3"
+  ],
+  "android_certificate_sha256": "73269514febe09f68087b112eeb7d921ed164a04fbf6c2098c31b336c9fb3db0",
+  "android_version_code": 3,
+  "android_debuggable": false,
+  "desktop_signed": false,
+  "macos_notarized": false,
+  "windows_target": "x86_64-pc-windows-gnu",
+  "windows_native_execution": "not performed; operator deferred Windows testing",
+  "notice_inventory_reuse": "External Cargo/npm package records are identical to 0.1.1. Original collected publisher texts reused, with new lock hashes and reuse basis recorded in each inventory.",
+  "keyboard_validation": "Native macOS acceptance recorded in desktop-keyboard-2026-10-24.json; source behavior unchanged except 0.1.2 labels.",
+  "assets": [
+    {
+      "file": "Andromeda-0.1.2-macos-arm64.dmg",
+      "bytes": 7105339,
+      "sha256": "97704b8a10a7575ea6da7f3db5d65a29d755e1eed3330d94424f5a156adf693d"
+    },
+    {
+      "file": "Andromeda-0.1.2-windows-x64-setup.exe",
+      "bytes": 5721600,
+      "sha256": "755c1a6be1c50106af751cce2cea76315312706ffbc38471eb6ce5d4915601ce"
+    },
+    {
+      "file": "Andromeda-0.1.2-android.apk",
+      "bytes": 44928996,
+      "sha256": "daf20fb9ad91fb7b3655d79478e453cc0b4e88bd28a62e8ca7893e8b678c79a9"
+    }
+  ],
+  "qualifications": [
+    "Windows installer is an unsigned cross-compiled preview; native Windows behavior is unverified.",
+    "The macOS app is unsigned and not notarized.",
+    "Android release key matches 0.1.0/0.1.1; debug builds use a different key.",
+    "Full screen-reader and wider native-platform validation remains unverified.",
+    "Existing installed user apps were preserved to avoid interrupting running work."
+  ]
+}

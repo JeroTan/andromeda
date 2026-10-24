@@ -16,6 +16,12 @@ Native inspection found that closing the asynchronously loaded instruction edito
 
 The user's running project and installed app were left intact. Published 0.1.1 binaries do not contain this later fix; it belongs in the next build. These checks reduce the Mac keyboard-validation gap but do not establish full screen-reader coverage.
 
+## 0.1.2 native packages — 2026-10-24
+
+The keyboard-focus correction is packaged in updated Mac DMG and Windows EXE previews, alongside Android APK versionCode 3. The Mac DMG checksum, version and 18-tool catalog passed; the Windows x64 payload and unchanged verified WebView2 loader were inspected; the APK is non-debuggable and verifies with the same release key. [Artifact evidence](evidence/native-release-0.1.2.json) records hashes and limits. External dependencies are unchanged; the packages reuse the collected original publisher notices with the reuse basis and new lock hashes recorded.
+
+The installed user apps were preserved. Full human screen-reader/wider-platform checks remain unverified, and Windows execution remains deferred. The packages do not convert those gaps into passes.
+
 ## Screenshot acceleration — 2026-10-24
 
 Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. Live preview retains its existing ADB capture loop.

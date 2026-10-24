@@ -1,5 +1,15 @@
 # Install Andromeda
 
+Download the [v0.1.2 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2): standalone Windows x64 EXE, Apple silicon Mac DMG, and signed Android APK. These apps do not need Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows is an unsigned cross-build without native Windows testing; Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
+
+1. Install the desktop app from the DMG or EXE. Install the APK on the phone if you need the optional gesture, Unicode or faster screenshot bridge.
+2. Enable USB debugging and authorize the computer on the phone. Start ADB using Android Platform Tools.
+3. Open Andromeda, choose your project folder and device, save access, then use **Connect Claude** or **Connect Codex**. Start the configured project when ready.
+
+Rust is needed only when building the server from source.
+
+## Build the command-line server from source
+
 The current development build requires Rust 1.88+ and Android Platform Tools. No root access is needed for basic observation and input. The Android shell-v2 transport requires Android 7 or newer; device and vendor behavior still needs validation.
 
 Download Platform Tools from [Android Developers](https://developer.android.com/tools/releases/platform-tools), extract them, and add the directory containing `adb` to your `PATH`. Android Studio includes them under its SDK directory. On macOS that is usually `~/Library/Android/sdk/platform-tools`; on Windows, `%LOCALAPPDATA%\Android\Sdk\platform-tools`.
@@ -19,10 +29,6 @@ Download Platform Tools from [Android Developers](https://developer.android.com/
 See [examples](examples.md) for safe observation, settings, batch, wait and companion-gesture prompts.
 
 `andromeda` starts the stdio server. `andromeda tools` prints tool schemas. `andromeda --device SERIAL call adm_get_device_info` runs a diagnostic call. Use an absolute executable path in client configuration when the client cannot find your Cargo bin directory.
-
-## Native preview installers
-
-Download the [v0.1.1 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.1): standalone Windows x64 EXE, Apple silicon Mac DMG, and signed Android APK. These apps do not need Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows is an unsigned cross-build without native Windows testing; Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
 
 ## Troubleshooting
 
