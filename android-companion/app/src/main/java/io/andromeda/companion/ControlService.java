@@ -39,6 +39,7 @@ public final class ControlService extends AccessibilityService {
     private volatile long lastAuthenticatedAt=0;
     private final AtomicLong generation=new AtomicLong();
     private final AtomicBoolean gestureActive=new AtomicBoolean();
+    private final ScreenCapture screenCapture=new ScreenCapture();
     private final Handler main=new Handler(Looper.getMainLooper());
     private final Set<LocalSocket> clients=ConcurrentHashMap.newKeySet();
     private final ThreadPoolExecutor workers=new ThreadPoolExecutor(4,4,30,TimeUnit.SECONDS,new ArrayBlockingQueue<>(4));
@@ -245,6 +246,7 @@ public final class ControlService extends AccessibilityService {
             disconnect.setDaemon(true); disconnect.start();
             JSONObject response;
             try { response = handle(new JSONObject(new String(bytes, StandardCharsets.UTF_8)), connected); }
+            catch (ScreenCapture.Failure error) { response = failure(error.code, error.getMessage()); }
             catch (Problem error) { response = failure(error.code, error.getMessage()); }
             catch (TimeoutException error) { response = failure("timeout", "Companion request exceeded its deadline; observe before retrying input"); }
             catch (Exception error) { response = failure("invalid_request", "Invalid or unsupported companion request"); }
@@ -276,6 +278,13 @@ public final class ControlService extends AccessibilityService {
         if(method.equals("stop")){stopSession();return success(new JSONObject().put("stopped",true).put("note","Already dispatched Android input may finish"));}
         RequestLease requestGeneration=lease(request);
         return switch(method){
+            case "screenshot" -> {
+                JSONObject before=screen();
+                JSONObject image=screenCapture.capture(this,request,()->checkRequest(requestGeneration,connected));
+                checkScreen(before,screen());
+                if(image.getInt("native_width")!=before.getInt("width") || image.getInt("native_height")!=before.getInt("height"))throw new Problem("stale_screen","Screenshot geometry changed; observe again");
+                yield success(image.put("screen",before));
+            }
             case "ui_tree" -> success(uiTree(requestGeneration, connected));
             case "type_text" -> success(typeTextVerified(request,requestGeneration,connected));
             case "gesture" -> success(gesture(request,requestGeneration,connected));
@@ -286,10 +295,10 @@ public final class ControlService extends AccessibilityService {
     private void requireSession()throws Problem{if(!armed())throw new Problem("session_inactive","Start a session in the Andromeda app on the phone");}
     private synchronized RequestLease lease(JSONObject request)throws Exception {
         String id=request.optString("project_id","");
-        boolean readOnly="ui_tree".equals(request.optString("method")) && !id.isEmpty();
+        boolean readOnly="screenshot".equals(request.optString("method")) || ("ui_tree".equals(request.optString("method")) && !id.isEmpty());
         if(!readOnly)requireSession();
         if(!id.isEmpty() && !readOnly && !desktopConnected())throw new Problem("desktop_disconnected","Desktop connection ended; resume after reconnecting");
-        if(id.isEmpty())return new RequestLease(generation.get(),"",0,false);
+        if(id.isEmpty())return new RequestLease(generation.get(),"",0,readOnly);
         ManagedProject project=managedProjects.get(id);
         if(project==null || (!readOnly && !"running".equals(project.state)))throw new Problem("project_inactive","Start or resume this project in Andromeda");
         return new RequestLease(generation.get(),id,project.revision,readOnly);

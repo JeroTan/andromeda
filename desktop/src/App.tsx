@@ -699,6 +699,10 @@ function App() {
                             : "Stopped · start this project when ready"}
                       </strong>
                       <p className="field-hint">
+                        Pause and Stop block input. Allowed observation tools
+                        remain available.
+                      </p>
+                      <p className="field-hint">
                         {bridge?.connected
                           ? "Phone and desktop connected · session status synchronized"
                           : bridge?.code === "companion_not_paired"

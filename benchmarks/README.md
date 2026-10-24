@@ -59,3 +59,17 @@ A fixed 1080×2376 game-result capture resized to 720 px on macOS arm64, release
 | AVIF, quality 80, speed 10 | 68,894 | 308.1 ms |
 
 WebP won on byte size in this sample; AVIF is not universally smaller. The earlier [lossless-WebP-only run](results/image-formats-2026-10-23.json) records the result before adding lossy WebP. These are fixed-source image-processing measurements, excluding phone capture, MCP transport and model time. They do not establish equal visual quality, device power use, or performance on other images. Raw screenshots remain private and are excluded from Git.
+
+### Compare capture backends through MCP
+
+Build the release CLI and an updated companion, pair the chosen device, and leave a non-sensitive static screen visible. This harness only calls `adm_get_view`; it never dispatches input and never saves image pixels:
+
+```sh
+cargo build --locked --release --bin andromeda
+python3 benchmarks/benchmark_mcp_capture.py \
+  --server target/release/andromeda --profile release \
+  --device YOUR_SERIAL --state-dir YOUR_PRIVATE_STATE_DIRECTORY \
+  --samples 20 --warmup 2 --output YOUR_NEW_RESULT_FILE.json
+```
+
+Repeat with `--reverse` and a different output path to inspect ordering/thermal effects. Each source is explicit, so fallback cannot silently enter a comparison. Native PNG, 720-pixel JPEG and 720-pixel WebP share requested dimensions and nominal quality across sources; Android and Rust encoders/resizers are not perceptually calibrated. The report separates the full stdio/JSON MCP round trip from controller execution and records warm-ups, failures, timing components, bytes, CPU/RSS samples, battery/temperature, host/device metadata and the server binary digest. API timestamp age is not original presentation age. Client/model inference and remote upload are excluded.

@@ -1,4 +1,5 @@
 mod long_view;
+mod view;
 use crate::{
     accessibility, capture,
     device::{Adb, Screen},
@@ -17,6 +18,7 @@ use std::{
     time::{Duration, Instant},
 };
 use tokio_util::sync::CancellationToken;
+pub use view::CaptureBackend;
 
 #[derive(Debug, Clone, Deserialize, JsonSchema)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -90,6 +92,7 @@ pub struct Controller {
     allow_control: bool,
     owner: Option<Arc<str>>,
     companion: Option<crate::companion::Companion>,
+    capture_backend: CaptureBackend,
 }
 struct Inner {
     adb: Adb,
@@ -133,6 +136,7 @@ impl Controller {
             default_serial,
             allow_control,
             owner: Some(Arc::from(owner.clone())),
+            capture_backend: self.capture_backend,
             companion: self.companion.clone().map(|bridge| bridge.scoped(owner)),
         }
     }
@@ -143,6 +147,7 @@ impl Controller {
             allow_control,
             owner: None,
             companion: None,
+            capture_backend: CaptureBackend::Auto,
             inner: Arc::new(Inner {
                 adb,
                 next_id: AtomicU64::new(1),
@@ -152,6 +157,12 @@ impl Controller {
                 paused: AtomicBool::new(false),
             }),
         }
+    }
+
+    /// Select acquisition for diagnostics and matched benchmarks. Auto prefers a paired bridge.
+    pub fn with_capture_backend(mut self, backend: CaptureBackend) -> Self {
+        self.capture_backend = backend;
+        self
     }
 
     /// Open a persistent capture stream for the selected device.
@@ -333,43 +344,7 @@ impl Controller {
                 Ok(Output::data(json!({"packages":packages})))
             }
             Operation::LongView(options) => self.long_view(&serial, options).await,
-            Operation::View(options) => {
-                options.validate()?;
-                let permit = self
-                    .inner
-                    .image_gate
-                    .clone()
-                    .acquire_owned()
-                    .await
-                    .map_err(|_| Error::new("shutdown", "Image processor closed"))?;
-                let geometry_started = Instant::now();
-                let screen = self.inner.adb.screen(&serial).await?;
-                let geometry_before_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
-                let capture_started = Instant::now();
-                let png = self.inner.adb.shell(&serial, "screencap -p").await?;
-                let capture_ms = capture_started.elapsed().as_secs_f64() * 1000.0;
-                let geometry_started = Instant::now();
-                self.inner.adb.ensure_screen(&serial, screen).await?;
-                let geometry_after_ms = geometry_started.elapsed().as_secs_f64() * 1000.0;
-                let (image, image_processing_ms) = tokio::task::spawn_blocking(move || {
-                    let _permit = permit;
-                    let started = Instant::now();
-                    capture::encode(png, options)
-                        .map(|image| (image, started.elapsed().as_secs_f64() * 1000.0))
-                })
-                .await
-                .map_err(|e| Error::new("image_encoding", e.to_string()))??;
-                if image.native_width != screen.width || image.native_height != screen.height {
-                    return Err(Error::new(
-                        "stale_screen",
-                        "Screenshot dimensions disagree with display geometry; observe again",
-                    ));
-                }
-                Ok(Output {
-                    data: json!({"serial":serial,"screen":screen,"image_width":image.width,"image_height":image.height,"scale_to_screen":{"x":screen.width as f64/image.width as f64,"y":screen.height as f64/image.height as f64},"bytes":image.bytes.len(),"mime_type":image.mime_type,"timings":{"geometry_before_ms":geometry_before_ms,"capture_ms":capture_ms,"geometry_after_ms":geometry_after_ms,"image_processing_ms":image_processing_ms}}),
-                    image: Some(image),
-                })
-            }
+            Operation::View(options) => self.view(&serial, options).await,
             Operation::UiTree => {
                 let tree = self.ui_tree(&serial).await?;
                 Ok(Output::data(

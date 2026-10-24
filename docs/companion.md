@@ -44,3 +44,9 @@ The companion only accepts framed, authenticated requests forwarded through the 
 ## Verification
 
 The repo's Rust companion seam tests use a simulated ADB server for framing, credential storage, errors, validation and tool results. The manually dispatched Android workflow can build the local UI bundle, debug/release APKs and a debug instrumentation APK, then run an emulator UI check. Hosted Actions remain disabled unless the operator explicitly requests a run. An isolated Android 17 emulator additionally verified a real two-pointer, 450 ms gesture and Unicode insertion into the debug test pad. It also confirmed light/dark and large-text rendering. Physical device gestures, TalkBack task traversal and broader rotation checks remain in the release ledger.
+
+## Optional screenshot acceleration
+
+On Android 11 and newer, the bridge can supply fresh screenshots using its declared screenshot capability. It supports bounded PNG/JPEG/WebP output and on-device scaling, while Rust validates the payload, encoding and native geometry. This uses the existing paired ADB connection and keeps no frame cache or files. Paused managed projects can still use allowed observation tools. Android-protected content remains protected and may appear black.
+
+The API has a platform rate limit and a bounded callback wait. Timeout, Stop and client disconnect discard the result and close buffers, including callbacks delivered later. Older phones and unavailable APIs retain the normal ADB path in automatic mode; no additional permission is granted automatically. Update/enablement behavior must be checked on each supported platform. See [API research](research/accessibility-capture.md) for lifecycle, clock and permission details.

@@ -1,5 +1,7 @@
+mod companion;
 mod long;
 use crate::errors::{Error, Result};
+pub(crate) use companion::from_companion;
 use image::{GenericImageView, ImageFormat, ImageReader, Limits};
 pub use long::{Scroll, Viewport, default_pages, default_settle_ms};
 use schemars::JsonSchema;
@@ -66,7 +68,9 @@ pub struct Image {
 }
 
 pub fn decode(png: &[u8]) -> Result<image::DynamicImage> {
-    let mut reader = ImageReader::with_format(Cursor::new(png), ImageFormat::Png);
+    let mut reader = ImageReader::new(Cursor::new(png))
+        .with_guessed_format()
+        .map_err(|_| Error::new("invalid_image", "Cannot identify screenshot image format"))?;
     let mut limits = Limits::default();
     limits.max_image_width = Some(8192);
     limits.max_image_height = Some(8192);
