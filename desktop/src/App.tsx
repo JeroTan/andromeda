@@ -1144,7 +1144,11 @@ function App() {
         >
           {dialog.kind === "connection" && (
             <>
-              <p>Review the Andromeda entry that will be written to:</p>
+              <p>
+                {dialog.client === "claude"
+                  ? "Connect Claude to Andromeda for this project:"
+                  : "Review the Andromeda entry that will be written to:"}
+              </p>
               <p className="path-block">{dialog.change.path}</p>
               {dialog.change.before && (
                 <details>
@@ -1155,9 +1159,9 @@ function App() {
               <h3>Proposed entry</h3>
               <pre>{dialog.change.after}</pre>
               <p className="field-hint">
-                Your other client settings are preserved. Reopen the project or
-                reconnect MCP afterward; your client may ask you to trust this
-                connection.
+                {dialog.client === "claude"
+                  ? "This registers Andromeda in your private Claude setup for this project and checks the connection. Other projects and servers are preserved."
+                  : "Your other client settings are preserved. Reopen the project or reconnect MCP afterward; your client may ask you to trust this connection."}
               </p>
               {dialog.change.replaces_existing && (
                 <label className="check-row">
@@ -1179,18 +1183,22 @@ function App() {
                   }
                   onClick={() =>
                     void run("apply", async () => {
-                      await invoke("apply_connection", {
+                      const result = await invoke<string>("apply_connection", {
                         id: dialog.change.id,
                         allowReplacement: replace,
                       });
                       setDialog(null);
-                      setNotice(
-                        "Connection saved. Reconnect MCP in your agent to use it.",
-                      );
+                      setNotice(result);
                     })
                   }
                 >
-                  {busy === "apply" ? "Saving…" : "Save connection"}
+                  {busy === "apply"
+                    ? dialog.client === "claude"
+                      ? "Connecting…"
+                      : "Saving…"
+                    : dialog.client === "claude"
+                      ? "Connect this project"
+                      : "Save connection"}
                 </button>
                 <button
                   className="secondary"

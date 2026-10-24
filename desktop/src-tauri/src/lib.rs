@@ -1,3 +1,4 @@
+mod claude_setup;
 use andromeda::{
     actions::{Controller, Operation, RunOptions},
     capture,
@@ -27,12 +28,18 @@ struct PreviewTask {
     cancel: CancellationToken,
 }
 
+enum PendingConnection {
+    File(ConfigChange),
+    Claude(claude_setup::Plan),
+}
+
 struct AppState {
+    state_directory: PathBuf,
     registry: Registry,
     controller: Controller,
     companion: andromeda::companion::Companion,
     host: Host,
-    changes: Mutex<BTreeMap<u64, ConfigChange>>,
+    changes: Mutex<BTreeMap<u64, PendingConnection>>,
     next_change: AtomicU64,
     settings: tokio::sync::Mutex<()>,
     preview: Mutex<Option<PreviewTask>>,
@@ -280,22 +287,45 @@ async fn preview_connection(
     id: String,
     client: Client,
 ) -> Result<ChangePreview> {
-    let change = state
-        .registry
-        .preview_client_config(&id, client, &server_path(&app)?)?;
-    let id = state.next_change.fetch_add(1, Ordering::Relaxed);
-    let preview = ChangePreview {
-        id,
-        path: change.path.clone(),
-        replaces_existing: change.replaces_existing,
-        before: change.before.clone(),
-        after: change.after.clone(),
+    let nonce = state.next_change.fetch_add(1, Ordering::Relaxed);
+    let (change, preview) = match client {
+        Client::Claude => {
+            let project = state.registry.get(&id)?;
+            let plan = claude_setup::Plan::new(
+                id,
+                project.root,
+                &server_path(&app)?,
+                &state.state_directory,
+            )?;
+            let preview = ChangePreview {
+                id: nonce,
+                path: plan.root.clone(),
+                replaces_existing: false,
+                before: String::new(),
+                after: serde_json::to_string_pretty(&plan.connection)
+                    .map_err(|_| Error::new("invalid_config", "Cannot encode Claude preview"))?,
+            };
+            (PendingConnection::Claude(plan), preview)
+        }
+        Client::Codex => {
+            let change = state
+                .registry
+                .preview_client_config(&id, client, &server_path(&app)?)?;
+            let preview = ChangePreview {
+                id: nonce,
+                path: change.path.clone(),
+                replaces_existing: change.replaces_existing,
+                before: change.before.clone(),
+                after: change.after.clone(),
+            };
+            (PendingConnection::File(change), preview)
+        }
     };
     let mut changes = state.changes.lock().unwrap_or_else(|e| e.into_inner());
     while changes.len() >= 8 {
         changes.pop_first();
     }
-    changes.insert(id, change);
+    changes.insert(nonce, change);
     Ok(preview)
 }
 
@@ -304,7 +334,7 @@ async fn apply_connection(
     state: State<'_, AppState>,
     id: u64,
     allow_replacement: bool,
-) -> Result<()> {
+) -> Result<String> {
     let _guard = state.settings.lock().await;
     let change = state
         .changes
@@ -312,9 +342,19 @@ async fn apply_connection(
         .unwrap_or_else(|e| e.into_inner())
         .remove(&id)
         .ok_or_else(|| Error::new("preview_expired", "Open a fresh connection preview"))?;
-    state
-        .registry
-        .apply_client_config(change, allow_replacement)
+    match change {
+        PendingConnection::File(change) => {
+            state
+                .registry
+                .apply_client_config(change, allow_replacement)?;
+            Ok("Connection saved. Reconnect MCP in your agent to use it.".into())
+        }
+        PendingConnection::Claude(plan) => {
+            state.registry.authorize(&plan.project_id, &plan.root)?;
+            plan.apply().await?;
+            Ok("Claude setup verified for this project. Refresh MCP in any already-open Claude conversation.".into())
+        }
+    }
 }
 
 #[tauri::command]
@@ -579,13 +619,14 @@ pub fn run() {
                 .map(Ok)
                 .unwrap_or_else(Registry::default_directory)?;
             let registry = Registry::open(directory.clone())?;
-            let store = andromeda::companion::Store::open(directory)?;
+            let store = andromeda::companion::Store::open(directory.clone())?;
             let adb = Adb::new("127.0.0.1:5037".parse()?);
             let companion = andromeda::companion::Companion::new(adb.clone(), store.clone());
             let controller = Controller::new(adb, None, true).with_companion(store);
             let host =
                 tauri::async_runtime::block_on(Host::start(registry.clone(), controller.clone()))?;
             app.manage(AppState {
+                state_directory: directory.canonicalize()?,
                 registry,
                 controller,
                 companion,
