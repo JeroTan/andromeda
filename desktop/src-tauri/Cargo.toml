@@ -1,6 +1,6 @@
 [package]
 name = "andromeda-desktop"
-version = "0.1.1"
+version = "0.1.2"
 description = "Project-scoped Android MCP setup and control"
 authors = ["Andromeda contributors"]
 edition = "2024"
