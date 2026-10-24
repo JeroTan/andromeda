@@ -4,7 +4,7 @@ Andromeda gives MCP agents tools to observe and control an Android device. The s
 
 [Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Examples](docs/examples.md) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md)
 
-**Development status:** the core server is implemented and undergoing device tests. The full release checklist is in [implementation-status.md](docs/implementation-status.md). Version `v0.1.0` has not been released.
+**v0.1.0 native preview:** [download the Mac DMG and Android APK](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0). The Mac app runs standalone and includes the Rust MCP server; npm is optional. Preview qualifications and deferred work are recorded in the release notes and [implementation-status.md](docs/implementation-status.md).
 
 ## Desktop preview
 
@@ -50,7 +50,7 @@ Coordinates use native screen pixels, with `(0, 0)` at the top left of the curre
 
 The device layer opens ADB services directly, without launching a host `adb` process for each tool call. Requests have deadlines and bounded output. `adm_stop` cancels active work, and failed input is never retried automatically. Screenshots support PNG, JPEG, lossy/lossless WebP and automatic compatible size selection. AVIF is an optional build feature for compatible clients/exports. The scrolling-view tool collects a bounded list scan; reobserve before using coordinates from earlier pages.
 
-The capture, persistent-stream and input benchmark harness, plus Android 17 emulator and OnePlus physical baselines, are in [benchmarks](benchmarks/README.md). Matched open-source comparisons remain future work. There is no claim that Andromeda is the fastest Android MCP implementation.
+The capture, persistent-stream and input benchmark harness, plus Android 17 emulator and OnePlus physical baselines, are in [benchmarks](benchmarks/README.md). Matched native-PNG comparisons with two pinned open-source MCP implementations are also recorded, with their mode-specific limitations. There is no claim that Andromeda is the fastest Android MCP implementation.
 
 ## Control and privacy
 

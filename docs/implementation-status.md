@@ -30,6 +30,14 @@ The notice collector now retains 304 macOS dependency records and 193 distinct f
 
 The full 15-minute emulator timer check passed with the real clock and authenticated desktop heartbeats. Desktop Stop arrived after 902.16 seconds, and subsequent input returned `project_stopped`. The emulator Settings selection was restored to Off. A follow-up Off-timer rejection verified that the corrected probe removes its temporary project registration and does not write a false expiry report. This closes the elapsed-duration emulator check, not physical power-management or all timer durations. See [timer evidence](evidence/session-timer-expiry-2026-10-24.json).
 
+## Native preview release direction — 2026-10-24
+
+The operator explicitly deferred Windows-native testing and requested that current artifacts be finished without further testing expansion. npm publication is optional and no longer a release requirement. Current native deliverables are the Apple silicon Mac DMG and signed Android release APK; Windows EXE/Linux binaries remain pending and are not represented as shipped. macOS Developer ID signing/notarization is unavailable on this host, so the current Mac package is an unsigned preview.
+
+Both native packages now contain collected original publisher notices, preserved license-by-reference statements, source associations and five corresponding MPL crate source archives. Exact Lynx source-JAR notices and PrimJS release notices supplement the earlier collection. Unresolved source-revision associations remain documented qualifications rather than invented prohibitions. The Android release APK is non-debuggable and has a dedicated release certificate; private signing material is stored outside the repository. Existing debug installs are not overwritten or uninstalled by this packaging work.
+
+Artifact evidence is in [native-release-0.1.0.json](evidence/native-release-0.1.0.json). Wider platform/human accessibility verification remains unproven. This preview publication does not require an npm login.
+
 ## Phase 1: Core Android MCP server
 
 - [x] Rust library and executable; Tokio and rmcp stdio transport
@@ -110,7 +118,7 @@ On 2026-10-22 the user clarified that Andromeda's main interface should be a des
 - [x] Project registration, allowed-tool policy, instruction-file loading and startup scope checks
 - [x] Reviewable project-local Codex/Claude configuration installation preserving existing settings
 - [x] Simple npm launcher (resolves local and platform builds; published platform packages remain release work)
-- [ ] Downloadable, signed/notarized desktop packaging for every platform
+- [ ] Remaining platform packages/signing beyond the current unsigned Mac preview (Windows testing deferred by operator)
 - [ ] Desktop UI/accessibility and project isolation verification on Windows and Linux (macOS evidence exists)
 - [x] Shared visual identity based on the supplied editorial reference: bold typography, rounded panels, thin borders, pastel accents and original celestial graphics
 - [ ] Polished phone permission/pairing/session UI with accessibility, text scaling, landscape and light/dark verification

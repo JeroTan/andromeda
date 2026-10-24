@@ -1,0 +1,48 @@
+{
+  "version": "0.1.0",
+  "channel": "preview",
+  "available_platforms": [
+    "macOS arm64",
+    "Android"
+  ],
+  "windows_native_testing": "deferred by operator",
+  "npm_publication": "not required; optional launcher retained in source",
+  "android_abis": [
+    "arm64-v8a",
+    "armeabi-v7a",
+    "x86",
+    "x86_64"
+  ],
+  "android_signature_schemes": [
+    "v2",
+    "v3"
+  ],
+  "android_certificate_sha256": "73269514febe09f68087b112eeb7d921ed164a04fbf6c2098c31b336c9fb3db0",
+  "macos_developer_id_signed": false,
+  "macos_notarized": false,
+  "macos_local_codesign_verify_exit": 1,
+  "notices_bundled": true,
+  "mpl_source_archives_bundled": 5,
+  "mcp_tool_count": 18,
+  "assets": [
+    {
+      "file": "Andromeda-0.1.0-android.apk",
+      "bytes": 44924676,
+      "sha256": "235f62412fd07420a852b8570bc1b59a41ede06bae2443191286cfe9c697a60c"
+    },
+    {
+      "file": "Andromeda-0.1.0-macos-arm64.dmg",
+      "bytes": 7055228,
+      "sha256": "661c50a811ed50b77916bd028dfd1e23a5e21efdadd43b9a167a377e2f1ac015"
+    }
+  ],
+  "qualifications": [
+    "Preview of existing supported local builds; Windows installer binary is not included.",
+    "Full native Windows/Linux and human screen-reader validation are deferred or incomplete; see repository evidence ledger.",
+    "Publisher source/notice associations are preserved with their recorded provenance qualifications.",
+    "Android release signing is separate from the development debug certificate; switching from a debug install requires a clean install and pairing again."
+  ],
+  "android_debuggable": false,
+  "android_min_sdk": 26,
+  "android_target_sdk": 36
+}
