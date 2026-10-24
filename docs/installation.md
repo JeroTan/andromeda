@@ -22,7 +22,7 @@ See [examples](examples.md) for safe observation, settings, batch, wait and comp
 
 ## Native preview installers
 
-Download the [v0.1.0 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0): a standalone Apple silicon Mac DMG and signed Android APK. Neither needs Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows EXE/Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
+Download the [v0.1.1 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.1): standalone Windows x64 EXE, Apple silicon Mac DMG, and signed Android APK. These apps do not need Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows is an unsigned cross-build without native Windows testing; Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
 
 ## Troubleshooting
 
