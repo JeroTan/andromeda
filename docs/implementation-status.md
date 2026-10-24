@@ -1,6 +1,14 @@
 # Implementation and release evidence
 
-The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger tracks the full scope; unchecked gates are unfinished. A passing mock test does not prove Android behavior or client compatibility.
+The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger records implementation and dated acceptance results. See the [current release audit](release-audit-0.1.1.md) for shipped artifacts, evidence and remaining validation limits. Historical pending items below may be resolved by later entries; unchecked verification is not a claim of a pass. A passing mock test does not prove Android behavior or client compatibility.
+
+## Published release and cleanup — 2026-10-24
+
+[v0.1.1](https://github.com/JeroTan/andromeda/releases/tag/v0.1.1) is published with Android APK, Apple silicon DMG and Windows x64 EXE installers. All five uploaded assets, including the manifest and checksums, were matched against local SHA-256 hashes after publication. See [publication evidence](evidence/release-publication-0.1.1.json). The repository remains private until the owner changes its visibility.
+
+Temporary compiler/toolchain outputs, dependency installations, old local release copies and private comparison imagery were removed. Installed apps, pairing, private release signing material and final v0.1.1 downloads were preserved. The task-installed MinGW, NSIS and 7-Zip packages were uninstalled without autoremove. See [cleanup evidence](evidence/release-cleanup-2026-10-24.json). GitHub Actions is still disabled with no active runs.
+
+The adaptive-held-gesture investigation is [recorded separately](research/adaptive-held-gestures.md). Continuation is feasible at the Android API level; implementation remains planned as specified. No model-response timing guarantee is made.
 
 ## Screenshot acceleration — 2026-10-24
 
@@ -83,7 +91,7 @@ This patch includes the Android icon, visible Save action for unsaved access edi
 - [x] Example prompts, demonstrations, contribution and security policies
 - [x] License and dependency/license review
 - [x] Historical GitHub CI evidence on Windows, macOS and Linux (core/desktop); Actions now disabled and manual-only
-- [ ] Release packaging, third-party notices and artifact verification
+- [x] APK, DMG and EXE preview packaging, bundled notices and uploaded artifact hash verification
 - [x] Reviewed feature PRs merged to main with conventional titles
 - [x] v0.1.0 native preview published with operator-deferred checks and remaining platform qualifications
 - [ ] Temporary branches, build artifacts and processes cleaned up
@@ -198,7 +206,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - Pinned Mobile Next 1.0.12 and MetaMask 0.5.0 were compared with Andromeda on the same physical USB phone, static screen and native PNG dimensions. All 160 capture samples and 80 Home-acknowledgement samples succeeded. Andromeda companion capture measured 175–196 ms median; its forced ADB path 372–384 ms, MetaMask default ADB 435–441 ms and Mobile Next explicitly selected ADB compatibility mode 500–505 ms. See [raw results and limitations](../benchmarks/README.md#matched-open-source-native-png-comparison).
 - Mobile Next default JPEG/mobilecli performance was not measured. This is a specific output-matched comparison, not a default-product ranking. Input had one ordering, child-process resource use is excluded, and no fastest-product or general reliability claim is established.
 
-### 6. Release packaging and artifact verification — release work
+### 6. Historical release packaging gates — superseded by the published-release entries
 
 - Build release artifacts for the CLI, desktop app and companion APK on Windows, macOS and Linux; include the project licenses and a generated third-party notices bundle (see [licenses](licenses.md)).
 - Produce checksums and verify the npm launcher against an installed platform package, not only a local Tauri build.
@@ -210,7 +218,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 - PRs #1–#3 are merged to main. The phone/capture/desktop integration merged at `d0efc43` after local validation and both review axes; release acceptance remains separate.
 - Hosted Actions is disabled by the operator. Re-enabling or rerunning it requires a new explicit instruction. The earlier Windows-fixture and Android-emulator failures remain documented; they are not reported as remote passes.
 
-### 8. Cleanup — development outputs retained
+### 8. Historical cleanup state — superseded by the cleanup receipt
 
 - Task-owned desktop preview/gateway processes were closed, temporary game captures and the failed video harness were removed, and completed feature branches were deleted.
 - The operator restart cleared both native test recorder processes; verification found zero remaining. That native recorder path is excluded from product code and further physical experiments.

@@ -1,0 +1,41 @@
+# Release audit: 0.1.1
+
+Checked on 2026-10-24 against the [original specification](intial_prompt.md), its session/capture amendments, the working tree and GitHub. The native preview is published. This audit separates shipped implementation from checks that remain unverified; it does not certify every platform or accessibility path.
+
+## Implementation and acceptance
+
+| Requirement | Evidence and result |
+| --- | --- |
+| Rust core reusable outside MCP; Tokio/rmcp stdio; model-independent controls | `src/lib.rs`, `src/device/`, `src/mcp/`; public device and MCP tests. Library examples use the controller independently. |
+| Discovery, device information, current view, UI tree and installed apps | Five observation tools in `docs/api.md` and `andromeda tools`; public transport/controller tests plus physical acceptance. |
+| Tap, swipe, navigation keys, text, app launch and URI launch | `src/actions/`, `src/input/`, `tests/controller.rs`; physical Settings workflows in both [Codex](evidence/core-acceptance-2026-10-22.json) and [Claude](evidence/claude-acceptance-2026-10-24.json). |
+| Sequential taps/swipes and coordinated batches with delays | Public schemas and controller tests cover interval timing, pauses and validation before execution. A failed action ends the sequence. |
+| Simultaneous multi-touch and Unicode through optional APK | [Physical companion evidence](evidence/physical-companion-2026-10-23.json): two concurrent pointers and exact Unicode insertion. [Interaction measurements](evidence/interaction-comparison-2026-10-24.json) record 48 endpoint samples per device and six recovery tasks per device. |
+| Structured results, descriptive errors, timing, timeout and cancellation; `adm_` names | `tests/mcp_protocol.rs`, `tests/controller.rs`, `tests/adb_transport.rs`; installed 0.1.1 catalog exposes 18 tools. |
+| Geometry, rotation, explicit device selection, disconnect recovery | Public device/protocol tests and physical rotation evidence; native image coordinates and scale metadata are documented in the API. |
+| Wait conditions, Stop, logging privacy and bounded work | `tests/controller.rs`, `tests/controller_scope.rs`, `tests/log_privacy.rs`; Stop is callable during an in-flight operation. Already-accepted Android input may finish. |
+| Persistent screen preview and streaming evaluation | `src/device/stream.rs`, desktop preview and transport framing/deadline tests. [Video investigation](research/low-latency-capture.md) retains the failed recorder result; the product uses an explicit ADB capture loop, not that recorder. |
+| Efficient capture with honest fallback and protected-content handling | [Capture spec](specs/accessibility-capture.md), public companion-capture tests, [emulator](evidence/accessibility-capture-emulator-2026-10-24.json) and [physical](evidence/accessibility-capture-physical-2026-10-24.json) evidence. |
+| Scaled PNG/JPEG/WebP, automatic compatible encoding, optional AVIF | `tests/image_formats.rs`, `src/capture/`, codec results under `benchmarks/results/`. AVIF is opt-in; native-coordinate mapping is preserved. |
+| Bounded scrolling long view | `src/actions/long_view.rs`, `tests/long_view.rs`, API documentation. Scrolling requires a running authorized project. Page limits/repeat detection do not prove complete coverage of an arbitrary list. |
+| Adaptive held-gesture investigation | [Investigation](research/adaptive-held-gestures.md) records continuation, ownership, bounded leases, watchdog/release and model-latency limits. Implementation remains planned, as the specification explicitly states. |
+| Desktop project/device/tool selection, configuration preview, instruction editor and canonical scope | `src/projects/`, `tests/project_scope.rs`, `tests/client_config.rs`, `tests/managed_mcp.rs`; [packaged macOS acceptance](evidence/desktop-acceptance-2026-10-22.json). Credentials stay in private app storage. |
+| Desktop owns Claude setup | `desktop/src-tauri/src/claude_setup.rs` runs project-local `claude mcp add` and checks `claude mcp get`. Installed 0.1.1 registration was rechecked as Connected. This does not prove an older chat refreshed its tool catalog. |
+| Independent project Start/Pause/Resume/Stop and global emergency Stop | [Session evidence](evidence/seamless-sessions-2026-10-23.json), [status regression](evidence/project-control-status-2026-10-24.json), public managed-MCP tests. Phone heartbeat loss paused input in 4.249 seconds; stale Resume could not override Stop. |
+| Reuse permission/pairing; no repeated phone Start; unlimited default and optional timer | Session evidence above plus [real-clock expiry](evidence/session-timer-expiry-2026-10-24.json): desktop stopped after 902.16 seconds and rejected subsequent input. Physical power-management behavior for every duration is not established. |
+| Desktop/phone visual identity, themes and framework evaluation | Original orbital assets, Tauri desktop, ReactLynx Android; [runtime decision](research/ui-runtime.md), [Android integration](research/android-lynx.md), desktop/phone UI evidence. Android adaptive/themed icon ships in 0.1.1. |
+| Accessibility, text scaling, landscape and focus behavior | [Companion acceptance](evidence/companion-acceptance-2026-10-22.json) verifies 200% text scale, exposed roles and permission activation. [Physical UI evidence](evidence/physical-ui-2026-10-23.json) verifies landscape and partial TalkBack. Full human traversal and wider desktop accessibility remain unverified. |
+| Reproducible latency/resource/accuracy/recovery metrics and comparisons | [Benchmark documentation](../benchmarks/README.md) and raw JSON retain sample counts, environment, p50/p95, stream FPS, host CPU/RSS, endpoints, recovery, codecs and real-client overhead. Matched native-PNG comparisons cover two alternatives; no universal fastest-product claim. |
+| Installation, client guides, API, sample prompts and contribution/security/license documents | `installation.md`, `claude-code.md`, `codex.md`, `clients.md`, `api.md`, `examples.md`, root `CONTRIBUTING.md`, `SECURITY.md`, MIT/Apache-2.0 licenses and `licenses.md`. |
+| Cross-platform checks and CI | Historical Windows/macOS/Linux core and desktop CI evidence is retained. Actions was disabled at the user's request and remains manual-only. Current Windows-native execution is explicitly deferred; earlier builds do not certify current native UI behavior. |
+| One-command launcher and native deliverables | [Launcher artifact check](evidence/release-packaging-2026-10-24.json); native APK/DMG/EXE and notices in [0.1.1 artifact evidence](evidence/native-release-0.1.1.json). npm publication is optional, not required to run native apps. |
+| Publish version and verify downloads | [v0.1.0 receipt](evidence/release-publication-0.1.0.json) and [v0.1.1 receipt](evidence/release-publication-0.1.1.json). GitHub asset digests match all local files; both are preview releases. |
+| Conventional PRs, merge and cleanup | Feature work is merged through PRs #1–#17. Final publication records follow in a documentation PR. [Cleanup receipt](evidence/release-cleanup-2026-10-24.json) records removed build outputs/tools and retained final artifacts/signing material. |
+
+## Remaining qualifications
+
+The operator deferred Windows-native testing and asked to finish the available artifacts without further testing expansion. The EXE is cross-compiled and its payload inspected; it has not been executed on Windows. macOS and Windows packages are unsigned; the Mac app is not notarized. Linux has historical build/package evidence but no 0.1.1 installer download.
+
+Full human TalkBack traversal, wider desktop keyboard/screen-reader coverage and current native Windows/Linux UI acceptance are not proven. These checks remain open in the original validation scope. Publishing a preview does not turn them into passes.
+
+Android release installs can update with the retained release key. Existing debug installations use a different certificate; they were preserved rather than uninstalled. Notice/source-provenance qualifications remain inside the packages. The repository's visibility remains the owner's decision.
