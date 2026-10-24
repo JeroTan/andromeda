@@ -4,7 +4,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 
 ## Screenshot acceleration — 2026-10-24
 
-Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. This does not change the live-preview recorder path.
+Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. Live preview retains its existing ADB capture loop.
 
 Local verification passed 62 Rust workspace tests, strict all-feature Clippy, Android debug/release builds, and the macOS release app build. Standards and Spec reviews have no unresolved findings. The isolated emulator retained accessibility through the capability update, protected a secure test window, passed late-callback/disconnect recovery, and supplied valid lossless WebP. See [acceptance evidence](evidence/accessibility-capture-emulator-2026-10-24.json).
 
