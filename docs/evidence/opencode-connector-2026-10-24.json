@@ -46,5 +46,13 @@
     "This verifies client connection, not a model-driven phone task or every tool call.",
     "Published v0.1.2 installers predate this connector; this source/local desktop update does not replace immutable release assets.",
     "Windows/Linux native UI acceptance and broader human accessibility remain deferred."
-  ]
+  ],
+  "installed_mac_app": {
+    "local_update": true,
+    "connect_opencode_button_verified": true,
+    "existing_projects_retained": 2,
+    "projects_left_stopped": true,
+    "desktop_binary_sha256": "10898699bb77d261e96cca3fde71f895a49a5e69fc0cf88e75202865b87397f9",
+    "jsonc_parser_mit_notice_present": true
+  }
 }

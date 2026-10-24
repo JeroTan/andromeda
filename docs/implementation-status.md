@@ -6,7 +6,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 
 The desktop now includes **Connect OpenCode** for OpenCode 2. It previews and saves project-local JSON/JSONC configuration, retaining comments, other settings and server entries. Replacement and concurrent-edit guards apply, and the managed connection keeps the existing directory/device/tool policy. OpenCode 1's legacy MCP map requires migration rather than silent rewriting.
 
-The native Mac button/preview/save/focus flow passed in an isolated project. The installed OpenCode 2.0.22 client reported Andromeda connected using that saved configuration, with no model calls or phone actions. Public configuration tests, the Rust workspace suite, strict Clippy and frontend/build checks passed. See [connector evidence](evidence/opencode-connector-2026-10-24.json) and the [OpenCode guide](opencode.md). Published 0.1.2 release assets predate this addition.
+The native Mac button/preview/save/focus flow passed in an isolated project. The installed OpenCode 2.0.22 client reported Andromeda connected using that saved configuration, with no model calls or phone actions. Public configuration tests, the Rust workspace suite, strict Clippy and frontend/build checks passed. See [connector evidence](evidence/opencode-connector-2026-10-24.json) and the [OpenCode guide](opencode.md). The local Mac app was updated and its Connect OpenCode button verified, preserving both registered projects in Stopped state. Published 0.1.2 release assets predate this addition.
 
 ## Preview acceptance closed — 2026-10-24
 
