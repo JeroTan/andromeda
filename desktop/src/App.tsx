@@ -702,6 +702,12 @@ function App() {
                         Pause and Stop block input. Allowed observation tools
                         remain available.
                       </p>
+                      {dirty && paused && (
+                        <p className="field-hint">
+                          You have unsaved access changes. Save access here,
+                          then start the project.
+                        </p>
+                      )}
                       <p className="field-hint">
                         {bridge?.connected
                           ? "Phone and desktop connected · session status synchronized"
@@ -714,17 +720,24 @@ function App() {
                       <button
                         className="primary"
                         disabled={
-                          !!busy || dirty || !project.enabled || !project.serial
+                          !!busy ||
+                          (paused &&
+                            !dirty &&
+                            (!project.enabled || !project.serial))
                         }
                         onClick={() =>
-                          void controlProject(paused ? "running" : "paused")
+                          dirty && paused
+                            ? void saveProject()
+                            : void controlProject(paused ? "running" : "paused")
                         }
                       >
-                        {session?.state === "running"
-                          ? "Pause project"
-                          : session?.state === "paused"
-                            ? "Resume project"
-                            : "Start project"}
+                        {dirty && paused
+                          ? "Save access"
+                          : session?.state === "running"
+                            ? "Pause project"
+                            : session?.state === "paused"
+                              ? "Resume project"
+                              : "Start project"}
                       </button>
                       <button
                         className="secondary"
