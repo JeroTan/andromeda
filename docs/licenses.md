@@ -60,3 +60,8 @@ done
 ## Release obligations
 
 A distributable release must include the project license files and a generated third-party notices file covering MIT, BSD, Apache-2.0, ISC, MPL-2.0, CC-BY-4.0, PSF-2.0 and BlueOak-1.0.0 dependencies. The current repository has the project licenses but does not yet ship a complete third-party notices bundle. That bundle is part of release packaging and artifact verification, not a code blocker for development builds.
+
+
+## Collection tooling added on 2026-10-24
+
+`scripts/collect-notices.py` and `release/about.toml` generate a macOS arm64 review candidate with pinned cargo-about 0.9.2. The first reviewed candidate contains 304 components and 193 unique notice texts. Seven missing original-file cases were resolved from exact upstream revisions; eight objc2-family crates, selectors, and final desktop bundle reconciliation remain explicit review gaps. Android/Lynx native mapping and MPL source provision also remain open. This does not claim the complete release notice obligation is met. See [packaging](release-packaging.md) and [research](research/release-notices.md).

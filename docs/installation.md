@@ -20,6 +20,10 @@ See [examples](examples.md) for safe observation, settings, batch, wait and comp
 
 `andromeda` starts the stdio server. `andromeda tools` prints tool schemas. `andromeda --device SERIAL call adm_get_device_info` runs a diagnostic call. Use an absolute executable path in client configuration when the client cannot find your Cargo bin directory.
 
+## Native installers in preparation
+
+The release formats are Android APK (Lynx phone bridge), macOS DMG and Windows EXE installer; Linux packaging is also tracked. `@jrw/andromeda` is the selected optional npm launcher, currently unpublished. Do not install the unrelated bare `andromeda` npm package. See [release packaging](release-packaging.md) for local build and verification commands.
+
 ## Troubleshooting
 
 | Result | Action |

@@ -14,7 +14,7 @@ npm ci
 npm run tauri dev
 ```
 
-To build a packaged preview, run `npm run tauri build -- --debug`. The build script includes a matching MCP executable inside the package. CI builds preview packages for macOS, Windows and Linux; downloads are available when the account's Actions artifact storage permits upload. Build/test failures fail the job; an unavailable preview upload is reported separately in its summary. These packages are development builds; published platform packages remain a release task.
+Run `npm run installer` from `desktop/` to build the native installer: macOS `.dmg`, Windows NSIS `.exe`, or Linux `.deb`. Use `npm run installer -- --debug` for a development preview. The build script includes a matching MCP executable inside the package. The manual CI configuration targets these formats, but hosted Actions is disabled at the operator's request. Native Windows/Linux installer validation remains a release gate. Build/test failures fail the job; an unavailable preview upload is reported separately in its summary. These packages are development builds; published platform packages remain a release task.
 
 After a local build, the one-command launcher is available from the repository root:
 
@@ -24,7 +24,7 @@ node npm/launcher.mjs
 andromeda
 ```
 
-The launcher resolves `ANDROMEDA_DESKTOP_BIN`, a macOS `.app` path in `ANDROMEDA_DESKTOP_APP`, a `@andromeda/desktop-<platform>-<arch>` package, or a local Tauri/development build. `--print-path` reports the selected executable. It does not download a release or start the MCP server itself. See [npm/README.md](../npm/README.md).
+The launcher resolves `ANDROMEDA_DESKTOP_BIN`, a macOS `.app` path in `ANDROMEDA_DESKTOP_APP`, a `@jrw/desktop-<platform>-<arch>` package, or a local Tauri/development build. `--print-path` reports the selected executable. It does not download a release or start the MCP server itself. See [npm/README.md](../npm/README.md).
 
 ## Connect a project
 

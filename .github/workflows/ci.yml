@@ -55,9 +55,9 @@ jobs:
           - os: ubuntu-latest
             bundle: deb
           - os: macos-latest
-            bundle: app
+            bundle: dmg
           - os: windows-latest
-            bundle: msi
+            bundle: nsis
     runs-on: ${{ matrix.os }}
     defaults:
       run:

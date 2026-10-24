@@ -1,5 +1,5 @@
 {
-  "name": "andromeda",
+  "name": "@jrw/andromeda",
   "version": "0.1.0",
   "private": true,
   "description": "Local Android observation and control for MCP agents",
@@ -20,5 +20,6 @@
   },
   "scripts": {
     "test:launcher": "node --test npm/launcher.test.mjs"
-  }
+  },
+  "andromedaPlatformScope": "@jrw"
 }

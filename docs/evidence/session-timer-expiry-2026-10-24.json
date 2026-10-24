@@ -1,0 +1,5405 @@
+{
+  "clock_accelerated": false,
+  "elapsed_to_desktop_stop_seconds": 902.160813917,
+  "environment": "disposable Android emulator",
+  "initial_seconds": 899,
+  "input_after_expiry_error": "project_stopped",
+  "limitations": [
+    "One real elapsed-time run with authenticated desktop heartbeats; not physical-device power-management evidence.",
+    "Phone timer selected through Settings before starting this probe; no private timer state or clock is modified."
+  ],
+  "samples": [
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 1.001710208,
+      "phone_active": true,
+      "phone_seconds": 899
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 2.008669333,
+      "phone_active": true,
+      "phone_seconds": 898
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 3.015760833,
+      "phone_active": true,
+      "phone_seconds": 897
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 4.0238255,
+      "phone_active": true,
+      "phone_seconds": 896
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 5.03109375,
+      "phone_active": true,
+      "phone_seconds": 895
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 6.039197875,
+      "phone_active": true,
+      "phone_seconds": 894
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 7.045606,
+      "phone_active": true,
+      "phone_seconds": 893
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 8.050435875,
+      "phone_active": true,
+      "phone_seconds": 892
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 9.057557792,
+      "phone_active": true,
+      "phone_seconds": 891
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 10.066521583,
+      "phone_active": true,
+      "phone_seconds": 890
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 11.074255458,
+      "phone_active": true,
+      "phone_seconds": 889
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 12.081537458,
+      "phone_active": true,
+      "phone_seconds": 888
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 13.085548708,
+      "phone_active": true,
+      "phone_seconds": 887
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 14.090022875,
+      "phone_active": true,
+      "phone_seconds": 886
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 15.097272167,
+      "phone_active": true,
+      "phone_seconds": 885
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 16.102299833,
+      "phone_active": true,
+      "phone_seconds": 884
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 17.108268917,
+      "phone_active": true,
+      "phone_seconds": 883
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 18.115909167,
+      "phone_active": true,
+      "phone_seconds": 882
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 19.123127208,
+      "phone_active": true,
+      "phone_seconds": 881
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 20.131491375,
+      "phone_active": true,
+      "phone_seconds": 880
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 21.136440417,
+      "phone_active": true,
+      "phone_seconds": 879
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 22.1438985,
+      "phone_active": true,
+      "phone_seconds": 878
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 23.150086125,
+      "phone_active": true,
+      "phone_seconds": 877
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 24.157332083,
+      "phone_active": true,
+      "phone_seconds": 876
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 25.165822083,
+      "phone_active": true,
+      "phone_seconds": 875
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 26.172717917,
+      "phone_active": true,
+      "phone_seconds": 874
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 27.179611125,
+      "phone_active": true,
+      "phone_seconds": 873
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 28.186197708,
+      "phone_active": true,
+      "phone_seconds": 872
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 29.193814375,
+      "phone_active": true,
+      "phone_seconds": 871
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 30.202434292,
+      "phone_active": true,
+      "phone_seconds": 870
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 31.209898167,
+      "phone_active": true,
+      "phone_seconds": 869
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 32.215513083,
+      "phone_active": true,
+      "phone_seconds": 868
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 33.223493417,
+      "phone_active": true,
+      "phone_seconds": 867
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 34.233309625,
+      "phone_active": true,
+      "phone_seconds": 866
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 35.241126208,
+      "phone_active": true,
+      "phone_seconds": 865
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 36.248176583,
+      "phone_active": true,
+      "phone_seconds": 864
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 37.255683875,
+      "phone_active": true,
+      "phone_seconds": 863
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 38.262694167,
+      "phone_active": true,
+      "phone_seconds": 862
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 39.269811792,
+      "phone_active": true,
+      "phone_seconds": 861
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 40.277353792,
+      "phone_active": true,
+      "phone_seconds": 860
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 41.286216125,
+      "phone_active": true,
+      "phone_seconds": 859
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 42.290647917,
+      "phone_active": true,
+      "phone_seconds": 858
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 43.296609417,
+      "phone_active": true,
+      "phone_seconds": 857
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 44.304519417,
+      "phone_active": true,
+      "phone_seconds": 856
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 45.311916542,
+      "phone_active": true,
+      "phone_seconds": 855
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 46.317554667,
+      "phone_active": true,
+      "phone_seconds": 854
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 47.325572833,
+      "phone_active": true,
+      "phone_seconds": 853
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 48.332552125,
+      "phone_active": true,
+      "phone_seconds": 852
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 49.340084,
+      "phone_active": true,
+      "phone_seconds": 851
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 50.347388167,
+      "phone_active": true,
+      "phone_seconds": 850
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 51.354880958,
+      "phone_active": true,
+      "phone_seconds": 849
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 52.362288333,
+      "phone_active": true,
+      "phone_seconds": 848
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 53.369369,
+      "phone_active": true,
+      "phone_seconds": 847
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 54.376173875,
+      "phone_active": true,
+      "phone_seconds": 846
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 55.382997625,
+      "phone_active": true,
+      "phone_seconds": 845
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 56.38805725,
+      "phone_active": true,
+      "phone_seconds": 844
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 57.393170875,
+      "phone_active": true,
+      "phone_seconds": 843
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 58.399985375,
+      "phone_active": true,
+      "phone_seconds": 842
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 59.407194542,
+      "phone_active": true,
+      "phone_seconds": 841
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 60.414509792,
+      "phone_active": true,
+      "phone_seconds": 840
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 61.422272667,
+      "phone_active": true,
+      "phone_seconds": 839
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 62.42907475,
+      "phone_active": true,
+      "phone_seconds": 838
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 63.437205417,
+      "phone_active": true,
+      "phone_seconds": 837
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 64.444224875,
+      "phone_active": true,
+      "phone_seconds": 836
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 65.451884625,
+      "phone_active": true,
+      "phone_seconds": 835
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 66.458960125,
+      "phone_active": true,
+      "phone_seconds": 834
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 67.465591417,
+      "phone_active": true,
+      "phone_seconds": 833
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 68.473161083,
+      "phone_active": true,
+      "phone_seconds": 832
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 69.479590167,
+      "phone_active": true,
+      "phone_seconds": 831
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 70.486807708,
+      "phone_active": true,
+      "phone_seconds": 830
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 71.492710083,
+      "phone_active": true,
+      "phone_seconds": 829
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 72.499048625,
+      "phone_active": true,
+      "phone_seconds": 828
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 73.505258917,
+      "phone_active": true,
+      "phone_seconds": 827
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 74.510645917,
+      "phone_active": true,
+      "phone_seconds": 826
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 75.515151458,
+      "phone_active": true,
+      "phone_seconds": 825
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 76.520937333,
+      "phone_active": true,
+      "phone_seconds": 824
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 77.529895375,
+      "phone_active": true,
+      "phone_seconds": 823
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 78.534404375,
+      "phone_active": true,
+      "phone_seconds": 822
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 79.548585583,
+      "phone_active": true,
+      "phone_seconds": 821
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 80.554258458,
+      "phone_active": true,
+      "phone_seconds": 820
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 81.55779425,
+      "phone_active": true,
+      "phone_seconds": 819
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 82.562254958,
+      "phone_active": true,
+      "phone_seconds": 818
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 83.565981,
+      "phone_active": true,
+      "phone_seconds": 817
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 84.573033083,
+      "phone_active": true,
+      "phone_seconds": 816
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 85.578291708,
+      "phone_active": true,
+      "phone_seconds": 815
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 86.58330425,
+      "phone_active": true,
+      "phone_seconds": 814
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 87.5893495,
+      "phone_active": true,
+      "phone_seconds": 813
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 88.59316075,
+      "phone_active": true,
+      "phone_seconds": 812
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 89.598366167,
+      "phone_active": true,
+      "phone_seconds": 811
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 90.603811667,
+      "phone_active": true,
+      "phone_seconds": 810
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 91.608620667,
+      "phone_active": true,
+      "phone_seconds": 809
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 92.61536525,
+      "phone_active": true,
+      "phone_seconds": 808
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 93.620724625,
+      "phone_active": true,
+      "phone_seconds": 807
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 94.62707775,
+      "phone_active": true,
+      "phone_seconds": 806
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 95.631773875,
+      "phone_active": true,
+      "phone_seconds": 805
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 96.636755625,
+      "phone_active": true,
+      "phone_seconds": 804
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 97.642107708,
+      "phone_active": true,
+      "phone_seconds": 803
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 98.647961167,
+      "phone_active": true,
+      "phone_seconds": 802
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 99.654409458,
+      "phone_active": true,
+      "phone_seconds": 801
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 100.658554083,
+      "phone_active": true,
+      "phone_seconds": 800
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 101.661592458,
+      "phone_active": true,
+      "phone_seconds": 799
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 102.666476583,
+      "phone_active": true,
+      "phone_seconds": 798
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 103.677758708,
+      "phone_active": true,
+      "phone_seconds": 797
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 104.682900875,
+      "phone_active": true,
+      "phone_seconds": 796
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 105.689889292,
+      "phone_active": true,
+      "phone_seconds": 795
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 106.69877925,
+      "phone_active": true,
+      "phone_seconds": 794
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 107.7129055,
+      "phone_active": true,
+      "phone_seconds": 793
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 108.716452083,
+      "phone_active": true,
+      "phone_seconds": 792
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 109.719639583,
+      "phone_active": true,
+      "phone_seconds": 791
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 110.724418583,
+      "phone_active": true,
+      "phone_seconds": 790
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 111.728604167,
+      "phone_active": true,
+      "phone_seconds": 789
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 112.735297208,
+      "phone_active": true,
+      "phone_seconds": 788
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 113.74075325,
+      "phone_active": true,
+      "phone_seconds": 787
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 114.747073125,
+      "phone_active": true,
+      "phone_seconds": 786
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 115.752516208,
+      "phone_active": true,
+      "phone_seconds": 785
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 116.759570625,
+      "phone_active": true,
+      "phone_seconds": 784
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 117.766942042,
+      "phone_active": true,
+      "phone_seconds": 783
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 118.77356125,
+      "phone_active": true,
+      "phone_seconds": 782
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 119.781010458,
+      "phone_active": true,
+      "phone_seconds": 781
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 120.788271333,
+      "phone_active": true,
+      "phone_seconds": 780
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 121.795248167,
+      "phone_active": true,
+      "phone_seconds": 779
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 122.8044905,
+      "phone_active": true,
+      "phone_seconds": 778
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 123.810781083,
+      "phone_active": true,
+      "phone_seconds": 777
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 124.818098083,
+      "phone_active": true,
+      "phone_seconds": 776
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 125.824508833,
+      "phone_active": true,
+      "phone_seconds": 775
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 126.830955333,
+      "phone_active": true,
+      "phone_seconds": 774
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 127.83790625,
+      "phone_active": true,
+      "phone_seconds": 773
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 128.84592,
+      "phone_active": true,
+      "phone_seconds": 772
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 129.851724083,
+      "phone_active": true,
+      "phone_seconds": 771
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 130.860293625,
+      "phone_active": true,
+      "phone_seconds": 770
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 131.868502708,
+      "phone_active": true,
+      "phone_seconds": 769
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 132.877004875,
+      "phone_active": true,
+      "phone_seconds": 768
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 133.882537583,
+      "phone_active": true,
+      "phone_seconds": 767
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 134.890320708,
+      "phone_active": true,
+      "phone_seconds": 766
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 135.896639667,
+      "phone_active": true,
+      "phone_seconds": 765
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 136.908028333,
+      "phone_active": true,
+      "phone_seconds": 764
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 137.91633425,
+      "phone_active": true,
+      "phone_seconds": 763
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 138.92101875,
+      "phone_active": true,
+      "phone_seconds": 762
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 139.9271315,
+      "phone_active": true,
+      "phone_seconds": 761
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 140.933726708,
+      "phone_active": true,
+      "phone_seconds": 760
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 141.940146583,
+      "phone_active": true,
+      "phone_seconds": 759
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 142.947147833,
+      "phone_active": true,
+      "phone_seconds": 758
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 143.953162042,
+      "phone_active": true,
+      "phone_seconds": 757
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 144.959344417,
+      "phone_active": true,
+      "phone_seconds": 756
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 145.965469042,
+      "phone_active": true,
+      "phone_seconds": 755
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 146.969690167,
+      "phone_active": true,
+      "phone_seconds": 754
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 147.976983292,
+      "phone_active": true,
+      "phone_seconds": 753
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 148.98315675,
+      "phone_active": true,
+      "phone_seconds": 752
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 149.991061542,
+      "phone_active": true,
+      "phone_seconds": 751
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 150.995572708,
+      "phone_active": true,
+      "phone_seconds": 750
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 152.001936833,
+      "phone_active": true,
+      "phone_seconds": 748
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 153.006881042,
+      "phone_active": true,
+      "phone_seconds": 747
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 154.012690583,
+      "phone_active": true,
+      "phone_seconds": 746
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 155.020920292,
+      "phone_active": true,
+      "phone_seconds": 745
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 156.025584833,
+      "phone_active": true,
+      "phone_seconds": 744
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 157.032401458,
+      "phone_active": true,
+      "phone_seconds": 743
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 158.0404175,
+      "phone_active": true,
+      "phone_seconds": 742
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 159.047018417,
+      "phone_active": true,
+      "phone_seconds": 741
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 160.053949875,
+      "phone_active": true,
+      "phone_seconds": 740
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 161.061375292,
+      "phone_active": true,
+      "phone_seconds": 739
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 162.068842208,
+      "phone_active": true,
+      "phone_seconds": 738
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 163.076024667,
+      "phone_active": true,
+      "phone_seconds": 737
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 164.082993542,
+      "phone_active": true,
+      "phone_seconds": 736
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 165.089686583,
+      "phone_active": true,
+      "phone_seconds": 735
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 166.097407333,
+      "phone_active": true,
+      "phone_seconds": 734
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 167.105004958,
+      "phone_active": true,
+      "phone_seconds": 733
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 168.111495542,
+      "phone_active": true,
+      "phone_seconds": 732
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 169.118965375,
+      "phone_active": true,
+      "phone_seconds": 731
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 170.126038708,
+      "phone_active": true,
+      "phone_seconds": 730
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 171.129227083,
+      "phone_active": true,
+      "phone_seconds": 729
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 172.135365875,
+      "phone_active": true,
+      "phone_seconds": 728
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 173.141962167,
+      "phone_active": true,
+      "phone_seconds": 727
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 174.148449417,
+      "phone_active": true,
+      "phone_seconds": 726
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 175.155636,
+      "phone_active": true,
+      "phone_seconds": 725
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 176.16267175,
+      "phone_active": true,
+      "phone_seconds": 724
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 177.170548708,
+      "phone_active": true,
+      "phone_seconds": 723
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 178.177263333,
+      "phone_active": true,
+      "phone_seconds": 722
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 179.1842905,
+      "phone_active": true,
+      "phone_seconds": 721
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 180.190664792,
+      "phone_active": true,
+      "phone_seconds": 720
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 181.2013105,
+      "phone_active": true,
+      "phone_seconds": 719
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 182.208649875,
+      "phone_active": true,
+      "phone_seconds": 718
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 183.22350075,
+      "phone_active": true,
+      "phone_seconds": 717
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 184.236245417,
+      "phone_active": true,
+      "phone_seconds": 716
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 185.242582208,
+      "phone_active": true,
+      "phone_seconds": 715
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 186.247631875,
+      "phone_active": true,
+      "phone_seconds": 714
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 187.265287292,
+      "phone_active": true,
+      "phone_seconds": 713
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 188.269852125,
+      "phone_active": true,
+      "phone_seconds": 712
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 189.278064333,
+      "phone_active": true,
+      "phone_seconds": 711
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 190.284726583,
+      "phone_active": true,
+      "phone_seconds": 710
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 191.321037708,
+      "phone_active": true,
+      "phone_seconds": 709
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 192.324046625,
+      "phone_active": true,
+      "phone_seconds": 708
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 193.325612125,
+      "phone_active": true,
+      "phone_seconds": 707
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 194.329941125,
+      "phone_active": true,
+      "phone_seconds": 706
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 195.335015167,
+      "phone_active": true,
+      "phone_seconds": 705
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 196.338301417,
+      "phone_active": true,
+      "phone_seconds": 704
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 197.341594333,
+      "phone_active": true,
+      "phone_seconds": 703
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 198.346564708,
+      "phone_active": true,
+      "phone_seconds": 702
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 199.350710792,
+      "phone_active": true,
+      "phone_seconds": 701
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 200.354937917,
+      "phone_active": true,
+      "phone_seconds": 700
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 201.359296958,
+      "phone_active": true,
+      "phone_seconds": 699
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 202.3634865,
+      "phone_active": true,
+      "phone_seconds": 698
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 203.366638208,
+      "phone_active": true,
+      "phone_seconds": 697
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 204.370300125,
+      "phone_active": true,
+      "phone_seconds": 696
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 205.373733625,
+      "phone_active": true,
+      "phone_seconds": 695
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 206.377641875,
+      "phone_active": true,
+      "phone_seconds": 694
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 207.380639083,
+      "phone_active": true,
+      "phone_seconds": 693
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 208.384058292,
+      "phone_active": true,
+      "phone_seconds": 692
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 209.388420667,
+      "phone_active": true,
+      "phone_seconds": 691
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 210.391740208,
+      "phone_active": true,
+      "phone_seconds": 690
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 211.396185333,
+      "phone_active": true,
+      "phone_seconds": 689
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 212.399799458,
+      "phone_active": true,
+      "phone_seconds": 688
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 213.405056292,
+      "phone_active": true,
+      "phone_seconds": 687
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 214.411955458,
+      "phone_active": true,
+      "phone_seconds": 686
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 215.420887958,
+      "phone_active": true,
+      "phone_seconds": 685
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 216.43010175,
+      "phone_active": true,
+      "phone_seconds": 684
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 217.43471725,
+      "phone_active": true,
+      "phone_seconds": 683
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 218.441367417,
+      "phone_active": true,
+      "phone_seconds": 682
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 219.447630292,
+      "phone_active": true,
+      "phone_seconds": 681
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 220.451921292,
+      "phone_active": true,
+      "phone_seconds": 680
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 221.458909958,
+      "phone_active": true,
+      "phone_seconds": 679
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 222.463762583,
+      "phone_active": true,
+      "phone_seconds": 678
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 223.47052,
+      "phone_active": true,
+      "phone_seconds": 677
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 224.47679275,
+      "phone_active": true,
+      "phone_seconds": 676
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 225.484863583,
+      "phone_active": true,
+      "phone_seconds": 675
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 226.491501208,
+      "phone_active": true,
+      "phone_seconds": 674
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 227.498693625,
+      "phone_active": true,
+      "phone_seconds": 673
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 228.502745667,
+      "phone_active": true,
+      "phone_seconds": 672
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 229.508329875,
+      "phone_active": true,
+      "phone_seconds": 671
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 230.515539875,
+      "phone_active": true,
+      "phone_seconds": 670
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 231.523210625,
+      "phone_active": true,
+      "phone_seconds": 669
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 232.529303208,
+      "phone_active": true,
+      "phone_seconds": 668
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 233.538445708,
+      "phone_active": true,
+      "phone_seconds": 667
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 234.547051083,
+      "phone_active": true,
+      "phone_seconds": 666
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 235.554831167,
+      "phone_active": true,
+      "phone_seconds": 665
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 236.569776542,
+      "phone_active": true,
+      "phone_seconds": 664
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 237.582920875,
+      "phone_active": true,
+      "phone_seconds": 663
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 238.597832333,
+      "phone_active": true,
+      "phone_seconds": 662
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 239.607108208,
+      "phone_active": true,
+      "phone_seconds": 661
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 240.613572125,
+      "phone_active": true,
+      "phone_seconds": 660
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 241.621012208,
+      "phone_active": true,
+      "phone_seconds": 659
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 242.628609417,
+      "phone_active": true,
+      "phone_seconds": 658
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 243.635836792,
+      "phone_active": true,
+      "phone_seconds": 657
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 244.64375575,
+      "phone_active": true,
+      "phone_seconds": 656
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 245.651398583,
+      "phone_active": true,
+      "phone_seconds": 655
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 246.659047917,
+      "phone_active": true,
+      "phone_seconds": 654
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 247.667148333,
+      "phone_active": true,
+      "phone_seconds": 653
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 248.674558125,
+      "phone_active": true,
+      "phone_seconds": 652
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 249.682218875,
+      "phone_active": true,
+      "phone_seconds": 651
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 250.690398125,
+      "phone_active": true,
+      "phone_seconds": 650
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 251.696610625,
+      "phone_active": true,
+      "phone_seconds": 649
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 252.704882292,
+      "phone_active": true,
+      "phone_seconds": 648
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 253.709930417,
+      "phone_active": true,
+      "phone_seconds": 647
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 254.716480958,
+      "phone_active": true,
+      "phone_seconds": 646
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 255.723894625,
+      "phone_active": true,
+      "phone_seconds": 645
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 256.731991042,
+      "phone_active": true,
+      "phone_seconds": 644
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 257.739777417,
+      "phone_active": true,
+      "phone_seconds": 643
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 258.743684,
+      "phone_active": true,
+      "phone_seconds": 642
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 259.749844167,
+      "phone_active": true,
+      "phone_seconds": 641
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 260.755284083,
+      "phone_active": true,
+      "phone_seconds": 640
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 261.763441708,
+      "phone_active": true,
+      "phone_seconds": 639
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 262.770171792,
+      "phone_active": true,
+      "phone_seconds": 638
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 263.777479917,
+      "phone_active": true,
+      "phone_seconds": 637
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 264.785489,
+      "phone_active": true,
+      "phone_seconds": 636
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 265.793079208,
+      "phone_active": true,
+      "phone_seconds": 635
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 266.800050167,
+      "phone_active": true,
+      "phone_seconds": 634
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 267.806055417,
+      "phone_active": true,
+      "phone_seconds": 633
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 268.812716833,
+      "phone_active": true,
+      "phone_seconds": 632
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 269.81997775,
+      "phone_active": true,
+      "phone_seconds": 631
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 270.825984208,
+      "phone_active": true,
+      "phone_seconds": 630
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 271.831163917,
+      "phone_active": true,
+      "phone_seconds": 629
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 272.83787475,
+      "phone_active": true,
+      "phone_seconds": 628
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 273.844813208,
+      "phone_active": true,
+      "phone_seconds": 627
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 274.857887083,
+      "phone_active": true,
+      "phone_seconds": 626
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 275.862561042,
+      "phone_active": true,
+      "phone_seconds": 625
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 276.867677208,
+      "phone_active": true,
+      "phone_seconds": 624
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 277.872347833,
+      "phone_active": true,
+      "phone_seconds": 623
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 278.878167417,
+      "phone_active": true,
+      "phone_seconds": 622
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 279.882655625,
+      "phone_active": true,
+      "phone_seconds": 621
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 280.897153417,
+      "phone_active": true,
+      "phone_seconds": 620
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 281.902373,
+      "phone_active": true,
+      "phone_seconds": 619
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 282.907719,
+      "phone_active": true,
+      "phone_seconds": 618
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 283.91161775,
+      "phone_active": true,
+      "phone_seconds": 617
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 284.91793975,
+      "phone_active": true,
+      "phone_seconds": 616
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 285.92265175,
+      "phone_active": true,
+      "phone_seconds": 615
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 286.927386167,
+      "phone_active": true,
+      "phone_seconds": 614
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 287.933498917,
+      "phone_active": true,
+      "phone_seconds": 613
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 288.939572292,
+      "phone_active": true,
+      "phone_seconds": 612
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 289.944629333,
+      "phone_active": true,
+      "phone_seconds": 611
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 290.950136542,
+      "phone_active": true,
+      "phone_seconds": 610
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 291.955700792,
+      "phone_active": true,
+      "phone_seconds": 609
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 292.9615685,
+      "phone_active": true,
+      "phone_seconds": 608
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 293.966305292,
+      "phone_active": true,
+      "phone_seconds": 607
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 294.971472375,
+      "phone_active": true,
+      "phone_seconds": 606
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 295.977332167,
+      "phone_active": true,
+      "phone_seconds": 605
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 296.982060125,
+      "phone_active": true,
+      "phone_seconds": 604
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 297.98794425,
+      "phone_active": true,
+      "phone_seconds": 603
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 298.992051083,
+      "phone_active": true,
+      "phone_seconds": 602
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 299.999583208,
+      "phone_active": true,
+      "phone_seconds": 600
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 301.004726042,
+      "phone_active": true,
+      "phone_seconds": 599
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 302.010968125,
+      "phone_active": true,
+      "phone_seconds": 598
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 303.017384125,
+      "phone_active": true,
+      "phone_seconds": 597
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 304.022968167,
+      "phone_active": true,
+      "phone_seconds": 596
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 305.029339708,
+      "phone_active": true,
+      "phone_seconds": 595
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 306.03729,
+      "phone_active": true,
+      "phone_seconds": 594
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 307.043558167,
+      "phone_active": true,
+      "phone_seconds": 593
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 308.049925833,
+      "phone_active": true,
+      "phone_seconds": 592
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 309.054006958,
+      "phone_active": true,
+      "phone_seconds": 591
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 310.073663167,
+      "phone_active": true,
+      "phone_seconds": 590
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 311.097799833,
+      "phone_active": true,
+      "phone_seconds": 589
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 312.110429042,
+      "phone_active": true,
+      "phone_seconds": 588
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 313.12494125,
+      "phone_active": true,
+      "phone_seconds": 587
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 314.140518792,
+      "phone_active": true,
+      "phone_seconds": 586
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 315.144238333,
+      "phone_active": true,
+      "phone_seconds": 585
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 316.14829675,
+      "phone_active": true,
+      "phone_seconds": 584
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 317.153785208,
+      "phone_active": true,
+      "phone_seconds": 583
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 318.161446083,
+      "phone_active": true,
+      "phone_seconds": 582
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 319.169505083,
+      "phone_active": true,
+      "phone_seconds": 581
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 320.176405083,
+      "phone_active": true,
+      "phone_seconds": 580
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 321.181799167,
+      "phone_active": true,
+      "phone_seconds": 579
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 322.187836083,
+      "phone_active": true,
+      "phone_seconds": 578
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 323.195419667,
+      "phone_active": true,
+      "phone_seconds": 577
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 324.201665917,
+      "phone_active": true,
+      "phone_seconds": 576
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 325.20858525,
+      "phone_active": true,
+      "phone_seconds": 575
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 326.214297083,
+      "phone_active": true,
+      "phone_seconds": 574
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 327.221240833,
+      "phone_active": true,
+      "phone_seconds": 573
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 328.228180333,
+      "phone_active": true,
+      "phone_seconds": 572
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 329.233068417,
+      "phone_active": true,
+      "phone_seconds": 571
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 330.237108583,
+      "phone_active": true,
+      "phone_seconds": 570
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 331.242203375,
+      "phone_active": true,
+      "phone_seconds": 569
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 332.247242375,
+      "phone_active": true,
+      "phone_seconds": 568
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 333.258302125,
+      "phone_active": true,
+      "phone_seconds": 567
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 334.272599167,
+      "phone_active": true,
+      "phone_seconds": 566
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 335.279980917,
+      "phone_active": true,
+      "phone_seconds": 565
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 336.294576292,
+      "phone_active": true,
+      "phone_seconds": 564
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 337.308664667,
+      "phone_active": true,
+      "phone_seconds": 563
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 338.319763792,
+      "phone_active": true,
+      "phone_seconds": 562
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 339.325463042,
+      "phone_active": true,
+      "phone_seconds": 561
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 340.332195042,
+      "phone_active": true,
+      "phone_seconds": 560
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 341.339565458,
+      "phone_active": true,
+      "phone_seconds": 559
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 342.347397417,
+      "phone_active": true,
+      "phone_seconds": 558
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 343.355093167,
+      "phone_active": true,
+      "phone_seconds": 557
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 344.362234042,
+      "phone_active": true,
+      "phone_seconds": 556
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 345.371015042,
+      "phone_active": true,
+      "phone_seconds": 555
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 346.378113125,
+      "phone_active": true,
+      "phone_seconds": 554
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 347.38542925,
+      "phone_active": true,
+      "phone_seconds": 553
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 348.392996958,
+      "phone_active": true,
+      "phone_seconds": 552
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 349.401323833,
+      "phone_active": true,
+      "phone_seconds": 551
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 350.408915875,
+      "phone_active": true,
+      "phone_seconds": 550
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 351.416988542,
+      "phone_active": true,
+      "phone_seconds": 549
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 352.42297475,
+      "phone_active": true,
+      "phone_seconds": 548
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 353.430094292,
+      "phone_active": true,
+      "phone_seconds": 547
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 354.439622125,
+      "phone_active": true,
+      "phone_seconds": 546
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 355.45543125,
+      "phone_active": true,
+      "phone_seconds": 545
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 356.463211292,
+      "phone_active": true,
+      "phone_seconds": 544
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 357.47262375,
+      "phone_active": true,
+      "phone_seconds": 543
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 358.480358625,
+      "phone_active": true,
+      "phone_seconds": 542
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 359.485564542,
+      "phone_active": true,
+      "phone_seconds": 541
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 360.49292075,
+      "phone_active": true,
+      "phone_seconds": 540
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 361.501266292,
+      "phone_active": true,
+      "phone_seconds": 539
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 362.507987333,
+      "phone_active": true,
+      "phone_seconds": 538
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 363.514848333,
+      "phone_active": true,
+      "phone_seconds": 537
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 364.521917167,
+      "phone_active": true,
+      "phone_seconds": 536
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 365.529391458,
+      "phone_active": true,
+      "phone_seconds": 535
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 366.536898958,
+      "phone_active": true,
+      "phone_seconds": 534
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 367.543631083,
+      "phone_active": true,
+      "phone_seconds": 533
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 368.549245583,
+      "phone_active": true,
+      "phone_seconds": 532
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 369.554693083,
+      "phone_active": true,
+      "phone_seconds": 531
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 370.561693583,
+      "phone_active": true,
+      "phone_seconds": 530
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 371.569327167,
+      "phone_active": true,
+      "phone_seconds": 529
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 372.574023125,
+      "phone_active": true,
+      "phone_seconds": 528
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 373.580866917,
+      "phone_active": true,
+      "phone_seconds": 527
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 374.58747275,
+      "phone_active": true,
+      "phone_seconds": 526
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 375.594438417,
+      "phone_active": true,
+      "phone_seconds": 525
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 376.602071125,
+      "phone_active": true,
+      "phone_seconds": 524
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 377.608772125,
+      "phone_active": true,
+      "phone_seconds": 523
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 378.613084875,
+      "phone_active": true,
+      "phone_seconds": 522
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 379.619541958,
+      "phone_active": true,
+      "phone_seconds": 521
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 380.623457708,
+      "phone_active": true,
+      "phone_seconds": 520
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 381.6291955,
+      "phone_active": true,
+      "phone_seconds": 519
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 382.635969292,
+      "phone_active": true,
+      "phone_seconds": 518
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 383.644492583,
+      "phone_active": true,
+      "phone_seconds": 517
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 384.652418875,
+      "phone_active": true,
+      "phone_seconds": 516
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 385.6575695,
+      "phone_active": true,
+      "phone_seconds": 515
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 386.665152208,
+      "phone_active": true,
+      "phone_seconds": 514
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 387.672219792,
+      "phone_active": true,
+      "phone_seconds": 513
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 388.67666075,
+      "phone_active": true,
+      "phone_seconds": 512
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 389.68035725,
+      "phone_active": true,
+      "phone_seconds": 511
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 390.686851875,
+      "phone_active": true,
+      "phone_seconds": 510
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 391.691036125,
+      "phone_active": true,
+      "phone_seconds": 509
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 392.699263417,
+      "phone_active": true,
+      "phone_seconds": 508
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 393.70584325,
+      "phone_active": true,
+      "phone_seconds": 507
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 394.7133665,
+      "phone_active": true,
+      "phone_seconds": 506
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 395.72054475,
+      "phone_active": true,
+      "phone_seconds": 505
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 396.727268125,
+      "phone_active": true,
+      "phone_seconds": 504
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 397.735493125,
+      "phone_active": true,
+      "phone_seconds": 503
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 398.742230167,
+      "phone_active": true,
+      "phone_seconds": 502
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 399.74572575,
+      "phone_active": true,
+      "phone_seconds": 501
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 400.750752083,
+      "phone_active": true,
+      "phone_seconds": 500
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 401.757942875,
+      "phone_active": true,
+      "phone_seconds": 499
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 402.763874292,
+      "phone_active": true,
+      "phone_seconds": 498
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 403.769305625,
+      "phone_active": true,
+      "phone_seconds": 497
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 404.777517167,
+      "phone_active": true,
+      "phone_seconds": 496
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 405.786278667,
+      "phone_active": true,
+      "phone_seconds": 495
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 406.794341333,
+      "phone_active": true,
+      "phone_seconds": 494
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 407.80119925,
+      "phone_active": true,
+      "phone_seconds": 493
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 408.805661458,
+      "phone_active": true,
+      "phone_seconds": 492
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 409.812648042,
+      "phone_active": true,
+      "phone_seconds": 491
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 410.81774775,
+      "phone_active": true,
+      "phone_seconds": 490
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 411.824511792,
+      "phone_active": true,
+      "phone_seconds": 489
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 412.832953333,
+      "phone_active": true,
+      "phone_seconds": 488
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 413.84105275,
+      "phone_active": true,
+      "phone_seconds": 487
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 414.846303958,
+      "phone_active": true,
+      "phone_seconds": 486
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 415.8531535,
+      "phone_active": true,
+      "phone_seconds": 485
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 416.858645083,
+      "phone_active": true,
+      "phone_seconds": 484
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 417.862697708,
+      "phone_active": true,
+      "phone_seconds": 483
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 418.8695265,
+      "phone_active": true,
+      "phone_seconds": 482
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 419.875782458,
+      "phone_active": true,
+      "phone_seconds": 481
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 420.881635417,
+      "phone_active": true,
+      "phone_seconds": 480
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 421.889409958,
+      "phone_active": true,
+      "phone_seconds": 479
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 422.896160792,
+      "phone_active": true,
+      "phone_seconds": 478
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 423.903073292,
+      "phone_active": true,
+      "phone_seconds": 477
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 424.909904375,
+      "phone_active": true,
+      "phone_seconds": 476
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 425.917561042,
+      "phone_active": true,
+      "phone_seconds": 475
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 426.924996042,
+      "phone_active": true,
+      "phone_seconds": 474
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 427.929768458,
+      "phone_active": true,
+      "phone_seconds": 473
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 428.936923333,
+      "phone_active": true,
+      "phone_seconds": 472
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 429.94304075,
+      "phone_active": true,
+      "phone_seconds": 471
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 430.950926417,
+      "phone_active": true,
+      "phone_seconds": 470
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 431.957290417,
+      "phone_active": true,
+      "phone_seconds": 469
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 432.965432333,
+      "phone_active": true,
+      "phone_seconds": 468
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 433.972466917,
+      "phone_active": true,
+      "phone_seconds": 467
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 434.97899075,
+      "phone_active": true,
+      "phone_seconds": 466
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 435.986433167,
+      "phone_active": true,
+      "phone_seconds": 465
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 436.992415292,
+      "phone_active": true,
+      "phone_seconds": 464
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 437.9983405,
+      "phone_active": true,
+      "phone_seconds": 463
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 439.0025025,
+      "phone_active": true,
+      "phone_seconds": 461
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 440.008240958,
+      "phone_active": true,
+      "phone_seconds": 460
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 441.015872292,
+      "phone_active": true,
+      "phone_seconds": 459
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 442.021565708,
+      "phone_active": true,
+      "phone_seconds": 458
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 443.025705875,
+      "phone_active": true,
+      "phone_seconds": 457
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 444.032606208,
+      "phone_active": true,
+      "phone_seconds": 456
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 445.042667292,
+      "phone_active": true,
+      "phone_seconds": 455
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 446.045885667,
+      "phone_active": true,
+      "phone_seconds": 454
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 447.049677042,
+      "phone_active": true,
+      "phone_seconds": 453
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 448.054331125,
+      "phone_active": true,
+      "phone_seconds": 452
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 449.059065083,
+      "phone_active": true,
+      "phone_seconds": 451
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 450.063040583,
+      "phone_active": true,
+      "phone_seconds": 450
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 451.066571542,
+      "phone_active": true,
+      "phone_seconds": 449
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 452.070889458,
+      "phone_active": true,
+      "phone_seconds": 448
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 453.074856125,
+      "phone_active": true,
+      "phone_seconds": 447
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 454.07915725,
+      "phone_active": true,
+      "phone_seconds": 446
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 455.083134208,
+      "phone_active": true,
+      "phone_seconds": 445
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 456.089077375,
+      "phone_active": true,
+      "phone_seconds": 444
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 457.093096375,
+      "phone_active": true,
+      "phone_seconds": 443
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 458.096292292,
+      "phone_active": true,
+      "phone_seconds": 442
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 459.099822917,
+      "phone_active": true,
+      "phone_seconds": 441
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 460.107591542,
+      "phone_active": true,
+      "phone_seconds": 440
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 461.16468275,
+      "phone_active": true,
+      "phone_seconds": 439
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 462.16882075,
+      "phone_active": true,
+      "phone_seconds": 438
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 463.171262833,
+      "phone_active": true,
+      "phone_seconds": 437
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 464.174059417,
+      "phone_active": true,
+      "phone_seconds": 436
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 465.176275375,
+      "phone_active": true,
+      "phone_seconds": 435
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 466.178861833,
+      "phone_active": true,
+      "phone_seconds": 434
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 467.18240475,
+      "phone_active": true,
+      "phone_seconds": 433
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 468.1887555,
+      "phone_active": true,
+      "phone_seconds": 432
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 469.19277225,
+      "phone_active": true,
+      "phone_seconds": 431
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 470.196432375,
+      "phone_active": true,
+      "phone_seconds": 430
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 471.199656208,
+      "phone_active": true,
+      "phone_seconds": 429
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 472.203674208,
+      "phone_active": true,
+      "phone_seconds": 428
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 473.208134875,
+      "phone_active": true,
+      "phone_seconds": 427
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 474.212341458,
+      "phone_active": true,
+      "phone_seconds": 426
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 475.216822333,
+      "phone_active": true,
+      "phone_seconds": 425
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 476.221134667,
+      "phone_active": true,
+      "phone_seconds": 424
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 477.224947,
+      "phone_active": true,
+      "phone_seconds": 423
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 478.229039708,
+      "phone_active": true,
+      "phone_seconds": 422
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 479.232754583,
+      "phone_active": true,
+      "phone_seconds": 421
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 480.2364505,
+      "phone_active": true,
+      "phone_seconds": 420
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 481.240516,
+      "phone_active": true,
+      "phone_seconds": 419
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 482.2452635,
+      "phone_active": true,
+      "phone_seconds": 418
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 483.248286083,
+      "phone_active": true,
+      "phone_seconds": 417
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 484.252754333,
+      "phone_active": true,
+      "phone_seconds": 416
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 485.257107042,
+      "phone_active": true,
+      "phone_seconds": 415
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 486.260950458,
+      "phone_active": true,
+      "phone_seconds": 414
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 487.265074042,
+      "phone_active": true,
+      "phone_seconds": 413
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 488.26940625,
+      "phone_active": true,
+      "phone_seconds": 412
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 489.274170792,
+      "phone_active": true,
+      "phone_seconds": 411
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 490.278809333,
+      "phone_active": true,
+      "phone_seconds": 410
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 491.282963708,
+      "phone_active": true,
+      "phone_seconds": 409
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 492.287378375,
+      "phone_active": true,
+      "phone_seconds": 408
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 493.291110583,
+      "phone_active": true,
+      "phone_seconds": 407
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 494.296353125,
+      "phone_active": true,
+      "phone_seconds": 406
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 495.299806167,
+      "phone_active": true,
+      "phone_seconds": 405
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 496.303003708,
+      "phone_active": true,
+      "phone_seconds": 404
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 497.3080745,
+      "phone_active": true,
+      "phone_seconds": 403
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 498.311555792,
+      "phone_active": true,
+      "phone_seconds": 402
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 499.314907542,
+      "phone_active": true,
+      "phone_seconds": 401
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 500.344288458,
+      "phone_active": true,
+      "phone_seconds": 400
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 501.386148792,
+      "phone_active": true,
+      "phone_seconds": 399
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 502.391041667,
+      "phone_active": true,
+      "phone_seconds": 398
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 503.394875,
+      "phone_active": true,
+      "phone_seconds": 397
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 504.396946917,
+      "phone_active": true,
+      "phone_seconds": 396
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 505.400446375,
+      "phone_active": true,
+      "phone_seconds": 395
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 506.402920708,
+      "phone_active": true,
+      "phone_seconds": 394
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 507.404622417,
+      "phone_active": true,
+      "phone_seconds": 393
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 508.408310792,
+      "phone_active": true,
+      "phone_seconds": 392
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 509.412454208,
+      "phone_active": true,
+      "phone_seconds": 391
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 510.41636275,
+      "phone_active": true,
+      "phone_seconds": 390
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 511.420727167,
+      "phone_active": true,
+      "phone_seconds": 389
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 512.425096167,
+      "phone_active": true,
+      "phone_seconds": 388
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 513.428853458,
+      "phone_active": true,
+      "phone_seconds": 387
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 514.433088375,
+      "phone_active": true,
+      "phone_seconds": 386
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 515.4383145,
+      "phone_active": true,
+      "phone_seconds": 385
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 516.443269,
+      "phone_active": true,
+      "phone_seconds": 384
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 517.450836542,
+      "phone_active": true,
+      "phone_seconds": 383
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 518.459949458,
+      "phone_active": true,
+      "phone_seconds": 382
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 519.467455708,
+      "phone_active": true,
+      "phone_seconds": 381
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 520.473413542,
+      "phone_active": true,
+      "phone_seconds": 380
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 521.482390167,
+      "phone_active": true,
+      "phone_seconds": 379
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 522.490172625,
+      "phone_active": true,
+      "phone_seconds": 378
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 523.497080292,
+      "phone_active": true,
+      "phone_seconds": 377
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 524.50549,
+      "phone_active": true,
+      "phone_seconds": 376
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 525.510951208,
+      "phone_active": true,
+      "phone_seconds": 375
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 526.518258125,
+      "phone_active": true,
+      "phone_seconds": 374
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 527.525885542,
+      "phone_active": true,
+      "phone_seconds": 373
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 528.535520125,
+      "phone_active": true,
+      "phone_seconds": 372
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 529.542627333,
+      "phone_active": true,
+      "phone_seconds": 371
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 530.549135625,
+      "phone_active": true,
+      "phone_seconds": 370
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 531.557279667,
+      "phone_active": true,
+      "phone_seconds": 369
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 532.566278708,
+      "phone_active": true,
+      "phone_seconds": 368
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 533.573108417,
+      "phone_active": true,
+      "phone_seconds": 367
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 534.579480167,
+      "phone_active": true,
+      "phone_seconds": 366
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 535.586238583,
+      "phone_active": true,
+      "phone_seconds": 365
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 536.594353125,
+      "phone_active": true,
+      "phone_seconds": 364
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 537.602861458,
+      "phone_active": true,
+      "phone_seconds": 363
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 538.608599542,
+      "phone_active": true,
+      "phone_seconds": 362
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 539.62292175,
+      "phone_active": true,
+      "phone_seconds": 361
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 540.644216583,
+      "phone_active": true,
+      "phone_seconds": 360
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 541.66884775,
+      "phone_active": true,
+      "phone_seconds": 359
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 542.691544083,
+      "phone_active": true,
+      "phone_seconds": 358
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 543.694748667,
+      "phone_active": true,
+      "phone_seconds": 357
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 544.698089167,
+      "phone_active": true,
+      "phone_seconds": 356
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 545.70348275,
+      "phone_active": true,
+      "phone_seconds": 355
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 546.713082292,
+      "phone_active": true,
+      "phone_seconds": 354
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 547.720978458,
+      "phone_active": true,
+      "phone_seconds": 353
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 548.729173542,
+      "phone_active": true,
+      "phone_seconds": 352
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 549.737546583,
+      "phone_active": true,
+      "phone_seconds": 351
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 550.741816917,
+      "phone_active": true,
+      "phone_seconds": 350
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 551.745915458,
+      "phone_active": true,
+      "phone_seconds": 349
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 552.750334583,
+      "phone_active": true,
+      "phone_seconds": 348
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 553.756526208,
+      "phone_active": true,
+      "phone_seconds": 347
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 554.763934625,
+      "phone_active": true,
+      "phone_seconds": 346
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 555.770206208,
+      "phone_active": true,
+      "phone_seconds": 345
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 556.779053083,
+      "phone_active": true,
+      "phone_seconds": 344
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 557.786862375,
+      "phone_active": true,
+      "phone_seconds": 343
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 558.795346417,
+      "phone_active": true,
+      "phone_seconds": 342
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 559.804232083,
+      "phone_active": true,
+      "phone_seconds": 341
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 560.810722542,
+      "phone_active": true,
+      "phone_seconds": 340
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 561.817586792,
+      "phone_active": true,
+      "phone_seconds": 339
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 562.824205333,
+      "phone_active": true,
+      "phone_seconds": 338
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 563.83198725,
+      "phone_active": true,
+      "phone_seconds": 337
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 564.841094417,
+      "phone_active": true,
+      "phone_seconds": 336
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 565.848038958,
+      "phone_active": true,
+      "phone_seconds": 335
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 566.856753125,
+      "phone_active": true,
+      "phone_seconds": 334
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 567.86529975,
+      "phone_active": true,
+      "phone_seconds": 333
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 568.871985917,
+      "phone_active": true,
+      "phone_seconds": 332
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 569.878661125,
+      "phone_active": true,
+      "phone_seconds": 331
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 570.887073583,
+      "phone_active": true,
+      "phone_seconds": 330
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 571.894126,
+      "phone_active": true,
+      "phone_seconds": 329
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 572.902348167,
+      "phone_active": true,
+      "phone_seconds": 328
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 573.908805042,
+      "phone_active": true,
+      "phone_seconds": 327
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 574.916757833,
+      "phone_active": true,
+      "phone_seconds": 326
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 575.924931625,
+      "phone_active": true,
+      "phone_seconds": 325
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 576.932190542,
+      "phone_active": true,
+      "phone_seconds": 324
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 577.938202292,
+      "phone_active": true,
+      "phone_seconds": 323
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 578.946423042,
+      "phone_active": true,
+      "phone_seconds": 322
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 579.953528542,
+      "phone_active": true,
+      "phone_seconds": 321
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 580.958404375,
+      "phone_active": true,
+      "phone_seconds": 320
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 581.966360042,
+      "phone_active": true,
+      "phone_seconds": 319
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 582.973943083,
+      "phone_active": true,
+      "phone_seconds": 318
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 583.9786,
+      "phone_active": true,
+      "phone_seconds": 317
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 584.984704375,
+      "phone_active": true,
+      "phone_seconds": 316
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 585.992027917,
+      "phone_active": true,
+      "phone_seconds": 315
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 586.999858292,
+      "phone_active": true,
+      "phone_seconds": 313
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 588.005344083,
+      "phone_active": true,
+      "phone_seconds": 312
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 589.0111875,
+      "phone_active": true,
+      "phone_seconds": 311
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 590.018790417,
+      "phone_active": true,
+      "phone_seconds": 310
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 591.025196667,
+      "phone_active": true,
+      "phone_seconds": 309
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 592.033533792,
+      "phone_active": true,
+      "phone_seconds": 308
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 593.040794292,
+      "phone_active": true,
+      "phone_seconds": 307
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 594.047550875,
+      "phone_active": true,
+      "phone_seconds": 306
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 595.056222792,
+      "phone_active": true,
+      "phone_seconds": 305
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 596.060627375,
+      "phone_active": true,
+      "phone_seconds": 304
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 597.063691583,
+      "phone_active": true,
+      "phone_seconds": 303
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 598.072980042,
+      "phone_active": true,
+      "phone_seconds": 302
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 599.080702833,
+      "phone_active": true,
+      "phone_seconds": 301
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 600.088062833,
+      "phone_active": true,
+      "phone_seconds": 300
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 601.092725083,
+      "phone_active": true,
+      "phone_seconds": 299
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 602.099692042,
+      "phone_active": true,
+      "phone_seconds": 298
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 603.105470875,
+      "phone_active": true,
+      "phone_seconds": 297
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 604.1123085,
+      "phone_active": true,
+      "phone_seconds": 296
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 605.121153875,
+      "phone_active": true,
+      "phone_seconds": 295
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 606.128274042,
+      "phone_active": true,
+      "phone_seconds": 294
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 607.135277625,
+      "phone_active": true,
+      "phone_seconds": 293
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 608.140804708,
+      "phone_active": true,
+      "phone_seconds": 292
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 609.14857675,
+      "phone_active": true,
+      "phone_seconds": 291
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 610.157274,
+      "phone_active": true,
+      "phone_seconds": 290
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 611.161815417,
+      "phone_active": true,
+      "phone_seconds": 289
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 612.167181667,
+      "phone_active": true,
+      "phone_seconds": 288
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 613.172489458,
+      "phone_active": true,
+      "phone_seconds": 287
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 614.183258917,
+      "phone_active": true,
+      "phone_seconds": 286
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 615.187631208,
+      "phone_active": true,
+      "phone_seconds": 285
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 616.194113583,
+      "phone_active": true,
+      "phone_seconds": 284
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 617.198805125,
+      "phone_active": true,
+      "phone_seconds": 283
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 618.205472167,
+      "phone_active": true,
+      "phone_seconds": 282
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 619.213219583,
+      "phone_active": true,
+      "phone_seconds": 281
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 620.223484125,
+      "phone_active": true,
+      "phone_seconds": 280
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 621.227991833,
+      "phone_active": true,
+      "phone_seconds": 279
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 622.236969375,
+      "phone_active": true,
+      "phone_seconds": 278
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 623.242666125,
+      "phone_active": true,
+      "phone_seconds": 277
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 624.249187375,
+      "phone_active": true,
+      "phone_seconds": 276
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 625.256200292,
+      "phone_active": true,
+      "phone_seconds": 275
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 626.263082167,
+      "phone_active": true,
+      "phone_seconds": 274
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 627.269459708,
+      "phone_active": true,
+      "phone_seconds": 273
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 628.274715208,
+      "phone_active": true,
+      "phone_seconds": 272
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 629.282193875,
+      "phone_active": true,
+      "phone_seconds": 271
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 630.289083667,
+      "phone_active": true,
+      "phone_seconds": 270
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 631.296850958,
+      "phone_active": true,
+      "phone_seconds": 269
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 632.302001292,
+      "phone_active": true,
+      "phone_seconds": 268
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 633.30821375,
+      "phone_active": true,
+      "phone_seconds": 267
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 634.314275583,
+      "phone_active": true,
+      "phone_seconds": 266
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 635.321905333,
+      "phone_active": true,
+      "phone_seconds": 265
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 636.324912583,
+      "phone_active": true,
+      "phone_seconds": 264
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 637.328350208,
+      "phone_active": true,
+      "phone_seconds": 263
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 638.332273083,
+      "phone_active": true,
+      "phone_seconds": 262
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 639.336821083,
+      "phone_active": true,
+      "phone_seconds": 261
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 640.341652875,
+      "phone_active": true,
+      "phone_seconds": 260
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 641.346448375,
+      "phone_active": true,
+      "phone_seconds": 259
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 642.352524083,
+      "phone_active": true,
+      "phone_seconds": 258
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 643.361588542,
+      "phone_active": true,
+      "phone_seconds": 257
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 644.368221917,
+      "phone_active": true,
+      "phone_seconds": 256
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 645.376321667,
+      "phone_active": true,
+      "phone_seconds": 255
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 646.386195042,
+      "phone_active": true,
+      "phone_seconds": 254
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 647.391996083,
+      "phone_active": true,
+      "phone_seconds": 253
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 648.396632292,
+      "phone_active": true,
+      "phone_seconds": 252
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 649.402621292,
+      "phone_active": true,
+      "phone_seconds": 251
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 650.407872,
+      "phone_active": true,
+      "phone_seconds": 250
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 651.412930083,
+      "phone_active": true,
+      "phone_seconds": 249
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 652.420468125,
+      "phone_active": true,
+      "phone_seconds": 248
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 653.429769708,
+      "phone_active": true,
+      "phone_seconds": 247
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 654.442843208,
+      "phone_active": true,
+      "phone_seconds": 246
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 655.447883292,
+      "phone_active": true,
+      "phone_seconds": 245
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 656.453887625,
+      "phone_active": true,
+      "phone_seconds": 244
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 657.46582,
+      "phone_active": true,
+      "phone_seconds": 243
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 658.47138425,
+      "phone_active": true,
+      "phone_seconds": 242
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 659.483794125,
+      "phone_active": true,
+      "phone_seconds": 241
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 660.488848,
+      "phone_active": true,
+      "phone_seconds": 240
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 661.493704958,
+      "phone_active": true,
+      "phone_seconds": 239
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 662.497889583,
+      "phone_active": true,
+      "phone_seconds": 238
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 663.503050042,
+      "phone_active": true,
+      "phone_seconds": 237
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 664.507960417,
+      "phone_active": true,
+      "phone_seconds": 236
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 665.512574125,
+      "phone_active": true,
+      "phone_seconds": 235
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 666.518065375,
+      "phone_active": true,
+      "phone_seconds": 234
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 667.523835417,
+      "phone_active": true,
+      "phone_seconds": 233
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 668.527888417,
+      "phone_active": true,
+      "phone_seconds": 232
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 669.53319875,
+      "phone_active": true,
+      "phone_seconds": 231
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 670.539212542,
+      "phone_active": true,
+      "phone_seconds": 230
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 671.544974667,
+      "phone_active": true,
+      "phone_seconds": 229
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 672.54989575,
+      "phone_active": true,
+      "phone_seconds": 228
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 673.555007625,
+      "phone_active": true,
+      "phone_seconds": 227
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 674.56121725,
+      "phone_active": true,
+      "phone_seconds": 226
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 675.566000542,
+      "phone_active": true,
+      "phone_seconds": 225
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 676.572176958,
+      "phone_active": true,
+      "phone_seconds": 224
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 677.5778125,
+      "phone_active": true,
+      "phone_seconds": 223
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 678.582408208,
+      "phone_active": true,
+      "phone_seconds": 222
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 679.587674875,
+      "phone_active": true,
+      "phone_seconds": 221
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 680.592860333,
+      "phone_active": true,
+      "phone_seconds": 220
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 681.598876542,
+      "phone_active": true,
+      "phone_seconds": 219
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 682.605089,
+      "phone_active": true,
+      "phone_seconds": 218
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 683.610490333,
+      "phone_active": true,
+      "phone_seconds": 217
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 684.616588375,
+      "phone_active": true,
+      "phone_seconds": 216
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 685.622300958,
+      "phone_active": true,
+      "phone_seconds": 215
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 686.62796225,
+      "phone_active": true,
+      "phone_seconds": 214
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 687.63269825,
+      "phone_active": true,
+      "phone_seconds": 213
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 688.63765325,
+      "phone_active": true,
+      "phone_seconds": 212
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 689.6440875,
+      "phone_active": true,
+      "phone_seconds": 211
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 690.651389042,
+      "phone_active": true,
+      "phone_seconds": 210
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 691.656224042,
+      "phone_active": true,
+      "phone_seconds": 209
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 692.663557125,
+      "phone_active": true,
+      "phone_seconds": 208
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 693.668540833,
+      "phone_active": true,
+      "phone_seconds": 207
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 694.672802792,
+      "phone_active": true,
+      "phone_seconds": 206
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 695.681927167,
+      "phone_active": true,
+      "phone_seconds": 205
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 696.687704958,
+      "phone_active": true,
+      "phone_seconds": 204
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 697.695467083,
+      "phone_active": true,
+      "phone_seconds": 203
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 698.702981333,
+      "phone_active": true,
+      "phone_seconds": 202
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 699.709528292,
+      "phone_active": true,
+      "phone_seconds": 201
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 700.71638825,
+      "phone_active": true,
+      "phone_seconds": 200
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 701.722099,
+      "phone_active": true,
+      "phone_seconds": 199
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 702.73100225,
+      "phone_active": true,
+      "phone_seconds": 198
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 703.737267625,
+      "phone_active": true,
+      "phone_seconds": 197
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 704.742264917,
+      "phone_active": true,
+      "phone_seconds": 196
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 705.747791083,
+      "phone_active": true,
+      "phone_seconds": 195
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 706.75527825,
+      "phone_active": true,
+      "phone_seconds": 194
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 707.761157625,
+      "phone_active": true,
+      "phone_seconds": 193
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 708.767566167,
+      "phone_active": true,
+      "phone_seconds": 192
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 709.773375708,
+      "phone_active": true,
+      "phone_seconds": 191
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 710.780890583,
+      "phone_active": true,
+      "phone_seconds": 190
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 711.787203,
+      "phone_active": true,
+      "phone_seconds": 189
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 712.7943255,
+      "phone_active": true,
+      "phone_seconds": 188
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 713.801409292,
+      "phone_active": true,
+      "phone_seconds": 187
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 714.806814625,
+      "phone_active": true,
+      "phone_seconds": 186
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 715.816073042,
+      "phone_active": true,
+      "phone_seconds": 185
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 716.824343792,
+      "phone_active": true,
+      "phone_seconds": 184
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 717.831234667,
+      "phone_active": true,
+      "phone_seconds": 183
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 718.838326875,
+      "phone_active": true,
+      "phone_seconds": 182
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 719.841817167,
+      "phone_active": true,
+      "phone_seconds": 181
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 720.85153075,
+      "phone_active": true,
+      "phone_seconds": 180
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 721.855949417,
+      "phone_active": true,
+      "phone_seconds": 179
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 722.861711917,
+      "phone_active": true,
+      "phone_seconds": 178
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 723.868629333,
+      "phone_active": true,
+      "phone_seconds": 177
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 724.87386425,
+      "phone_active": true,
+      "phone_seconds": 176
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 725.878822458,
+      "phone_active": true,
+      "phone_seconds": 175
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 726.884768167,
+      "phone_active": true,
+      "phone_seconds": 174
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 727.889936042,
+      "phone_active": true,
+      "phone_seconds": 173
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 728.895407375,
+      "phone_active": true,
+      "phone_seconds": 172
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 729.901782292,
+      "phone_active": true,
+      "phone_seconds": 171
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 730.909023417,
+      "phone_active": true,
+      "phone_seconds": 170
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 731.916012875,
+      "phone_active": true,
+      "phone_seconds": 169
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 732.922310208,
+      "phone_active": true,
+      "phone_seconds": 168
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 733.9270365,
+      "phone_active": true,
+      "phone_seconds": 167
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 734.932223167,
+      "phone_active": true,
+      "phone_seconds": 166
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 735.939544833,
+      "phone_active": true,
+      "phone_seconds": 165
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 736.945233583,
+      "phone_active": true,
+      "phone_seconds": 164
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 737.95014775,
+      "phone_active": true,
+      "phone_seconds": 163
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 738.956917208,
+      "phone_active": true,
+      "phone_seconds": 162
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 739.963139833,
+      "phone_active": true,
+      "phone_seconds": 161
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 740.969788042,
+      "phone_active": true,
+      "phone_seconds": 160
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 741.974754125,
+      "phone_active": true,
+      "phone_seconds": 159
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 742.979839917,
+      "phone_active": true,
+      "phone_seconds": 158
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 743.985376208,
+      "phone_active": true,
+      "phone_seconds": 157
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 744.992381917,
+      "phone_active": true,
+      "phone_seconds": 156
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 746.000121125,
+      "phone_active": true,
+      "phone_seconds": 154
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 747.004508333,
+      "phone_active": true,
+      "phone_seconds": 153
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 748.012799833,
+      "phone_active": true,
+      "phone_seconds": 152
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 749.017706,
+      "phone_active": true,
+      "phone_seconds": 151
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 750.022578167,
+      "phone_active": true,
+      "phone_seconds": 150
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 751.03343775,
+      "phone_active": true,
+      "phone_seconds": 149
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 752.041172583,
+      "phone_active": true,
+      "phone_seconds": 148
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 753.047760125,
+      "phone_active": true,
+      "phone_seconds": 147
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 754.053134083,
+      "phone_active": true,
+      "phone_seconds": 146
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 755.059761625,
+      "phone_active": true,
+      "phone_seconds": 145
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 756.067542083,
+      "phone_active": true,
+      "phone_seconds": 144
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 757.072873292,
+      "phone_active": true,
+      "phone_seconds": 143
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 758.080905875,
+      "phone_active": true,
+      "phone_seconds": 142
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 759.087472667,
+      "phone_active": true,
+      "phone_seconds": 141
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 760.095437917,
+      "phone_active": true,
+      "phone_seconds": 140
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 761.101599625,
+      "phone_active": true,
+      "phone_seconds": 139
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 762.109288292,
+      "phone_active": true,
+      "phone_seconds": 138
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 763.116279667,
+      "phone_active": true,
+      "phone_seconds": 137
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 764.122280833,
+      "phone_active": true,
+      "phone_seconds": 136
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 765.129109417,
+      "phone_active": true,
+      "phone_seconds": 135
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 766.134617083,
+      "phone_active": true,
+      "phone_seconds": 134
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 767.140175125,
+      "phone_active": true,
+      "phone_seconds": 133
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 768.146678625,
+      "phone_active": true,
+      "phone_seconds": 132
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 769.152032042,
+      "phone_active": true,
+      "phone_seconds": 131
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 770.158014083,
+      "phone_active": true,
+      "phone_seconds": 130
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 771.165479292,
+      "phone_active": true,
+      "phone_seconds": 129
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 772.1729705,
+      "phone_active": true,
+      "phone_seconds": 128
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 773.181175875,
+      "phone_active": true,
+      "phone_seconds": 127
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 774.19103075,
+      "phone_active": true,
+      "phone_seconds": 126
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 775.202475875,
+      "phone_active": true,
+      "phone_seconds": 125
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 776.208893792,
+      "phone_active": true,
+      "phone_seconds": 124
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 777.214895292,
+      "phone_active": true,
+      "phone_seconds": 123
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 778.220595583,
+      "phone_active": true,
+      "phone_seconds": 122
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 779.228709333,
+      "phone_active": true,
+      "phone_seconds": 121
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 780.23477775,
+      "phone_active": true,
+      "phone_seconds": 120
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 781.241418625,
+      "phone_active": true,
+      "phone_seconds": 119
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 782.247942667,
+      "phone_active": true,
+      "phone_seconds": 118
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 783.254513833,
+      "phone_active": true,
+      "phone_seconds": 117
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 784.261451792,
+      "phone_active": true,
+      "phone_seconds": 116
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 785.268176083,
+      "phone_active": true,
+      "phone_seconds": 115
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 786.273667042,
+      "phone_active": true,
+      "phone_seconds": 114
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 787.280301083,
+      "phone_active": true,
+      "phone_seconds": 113
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 788.286753208,
+      "phone_active": true,
+      "phone_seconds": 112
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 789.293187542,
+      "phone_active": true,
+      "phone_seconds": 111
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 790.300076417,
+      "phone_active": true,
+      "phone_seconds": 110
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 791.305169708,
+      "phone_active": true,
+      "phone_seconds": 109
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 792.309609583,
+      "phone_active": true,
+      "phone_seconds": 108
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 793.3175555,
+      "phone_active": true,
+      "phone_seconds": 107
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 794.32496125,
+      "phone_active": true,
+      "phone_seconds": 106
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 795.330694083,
+      "phone_active": true,
+      "phone_seconds": 105
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 796.336125458,
+      "phone_active": true,
+      "phone_seconds": 104
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 797.340264042,
+      "phone_active": true,
+      "phone_seconds": 103
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 798.347533292,
+      "phone_active": true,
+      "phone_seconds": 102
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 799.352548167,
+      "phone_active": true,
+      "phone_seconds": 101
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 800.359648,
+      "phone_active": true,
+      "phone_seconds": 100
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 801.365020042,
+      "phone_active": true,
+      "phone_seconds": 99
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 802.370009917,
+      "phone_active": true,
+      "phone_seconds": 98
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 803.375497083,
+      "phone_active": true,
+      "phone_seconds": 97
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 804.3830675,
+      "phone_active": true,
+      "phone_seconds": 96
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 805.389038583,
+      "phone_active": true,
+      "phone_seconds": 95
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 806.39586675,
+      "phone_active": true,
+      "phone_seconds": 94
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 807.402827917,
+      "phone_active": true,
+      "phone_seconds": 93
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 808.408665125,
+      "phone_active": true,
+      "phone_seconds": 92
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 809.41540775,
+      "phone_active": true,
+      "phone_seconds": 91
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 810.420960042,
+      "phone_active": true,
+      "phone_seconds": 90
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 811.428911958,
+      "phone_active": true,
+      "phone_seconds": 89
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 812.434600292,
+      "phone_active": true,
+      "phone_seconds": 88
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 813.441077417,
+      "phone_active": true,
+      "phone_seconds": 87
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 814.447501792,
+      "phone_active": true,
+      "phone_seconds": 86
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 815.454048708,
+      "phone_active": true,
+      "phone_seconds": 85
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 816.460959083,
+      "phone_active": true,
+      "phone_seconds": 84
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 817.46956975,
+      "phone_active": true,
+      "phone_seconds": 83
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 818.47760775,
+      "phone_active": true,
+      "phone_seconds": 82
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 819.48435825,
+      "phone_active": true,
+      "phone_seconds": 81
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 820.490862542,
+      "phone_active": true,
+      "phone_seconds": 80
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 821.499258417,
+      "phone_active": true,
+      "phone_seconds": 79
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 822.503690625,
+      "phone_active": true,
+      "phone_seconds": 78
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 823.5098625,
+      "phone_active": true,
+      "phone_seconds": 77
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 824.517370875,
+      "phone_active": true,
+      "phone_seconds": 76
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 825.52229175,
+      "phone_active": true,
+      "phone_seconds": 75
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 826.530370458,
+      "phone_active": true,
+      "phone_seconds": 74
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 827.538546417,
+      "phone_active": true,
+      "phone_seconds": 73
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 828.547884042,
+      "phone_active": true,
+      "phone_seconds": 72
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 829.553346333,
+      "phone_active": true,
+      "phone_seconds": 71
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 830.560033833,
+      "phone_active": true,
+      "phone_seconds": 70
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 831.566887583,
+      "phone_active": true,
+      "phone_seconds": 69
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 832.573473,
+      "phone_active": true,
+      "phone_seconds": 68
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 833.598054292,
+      "phone_active": true,
+      "phone_seconds": 67
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 834.603052708,
+      "phone_active": true,
+      "phone_seconds": 66
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 835.60724725,
+      "phone_active": true,
+      "phone_seconds": 65
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 836.623602958,
+      "phone_active": true,
+      "phone_seconds": 64
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 837.638558125,
+      "phone_active": true,
+      "phone_seconds": 63
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 838.65361125,
+      "phone_active": true,
+      "phone_seconds": 62
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 839.666623042,
+      "phone_active": true,
+      "phone_seconds": 61
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 840.670243292,
+      "phone_active": true,
+      "phone_seconds": 60
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 841.675590458,
+      "phone_active": true,
+      "phone_seconds": 59
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 842.679605375,
+      "phone_active": true,
+      "phone_seconds": 58
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 843.6864275,
+      "phone_active": true,
+      "phone_seconds": 57
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 844.696487667,
+      "phone_active": true,
+      "phone_seconds": 56
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 845.702098667,
+      "phone_active": true,
+      "phone_seconds": 55
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 846.706700375,
+      "phone_active": true,
+      "phone_seconds": 54
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 847.713021917,
+      "phone_active": true,
+      "phone_seconds": 53
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 848.720392,
+      "phone_active": true,
+      "phone_seconds": 52
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 849.726908458,
+      "phone_active": true,
+      "phone_seconds": 51
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 850.734286833,
+      "phone_active": true,
+      "phone_seconds": 50
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 851.740604875,
+      "phone_active": true,
+      "phone_seconds": 49
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 852.745470083,
+      "phone_active": true,
+      "phone_seconds": 48
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 853.751050167,
+      "phone_active": true,
+      "phone_seconds": 47
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 854.757786833,
+      "phone_active": true,
+      "phone_seconds": 46
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 855.763085417,
+      "phone_active": true,
+      "phone_seconds": 45
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 856.769878333,
+      "phone_active": true,
+      "phone_seconds": 44
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 857.77662975,
+      "phone_active": true,
+      "phone_seconds": 43
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 858.784723417,
+      "phone_active": true,
+      "phone_seconds": 42
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 859.7903575,
+      "phone_active": true,
+      "phone_seconds": 41
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 860.796163333,
+      "phone_active": true,
+      "phone_seconds": 40
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 861.802035125,
+      "phone_active": true,
+      "phone_seconds": 39
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 862.817105958,
+      "phone_active": true,
+      "phone_seconds": 38
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 863.82452325,
+      "phone_active": true,
+      "phone_seconds": 37
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 864.829674708,
+      "phone_active": true,
+      "phone_seconds": 36
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 865.83497375,
+      "phone_active": true,
+      "phone_seconds": 35
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 866.840482875,
+      "phone_active": true,
+      "phone_seconds": 34
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 867.84491625,
+      "phone_active": true,
+      "phone_seconds": 33
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 868.851567458,
+      "phone_active": true,
+      "phone_seconds": 32
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 869.866000667,
+      "phone_active": true,
+      "phone_seconds": 31
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 870.870801208,
+      "phone_active": true,
+      "phone_seconds": 30
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 871.877379333,
+      "phone_active": true,
+      "phone_seconds": 29
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 872.883052542,
+      "phone_active": true,
+      "phone_seconds": 28
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 873.895889042,
+      "phone_active": true,
+      "phone_seconds": 27
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 874.908089708,
+      "phone_active": true,
+      "phone_seconds": 26
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 875.92631225,
+      "phone_active": true,
+      "phone_seconds": 25
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 876.937585833,
+      "phone_active": true,
+      "phone_seconds": 24
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 877.941094208,
+      "phone_active": true,
+      "phone_seconds": 23
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 878.94644275,
+      "phone_active": true,
+      "phone_seconds": 22
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 879.9504275,
+      "phone_active": true,
+      "phone_seconds": 21
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 880.954846708,
+      "phone_active": true,
+      "phone_seconds": 20
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 881.959592125,
+      "phone_active": true,
+      "phone_seconds": 19
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 882.996378417,
+      "phone_active": true,
+      "phone_seconds": 17
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 884.024071833,
+      "phone_active": true,
+      "phone_seconds": 16
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 885.0445915,
+      "phone_active": true,
+      "phone_seconds": 15
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 886.053719792,
+      "phone_active": true,
+      "phone_seconds": 14
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 887.056914792,
+      "phone_active": true,
+      "phone_seconds": 13
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 888.059608292,
+      "phone_active": true,
+      "phone_seconds": 12
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 889.066856083,
+      "phone_active": true,
+      "phone_seconds": 11
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 890.074124375,
+      "phone_active": true,
+      "phone_seconds": 10
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 891.082149875,
+      "phone_active": true,
+      "phone_seconds": 9
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 892.088613583,
+      "phone_active": true,
+      "phone_seconds": 8
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 893.095957292,
+      "phone_active": true,
+      "phone_seconds": 7
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 894.103773208,
+      "phone_active": true,
+      "phone_seconds": 6
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 895.111076,
+      "phone_active": true,
+      "phone_seconds": 5
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 896.117304375,
+      "phone_active": true,
+      "phone_seconds": 4
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 897.124564542,
+      "phone_active": true,
+      "phone_seconds": 3
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 898.131829625,
+      "phone_active": true,
+      "phone_seconds": 2
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 899.137001167,
+      "phone_active": true,
+      "phone_seconds": 1
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 900.146967375,
+      "phone_active": false,
+      "phone_seconds": 0
+    },
+    {
+      "desktop_state": "running",
+      "elapsed_seconds": 901.15268075,
+      "phone_active": false,
+      "phone_seconds": 0
+    },
+    {
+      "desktop_state": "stopped",
+      "elapsed_seconds": 902.160813917,
+      "phone_active": false,
+      "phone_seconds": 0
+    }
+  ],
+  "schema_version": 1,
+  "timer_minutes": 15,
+  "date": "2026-10-24",
+  "device_model": "sdk_gphone64_arm64",
+  "android_api": 37,
+  "probe_source_commit": "efc244e",
+  "probe_cleanup_note": "The elapsed run used the initial probe. A later scoped cleanup fix removes its temporary registry entry on normal/error exits; this run's disposable state directory is deleted during cleanup.",
+  "apk_sha256": "1625fbdcc44809ae4e7231dab37ae866ec7c95fee2ce656ac916530164f79b54",
+  "settings_15_minutes_selected_verified": true,
+  "samples_count": 896,
+  "emulator_setting_restored": "Off",
+  "cleanup_regression": {
+    "off_timer_precondition_rejected": true,
+    "temporary_registration_removed_on_error": true,
+    "false_expiry_report_created": false
+  }
+}
