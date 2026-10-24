@@ -170,7 +170,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 ### 5. Representative open-source comparisons — not started
 
 - Select comparable local Android-control tools and document why each is comparable. Run matched device/transport/build/task measurements; include failures, not only successful latency.
-- The current README and benchmark report deliberately make no speed claim. This gate stays open until raw comparable results exist.
+- The current README and benchmark report deliberately make no speed claim against other products. This gate stays open until raw comparable results exist.
 
 ### 6. Release packaging and artifact verification — release work
 
