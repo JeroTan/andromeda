@@ -22,6 +22,14 @@ execFileSync("cargo", args, { cwd: root, stdio: "inherit" });
 const executable = target.includes("windows") ? "andromeda.exe" : "andromeda";
 const destination = join(root, "desktop", "src-tauri", "binaries");
 mkdirSync(destination, { recursive: true });
+// A cross-build must not bundle an executable left by another platform.
+rmSync(
+  join(
+    destination,
+    executable === "andromeda.exe" ? "andromeda" : "andromeda.exe",
+  ),
+  { force: true },
+);
 copyFileSync(
   join(
     root,
