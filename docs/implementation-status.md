@@ -22,6 +22,14 @@ Local verification passed the 52-test Rust workspace suite, all-feature Clippy, 
 
 Managed device information now reports the requesting project's `project_state` and combines that state with its input policy and global control state for `control_enabled`. A paused project previously reported true when another project was running, even though its input was correctly rejected. The public MCP regression failed before the fix and passes after it. Text and structured results agree; the tool catalog also explains that managed Stop ends the project session. The full Rust suite, strict all-feature Clippy, release app build and both review axes pass. Installed macOS/physical-phone checks verified Stopped/Running/Paused responses, then restored Running and its on-demand preview. See [evidence](evidence/project-control-status-2026-10-24.json).
 
+## Installer preparation and full timer check — 2026-10-24
+
+The operator selected `@jrw/andromeda` and clarified the native deliverables: Lynx phone APK, macOS DMG and Windows EXE installer. The local installer command now selects DMG/NSIS EXE/Debian per host. The manual-only workflow targets DMG/NSIS too; Actions remains disabled. A macOS DMG built successfully, passed image checksum verification, mounted read-only with the app and Applications link, and exposed all 18 tools through its bundled CLI. The corresponding npm platform package installed offline and cold-launched the same app bytes with isolated state; the normal app/project was restored afterward. See [package evidence](evidence/release-packaging-2026-10-24.json) and [build commands](release-packaging.md). Windows EXE execution, Linux validation, signing, complete installer notices, authenticated npm publication and the final release remain open.
+
+The notice collector now retains 304 macOS dependency records and 193 distinct full text files, checks harvested Cargo/npm source against verified archive bytes, and preserves exact-revision overrides. Tampered Cargo/npm notice files were independently rejected and restored. Ten macOS review gaps remain; Android/Lynx mapping and MPL source provision remain open. Staged packages are explicitly private previews with `ready_to_publish: false`.
+
+The full 15-minute emulator timer check passed with the real clock and authenticated desktop heartbeats. Desktop Stop arrived after 902.16 seconds, and subsequent input returned `project_stopped`. The emulator Settings selection was restored to Off. A follow-up Off-timer rejection verified that the corrected probe removes its temporary project registration and does not write a false expiry report. This closes the elapsed-duration emulator check, not physical power-management or all timer durations. See [timer evidence](evidence/session-timer-expiry-2026-10-24.json).
+
 ## Phase 1: Core Android MCP server
 
 - [x] Rust library and executable; Tokio and rmcp stdio transport
@@ -180,7 +188,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 
 - Build release artifacts for the CLI, desktop app and companion APK on Windows, macOS and Linux; include the project licenses and a generated third-party notices bundle (see [licenses](licenses.md)).
 - Produce checksums and verify the npm launcher against an installed platform package, not only a local Tauri build.
-- macOS signing/notarization, Windows signing and any store packaging are release decisions. The current debug package is a development preview, not a signed release.
+- macOS signing/notarization, Windows signing and any store packaging are release decisions. The installed macOS build is release-optimized, and a DMG candidate is verified, but this is not a signed/notarized public release.
 - Published npm platform packages, GitHub release assets and `v0.1.0` publication remain open.
 
 ### 7. Feature integration — merged

@@ -37,7 +37,7 @@ python3 scripts/collect-notices.py \
   --out .scratch/macos-notices
 ```
 
-This collects macOS arm64 Rust/default-feature dependencies and desktop npm runtime candidates. It verifies cached Rust archive checksums against Cargo.lock, includes nested native notices, preserves full texts by SHA-256, and validates checked-in upstream overrides against the exact crate/VCS hashes. `release/notice-overrides.json` records source revisions and unresolved original-text cases. The generated inventory deliberately retains `complete: false` until source and final-bundle review is complete. Android/Lynx and other target inventories remain separate work; see [research](research/release-notices.md).
+This collects macOS arm64 Rust/default-feature dependencies and desktop npm runtime candidates. It verifies cached Rust archive checksums against Cargo.lock and npm archive SRI against the lockfile, compares installed files against those verified archives, harvests original texts from the archive bytes, includes nested native notices, and validates checked-in upstream overrides against exact crate/VCS hashes. `release/notice-overrides.json` records source revisions and unresolved original-text cases. The generated inventory deliberately retains `complete: false` until source and final-bundle review is complete. Android/Lynx and other target inventories remain separate work; see [research](research/release-notices.md).
 
 Stage an existing macOS bundle as private local packages:
 
@@ -68,3 +68,14 @@ The selected npm scope still needs authenticated ownership/publishing access on 
 - Configure release signing for Android, macOS signing/notarization, and the Windows signing decision.
 - Build/run the current Windows EXE and Linux packages on their native systems, including accessibility and scaling checks.
 - Verify final checksums and a cold launch of each signed/distributable artifact, then publish platform packages, installers and v0.1.0 only after the remaining product acceptance gates pass.
+
+## Full-duration timer acceptance
+
+Use a disposable emulator only. Set **Settings → Session → 15 minutes** through the phone UI, enable its accessibility service and pair it into a new private state directory. Then run:
+
+```sh
+cargo run --locked --example verify_session_timer -- \
+  emulator-SERIAL PRIVATE_STATE NEW_REPORT.json
+```
+
+The probe uses the public controller/managed gateway, keeps authenticated heartbeats running, waits the full elapsed duration, checks phone expiry and desktop Stop, then verifies subsequent input is rejected. It does not accelerate a clock. The temporary registration is removed on normal/error return; the state directory remains the caller's responsibility. Restore Off through Settings and delete the disposable emulator/state after collecting metadata.
