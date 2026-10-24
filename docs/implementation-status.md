@@ -22,6 +22,12 @@ The keyboard-focus correction is packaged in updated Mac DMG and Windows EXE pre
 
 The installed user apps were preserved. Full human screen-reader/wider-platform checks remain unverified, and Windows execution remains deferred. The packages do not convert those gaps into passes.
 
+## 0.1.2 publication and final cleanup — 2026-10-24
+
+[v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) is published at `948eaac`. All five uploaded asset digests match the local files; see the [publication receipt](evidence/release-publication-0.1.2.json). PR #20 merged the packages and standalone-install guidance. Earlier feature/release branches are removed, and build outputs, temporary compiler installations and old local downloads were cleaned up again. Final packages, private signing material and installed user apps are preserved; see [cleanup receipt](evidence/release-cleanup-0.1.2.json).
+
+The release delivery is verified. The full original accessibility/platform acceptance remains open pending a human pass or an explicit scope decision. No human screen-reader pass is inferred from native accessibility-tree checks or preview publication.
+
 ## Screenshot acceleration — 2026-10-24
 
 Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. Live preview retains its existing ADB capture loop.
@@ -106,7 +112,7 @@ This patch includes the Android icon, visible Save action for unsaved access edi
 - [x] APK, DMG and EXE preview packaging, bundled notices and uploaded artifact hash verification
 - [x] Reviewed feature PRs merged to main with conventional titles
 - [x] v0.1.0 native preview published with operator-deferred checks and remaining platform qualifications
-- [ ] Temporary branches, build artifacts and processes cleaned up
+- [x] Completed feature/release branches, temporary build artifacts and task processes cleaned up (final receipts retained)
 
 ## Agreed test boundaries
 
