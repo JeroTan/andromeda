@@ -1,0 +1,52 @@
+{
+  "version": "0.1.1",
+  "channel": "preview",
+  "source_commit": "34ccd81b6a2dc2021a6780a8e71aad415fb22303",
+  "available_platforms": [
+    "macOS arm64",
+    "Windows x64",
+    "Android"
+  ],
+  "mcp_tool_count": 18,
+  "android_signature_schemes": [
+    "v2",
+    "v3"
+  ],
+  "android_certificate_sha256": "73269514febe09f68087b112eeb7d921ed164a04fbf6c2098c31b336c9fb3db0",
+  "android_version_code": 2,
+  "android_debuggable": false,
+  "desktop_signed": false,
+  "macos_notarized": false,
+  "windows_target": "x86_64-pc-windows-gnu",
+  "windows_native_execution": "not performed; operator deferred Windows testing",
+  "windows_payload_verified": [
+    "andromeda-desktop.exe (x64)",
+    "bin/andromeda.exe (x64)",
+    "WebView2Loader.dll (x64)",
+    "third-party notices"
+  ],
+  "assets": [
+    {
+      "file": "Andromeda-0.1.1-macos-arm64.dmg",
+      "bytes": 7109625,
+      "sha256": "48c378bde40f1bfa6e387c52c75becfbfe171a4f937c842d68274cdbfa40fd6d"
+    },
+    {
+      "file": "Andromeda-0.1.1-windows-x64-setup.exe",
+      "bytes": 5722813,
+      "sha256": "6ace20d3fb318ccba5426f000b9c6eb52cc78918dadba4e8b62cea68d9d5bd7a"
+    },
+    {
+      "file": "Andromeda-0.1.1-android.apk",
+      "bytes": 44933408,
+      "sha256": "37ea4c86b799ee8f6e196deb7c3f8453f6984f2ede4467f16acc61c0c810c023"
+    }
+  ],
+  "qualifications": [
+    "Windows installer is an unsigned cross-compiled preview; native Windows behavior is unverified.",
+    "The macOS app is unsigned and not notarized.",
+    "Android release certificate differs from development/debug builds; switching from a debug installation requires a clean install.",
+    "Additional platform/screen-reader verification is deferred or incomplete; no general compatibility guarantee is made.",
+    "Claude registration cannot hot-reload an already-open Claude conversation."
+  ]
+}

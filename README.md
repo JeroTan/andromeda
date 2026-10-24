@@ -4,7 +4,7 @@ Andromeda gives MCP agents tools to observe and control an Android device. The s
 
 [Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Examples](docs/examples.md) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md)
 
-**v0.1.0 native preview:** [download the Mac DMG and Android APK](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0). The Mac app runs standalone and includes the Rust MCP server; npm is optional. Preview qualifications and deferred work are recorded in the release notes and [implementation-status.md](docs/implementation-status.md).
+**v0.1.1 native preview:** [download the Windows EXE, Mac DMG and Android APK](https://github.com/JeroTan/andromeda/releases/tag/v0.1.1). The Mac app runs standalone and includes the Rust MCP server; npm is optional. Preview qualifications and deferred work are recorded in the release notes and [implementation-status.md](docs/implementation-status.md).
 
 ## Desktop preview
 

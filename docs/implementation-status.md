@@ -38,6 +38,12 @@ Both native packages now contain collected original publisher notices, preserved
 
 The [v0.1.0 native preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.0) was published at commit `966dcd3`; all four uploaded asset hashes match local files. See [publication evidence](evidence/release-publication-0.1.0.json). Artifact evidence is in [native-release-0.1.0.json](evidence/native-release-0.1.0.json). Wider platform/human accessibility verification remains unproven. This preview publication does not require an npm login.
 
+## 0.1.1 native packages — 2026-10-24
+
+The Windows x64 NSIS installer is now built, alongside the updated Apple silicon DMG and signed Android APK. The Windows payload was inspected without executing it: x64 desktop/MCP binaries, matching WebView2 loader and notices are present; the earlier cross-build's leftover Mac executable is excluded. Native Windows testing remains deferred as requested. The build uses a matching official Rust 1.99 compiler/stdlib with MinGW-w64 and NSIS; the Homebrew compiler could not consume the official prebuilt stdlib, so the isolated matching toolchain was used.
+
+This patch includes the Android icon, visible Save action for unsaved access edits, and desktop-owned Claude CLI setup/result feedback. The actual Claude registration reports Connected; already-open chat tool catalogs still require their client reconnect/reopen step. Android versionCode is 2 and the release certificate matches 0.1.0. Artifact evidence is [native-release-0.1.1.json](evidence/native-release-0.1.1.json). Unsigned desktop status, native Windows testing and remaining broader validation qualifications are retained; this is a preview, not an unqualified compatibility claim.
+
 ## Phase 1: Core Android MCP server
 
 - [x] Rust library and executable; Tokio and rmcp stdio transport

@@ -87,3 +87,16 @@ The operator deferred Windows-native testing and asked to finish the existing na
 Run `scripts/assemble-release-notices.py --macos-notices PATH_TO_COLLECTED_MACOS_NOTICES` after the collector to append the exact Lynx source-JAR notices, pinned PrimJS notices and corresponding MPL source archives. Copy the resulting directory to `android-companion/app/src/main/assets/third-party-notices/` before building the APK. Desktop packaging copies `release/generated-notices/` (or `ANDROMEDA_NOTICES_DIR`) into the app's resources. Generated directories are ignored by Git; source links, checksums and qualifications remain in the artifacts.
 
 Android release signing material is held privately outside the repository in the operator's Application Support directory. Preserve a secure backup of the keystore and its password file; future release APKs need the same key. Do not upload either file. The release APK is aligned and signed with Android build-tools, then verified with `apksigner verify`. It uses a different certificate from the development/debug app; migration details are in the release notes.
+
+## Windows cross-build used for 0.1.1
+
+The unsigned NSIS preview was built on macOS with the official Rust 1.99.0 compiler, matching host and x86_64-pc-windows-gnu standard libraries, MinGW-w64 14.0.0 and NSIS 3.13. A Homebrew rustc build cannot consume the official stdlib metadata despite matching version numbers; use a matching compiler/stdlib set.
+
+```sh
+python3 scripts/collect-notices.py --cargo-about PATH_TO_CARGO_ABOUT \
+  --target x86_64-pc-windows-gnu --out NEW_WINDOWS_NOTICES
+python3 scripts/build-windows-preview.py --toolchain PREPARED_RUST_SYSROOT \
+  --notices WINDOWS_NOTICES_WITH_VENDOR_TEXTS
+```
+
+The sysroot must contain its host compiler/stdlib and Windows GNU stdlib. The helper does not download or accept licenses automatically. Windows notices include the exact WebView2 1.0.3650.58 publisher-package texts after matching its loader DLL to the bundled crate binary, plus MinGW/Rust notices. This cross-build is not native Windows validation.
