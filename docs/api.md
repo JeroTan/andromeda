@@ -89,7 +89,7 @@ No tool treats a dispatched action as a verified task. Successful input returns 
 
 ## Scrolling capture
 
-`adm_get_long_view` scrolls a selected list and returns one tall image containing bounded viewport observations. It requires input authorization and, for managed projects, approval like other input tools. Example:
+`adm_get_long_view` scrolls a selected list and returns one tall image containing bounded viewport observations. It requires input authorization and a running managed project with this tool enabled. Allowed actions execute without per-action approval. Example:
 
 ```json
 {

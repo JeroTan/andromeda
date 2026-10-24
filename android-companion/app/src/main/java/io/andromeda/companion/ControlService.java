@@ -24,6 +24,8 @@ import java.io.DataOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.ArrayDeque;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,9 +46,94 @@ public final class ControlService extends AccessibilityService {
     private volatile boolean destroyed;
     private SharedPreferences preferences;
 
+    private String desktopHost = "";
+    private volatile long lastSyncAt;
+    private final Map<String, ManagedProject> managedProjects = new LinkedHashMap<>();
+    private final AtomicLong nextPhoneEvent=new AtomicLong();
+    private final Map<String, JSONObject> phoneEvents = new LinkedHashMap<>();
+    private static final class ManagedProject {
+        String id, name, state; long hostGeneration, sessionId, phoneAck, resumeEpoch, revision;
+        ManagedProject(String id, String name, String state, long hostGeneration, long sessionId, long phoneAck, long resumeEpoch) { this.id=id; this.name=name; this.state=state; this.hostGeneration=hostGeneration; this.sessionId=sessionId; this.phoneAck=phoneAck; this.resumeEpoch=resumeEpoch; }
+    }
+    private record RequestLease(long global, String project, long revision, boolean readOnly) {}
+    private final Runnable sessionWatchdog = new Runnable() {
+        @Override public void run() {
+            synchronized(ControlService.this) {
+                if (destroyed) return;
+                if (armedUntil > 0 && armedUntil != Long.MAX_VALUE && !armed()) stopSession();
+                if (lastSyncAt > 0 && !desktopConnected()) {
+                    for (ManagedProject project : managedProjects.values()) if ("running".equals(project.state)) changeProject(project.id, "paused");
+                }
+            }
+            main.postDelayed(this, 1000);
+        }
+    };
+    public boolean desktopConnected() { return lastSyncAt > 0 && SystemClock.elapsedRealtime()-lastSyncAt < 4000; }
+    public synchronized JSONArray projectsSnapshot() {
+        JSONArray result = new JSONArray();
+        for (ManagedProject project : managedProjects.values()) {
+            try { result.put(new JSONObject().put("id",project.id).put("name",project.name).put("state",project.state)); } catch(JSONException ignored) {}
+        }
+        return result;
+    }
+    public synchronized void changeProject(String id, String state) {
+        ManagedProject project = managedProjects.get(id);
+        if (project == null || (!"paused".equals(state) && !"stopped".equals(state) && !"running".equals(state))) return;
+        if ("running".equals(state) && (!"paused".equals(project.state) || !desktopConnected())) return;
+        project.state = state; project.revision++;
+        try { phoneEvents.put(id,new JSONObject().put("project_id",id).put("state",state).put("generation",project.hostGeneration).put("session_id",project.sessionId).put("event_id",nextPhoneEvent.incrementAndGet()).put("resume_epoch",project.resumeEpoch)); } catch(JSONException ignored) {}
+        updateManagedArm();
+    }
+    private void updateManagedArm() {
+        boolean running = managedProjects.values().stream().anyMatch(project -> "running".equals(project.state));
+        if (running && armedUntil == 0) {
+            int minutes=preferences.getInt("session_timer_minutes",0);
+            armedUntil=minutes==0?Long.MAX_VALUE:SystemClock.elapsedRealtime()+minutes*60_000L;
+        } else if (!running) armedUntil=0;
+    }
+    private synchronized JSONObject syncSessions(JSONObject request) throws Exception {
+        String host = string(request,"host_id",32);
+        if (!host.matches("[0-9a-f]{32}")) throw new Problem("invalid_request","Invalid desktop identifier");
+        JSONArray incoming=request.getJSONArray("projects");
+        if(incoming.length()>100)throw new Problem("invalid_request","Too many project sessions");
+        // Validate the complete update before changing any state.
+        Map<String,ManagedProject> next=new LinkedHashMap<>();
+        for(int i=0;i<incoming.length();i++) {
+            JSONObject value=incoming.getJSONObject(i); String id=string(value,"id",32),name=string(value,"name",256),state=string(value,"state",16);
+            if(!id.matches("[0-9a-f]{32}") || next.containsKey(id) || (!state.equals("running") && !state.equals("paused") && !state.equals("stopped")))throw new Problem("invalid_request","Invalid project session");
+            long hostGeneration=value.getLong("generation"); if(hostGeneration<0)throw new Problem("invalid_request","Invalid session generation");
+            long sessionId=value.getLong("session_id"); if(sessionId<0)throw new Problem("invalid_request","Invalid session identifier");
+            long phoneAck=value.getLong("phone_ack"); if(phoneAck<0)throw new Problem("invalid_request","Invalid phone event acknowledgement");
+            long resumeEpoch=value.getLong("resume_epoch"); if(resumeEpoch<0)throw new Problem("invalid_request","Invalid resume epoch");
+            next.put(id,new ManagedProject(id,name,state,hostGeneration,sessionId,phoneAck,resumeEpoch));
+        }
+        // Android can recreate this service while the desktop retains acknowledgements.
+        // New phone events must remain greater than every validated incoming ACK.
+        for(ManagedProject project:next.values())nextPhoneEvent.accumulateAndGet(project.phoneAck,Math::max);
+        if(!desktopHost.equals(host)) { stopSession(); managedProjects.clear(); phoneEvents.clear(); desktopHost=host; }
+        for(ManagedProject project:next.values()) {
+            ManagedProject previous=managedProjects.get(project.id);
+            JSONObject event=phoneEvents.get(project.id);
+            if(event!=null && event.getLong("session_id")==project.sessionId && event.getLong("event_id")>project.phoneAck) {
+                // Keep the newest phone action until the desktop acknowledges that
+                // exact event. An older Resume response cannot erase a newer Stop.
+                String desired=event.getString("state");
+                if("stopped".equals(project.state) && !"stopped".equals(desired))phoneEvents.remove(project.id);
+                else if("running".equals(desired) && event.getLong("resume_epoch")!=project.resumeEpoch)phoneEvents.remove(project.id);
+                else project.state=desired;
+            } else phoneEvents.remove(project.id);
+            if(previous!=null)project.revision=previous.revision+(previous.state.equals(project.state) && previous.sessionId==project.sessionId?0:1);
+        }
+        managedProjects.clear(); managedProjects.putAll(next); phoneEvents.keySet().retainAll(next.keySet());
+        lastSyncAt=SystemClock.elapsedRealtime(); updateManagedArm();
+        JSONArray events=new JSONArray(); for(JSONObject event:phoneEvents.values())events.put(event);
+        return new JSONObject().put("events",events).put("session_active",armed());
+    }
+
     @Override protected void onServiceConnected(){
         preferences=getSharedPreferences("pairing",MODE_PRIVATE);
         destroyed=false;
+        main.removeCallbacks(sessionWatchdog); main.post(sessionWatchdog);
         bindEndpoint(0);
     }
     private void bindEndpoint(int attempt){
@@ -87,6 +174,7 @@ public final class ControlService extends AccessibilityService {
             try(LocalSocket wake=new LocalSocket()){wake.connect(new LocalSocketAddress("andromeda-v1"));}catch(Exception ignored){}
             try{owned.close();}catch(Exception ignored){}
         }
+        main.removeCallbacks(sessionWatchdog);
         stopSession();pairingUntil=0;
         for(LocalSocket client:clients)close(client);
         workers.shutdownNow();super.onDestroy();
@@ -100,7 +188,10 @@ public final class ControlService extends AccessibilityService {
         armedUntil=minutes==0?Long.MAX_VALUE:SystemClock.elapsedRealtime()+minutes*60_000L;
         return true;
     }
-    public void stopSession(){armedUntil=0;pairingUntil=0;generation.incrementAndGet();}
+    public synchronized void stopSession(){
+        for (ManagedProject project:managedProjects.values()) changeProject(project.id,"stopped");
+        armedUntil=0;pairingUntil=0;generation.incrementAndGet();
+    }
     public boolean hasPairing(){return !preferences.getString("token","").isEmpty();}
     public int pairingSeconds(){return (int)Math.max(0,(pairingUntil-SystemClock.elapsedRealtime()+999)/1000);}
     public boolean ready(){return instance==this && listener!=null;}
@@ -180,9 +271,10 @@ public final class ControlService extends AccessibilityService {
         byte[] expected=preferences.getString("token","").getBytes(StandardCharsets.UTF_8);
         if(expected.length!=64 || !MessageDigest.isEqual(expected,token.getBytes(StandardCharsets.UTF_8)))throw new Problem("unauthorized","Pair this computer again from the phone");
         lastAuthenticatedAt=SystemClock.elapsedRealtime();
+        if(method.equals("session_sync"))return success(syncSessions(request));
         if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("session_seconds",sessionSeconds()).put("gesture_active",gestureActive.get()));
         if(method.equals("stop")){stopSession();return success(new JSONObject().put("stopped",true).put("note","Already dispatched Android input may finish"));}
-        requireSession();long requestGeneration=generation.get();
+        RequestLease requestGeneration=lease(request);
         return switch(method){
             case "ui_tree" -> success(uiTree(requestGeneration, connected));
             case "type_text" -> success(typeTextVerified(request,requestGeneration,connected));
@@ -192,8 +284,23 @@ public final class ControlService extends AccessibilityService {
     }
 
     private void requireSession()throws Problem{if(!armed())throw new Problem("session_inactive","Start a session in the Andromeda app on the phone");}
-    private void checkRequest(long expectedGeneration, AtomicBoolean connected)throws Problem{requireSession();if(!connected.get() || generation.get()!=expectedGeneration)throw new Problem("cancelled","The request or session ended before completion");}
-    private <T>T onMain(Callable<T> action,long timeout,long requestGeneration,AtomicBoolean connected)throws Exception{
+    private synchronized RequestLease lease(JSONObject request)throws Exception {
+        String id=request.optString("project_id","");
+        boolean readOnly="ui_tree".equals(request.optString("method")) && !id.isEmpty();
+        if(!readOnly)requireSession();
+        if(!id.isEmpty() && !readOnly && !desktopConnected())throw new Problem("desktop_disconnected","Desktop connection ended; resume after reconnecting");
+        if(id.isEmpty())return new RequestLease(generation.get(),"",0,false);
+        ManagedProject project=managedProjects.get(id);
+        if(project==null || (!readOnly && !"running".equals(project.state)))throw new Problem("project_inactive","Start or resume this project in Andromeda");
+        return new RequestLease(generation.get(),id,project.revision,readOnly);
+    }
+    private synchronized void checkRequest(RequestLease expectedGeneration, AtomicBoolean connected)throws Problem {
+        if(!expectedGeneration.readOnly())requireSession();
+        if(!expectedGeneration.project().isEmpty() && !expectedGeneration.readOnly() && !desktopConnected())throw new Problem("desktop_disconnected","Desktop connection ended; input was cancelled");
+        ManagedProject project=managedProjects.get(expectedGeneration.project());
+        if(!connected.get() || generation.get()!=expectedGeneration.global() || (!expectedGeneration.project().isEmpty() && (project==null || (!expectedGeneration.readOnly() && !"running".equals(project.state)) || project.revision!=expectedGeneration.revision())))throw new Problem("cancelled","The request or project session ended before completion");
+    }
+    private <T>T onMain(Callable<T> action,long timeout,RequestLease requestGeneration,AtomicBoolean connected)throws Exception{
         FutureTask<T> task=new FutureTask<>(()->{checkRequest(requestGeneration,connected);return action.call();});
         main.post(task);
         try{return task.get(timeout,TimeUnit.MILLISECONDS);}
@@ -218,7 +325,7 @@ public final class ControlService extends AccessibilityService {
         if(focused==null || !focused.isEditable())throw new Problem("no_editable_focus","Focus an editable field first");
         return focused.isShowingHintText()?"":value(focused.getText());
     }
-    private JSONObject typeTextVerified(JSONObject request,long expectedGeneration,AtomicBoolean connected)throws Exception{
+    private JSONObject typeTextVerified(JSONObject request,RequestLease expectedGeneration,AtomicBoolean connected)throws Exception{
         TextChange change=onMain(()->typeText(request),3000,expectedGeneration,connected);
         if(change.masked()){
             return new JSONObject().put("characters",change.characters()).put("mode",change.mode())
@@ -275,7 +382,7 @@ public final class ControlService extends AccessibilityService {
         if(!focused.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT,arguments))throw new Problem("text_rejected","The focused app rejected text replacement");
         return new TextChange(text,cursor,inserted,mode,focused.isPassword());
     }
-    private JSONObject gesture(JSONObject request,long expectedGeneration,AtomicBoolean connected)throws Exception{
+    private JSONObject gesture(JSONObject request,RequestLease expectedGeneration,AtomicBoolean connected)throws Exception{
         if(!gestureActive.compareAndSet(false,true))throw new Problem("device_busy","A companion gesture is already active");
         CompletableFuture<JSONObject> completion=new CompletableFuture<>();
         try{
@@ -301,7 +408,7 @@ public final class ControlService extends AccessibilityService {
                 boolean accepted=dispatchGesture(gesture.build(),new GestureResultCallback(){
                     @Override public void onCompleted(GestureDescription result){
                         gestureActive.set(false);
-                        if(generation.get()!=expectedGeneration){completion.completeExceptionally(new Problem("cancelled","Session stopped; input may already have occurred"));return;}
+                        try { checkRequest(expectedGeneration, connected); } catch (Problem stopped) { completion.completeExceptionally(stopped); return; }
                         try{completion.complete(new JSONObject().put("completed",true).put("strokes",strokes.length()));}catch(JSONException error){completion.completeExceptionally(error);}
                     }
                     @Override public void onCancelled(GestureDescription result){gestureActive.set(false);completion.completeExceptionally(new Problem("gesture_cancelled","Android cancelled the gesture; observe before retrying"));}
@@ -321,9 +428,9 @@ public final class ControlService extends AccessibilityService {
     }
 
     private record PendingNode(AccessibilityNodeInfo node,int parent){}
-    private JSONObject uiTree(long expectedGeneration,AtomicBoolean connected)throws Exception{
+    private JSONObject uiTree(RequestLease expectedGeneration,AtomicBoolean connected)throws Exception{
         long deadline=SystemClock.elapsedRealtime()+3000;
-        requireSession();JSONObject geometry=screen();
+        checkRequest(expectedGeneration,connected);JSONObject geometry=screen();
         AccessibilityNodeInfo root=getRootInActiveWindow();
         if(root==null)throw new Problem("ui_unavailable","No active accessibility window");
         JSONArray nodes=new JSONArray();ArrayDeque<PendingNode> pending=new ArrayDeque<>();pending.add(new PendingNode(root,-1));int textBudget=0;

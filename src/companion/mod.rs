@@ -85,11 +85,20 @@ impl Store {
 pub struct Companion {
     adb: Adb,
     store: Store,
+    project: Option<String>,
 }
 
 impl Companion {
     pub fn new(adb: Adb, store: Store) -> Self {
-        Self { adb, store }
+        Self {
+            adb,
+            store,
+            project: None,
+        }
+    }
+    pub(crate) fn scoped(mut self, project: String) -> Self {
+        self.project = Some(project);
+        self
     }
     /// Only called by the operator's setup interface, never an MCP tool.
     pub async fn pair(&self, serial: &str) -> Result<()> {
@@ -128,6 +137,9 @@ impl Companion {
         let object = arguments
             .as_object_mut()
             .ok_or_else(|| Error::invalid("Companion arguments must be an object"))?;
+        if let Some(project) = &self.project {
+            object.insert("project_id".into(), json!(project));
+        }
         object.insert("version".into(), json!(1));
         object.insert("method".into(), json!(method));
         object.insert("token".into(), json!(pairing.token));

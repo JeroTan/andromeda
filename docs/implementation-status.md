@@ -2,6 +2,12 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger tracks the full scope; unchecked gates are unfinished. A passing mock test does not prove Android behavior or client compatibility.
 
+## Current session flow — 2026-10-23 correction
+
+The user superseded the earlier per-action approval/global Resume design with [seamless project sessions](specs/seamless-project-sessions.md). Start each configured project once; its saved allowed tools execute without further Andromeda approval prompts. Each project has independent Pause/Resume and Stop, and Stop all projects is the emergency control. Phone and desktop replicate project state over authenticated bounded heartbeat messages; the phone needs no second Start. Saved pairing is shown separately from actual connectivity. Earlier sections below describing per-request approval are historical and superseded by this correction.
+
+Local verification passed the 52-test Rust workspace suite, all-feature Clippy, desktop/frontend/package builds, phone UI/APK builds and two review axes after fixes. Public MCP/ADB tests cover independent project cancellation, later Stop versus stale Resume, loss/reconnect fencing, and a concurrent Resume during a failed bridge sync. Physical checks verified desktop Start → phone Running, phone Pause/Resume → desktop state, desktop Stop → phone Stopped, and rejection of paused/stopped MCP input. One harmless Home-key request executed without approval. Phone Stop also survived a deliberately older Resume acknowledgment, and heartbeat loss paused the phone after 4.249 seconds. These are scoped acceptance results, not a general latency benchmark. See [evidence](evidence/seamless-sessions-2026-10-23.json). Hosted Actions stayed disabled; this does not close the remaining release gates.
+
 ## Phase 1: Core Android MCP server
 
 - [x] Rust library and executable; Tokio and rmcp stdio transport

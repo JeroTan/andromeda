@@ -3,7 +3,7 @@ use andromeda::{
     capture,
     device::{Adb, DeviceSummary},
     errors::{Error, Result},
-    managed::{Approval, ConnectionStatus, Host},
+    managed::{BridgeStatus, ConnectionStatus, Host, ProjectSession, ProjectState},
     projects::{Client, ConfigChange, Project, Registry},
 };
 use base64::Engine;
@@ -53,9 +53,9 @@ fn stop_preview_task(state: &AppState) {
 #[derive(Serialize)]
 struct Snapshot {
     projects: Vec<Project>,
-    paused: bool,
+    sessions: Vec<ProjectSession>,
+    bridges: Vec<BridgeStatus>,
     pause_generation: u64,
-    approvals: Vec<Approval>,
     connections: Vec<ConnectionStatus>,
     tools: Vec<ToolSummary>,
 }
@@ -70,9 +70,14 @@ struct ToolSummary {
 async fn snapshot(state: State<'_, AppState>) -> Result<Snapshot> {
     Ok(Snapshot {
         projects: state.registry.list()?,
-        paused: state.host.is_paused(),
+        sessions: state
+            .registry
+            .list()?
+            .iter()
+            .map(|project| state.host.project_session(&project.id))
+            .collect(),
+        bridges: state.host.bridge_statuses(),
         pause_generation: state.host.pause_generation(),
-        approvals: state.host.approvals(),
         connections: state.host.connections(),
         tools: andromeda::mcp::tools()
             .into_iter()
@@ -122,8 +127,9 @@ async fn save_project(
     enabled: bool,
 ) -> Result<Project> {
     let _guard = state.settings.lock().await;
-    require_paused(&state)?;
+    require_paused(&state, &id)?;
     let previous_serial = state.registry.get(&id)?.serial;
+    state.host.stop_project(&id);
     let saved = state
         .registry
         .update(&id, serial, allowed_tools, instruction_file, enabled)?;
@@ -133,11 +139,11 @@ async fn save_project(
     Ok(saved)
 }
 
-fn require_paused(state: &AppState) -> Result<()> {
-    if !state.host.is_paused() {
+fn require_paused(state: &AppState, id: &str) -> Result<()> {
+    if state.host.project_session(id).state == ProjectState::Running {
         return Err(Error::new(
             "pause_required",
-            "Pause the session before changing project access",
+            "Pause this project before changing its access",
         ));
     }
     Ok(())
@@ -146,7 +152,7 @@ fn require_paused(state: &AppState) -> Result<()> {
 #[tauri::command]
 async fn remove_project(state: State<'_, AppState>, id: String) -> Result<()> {
     let _guard = state.settings.lock().await;
-    require_paused(&state)?;
+    require_paused(&state, &id)?;
     state.registry.remove(&id)?;
     stop_preview_task(state.inner());
     Ok(())
@@ -169,7 +175,7 @@ async fn devices(state: State<'_, AppState>) -> Result<Vec<DeviceSummary>> {
 #[tauri::command]
 async fn pair_companion(state: State<'_, AppState>, id: String) -> Result<()> {
     let _guard = state.settings.lock().await;
-    require_paused(&state)?;
+    require_paused(&state, &id)?;
     let project = state.registry.get(&id)?;
     let serial = project.serial.ok_or_else(|| {
         Error::new(
@@ -177,7 +183,11 @@ async fn pair_companion(state: State<'_, AppState>, id: String) -> Result<()> {
             "Select and save this project's phone first",
         )
     })?;
-    state.companion.pair(&serial).await
+    if !state.companion.is_paired(&serial)? || state.companion.status(&serial).await.is_err() {
+        state.companion.pair(&serial).await?;
+    }
+    let _ = state.host.sync_phone_sessions().await;
+    Ok(())
 }
 
 #[tauri::command]
@@ -217,7 +227,7 @@ async fn save_instructions(
     previous: Option<String>,
 ) -> Result<()> {
     let _guard = state.settings.lock().await;
-    require_paused(&state)?;
+    require_paused(&state, &id)?;
     state
         .registry
         .save_instructions(&id, &content, previous.as_deref())
@@ -308,20 +318,34 @@ async fn apply_connection(
 }
 
 #[tauri::command]
-fn pause(state: State<'_, AppState>) -> usize {
+async fn emergency_stop(state: State<'_, AppState>) -> Result<usize> {
     stop_preview_task(state.inner());
-    state.host.stop_all()
+    let count = state.host.stop_all();
+    let _ = state.host.sync_phone_sessions().await;
+    Ok(count)
 }
 
 #[tauri::command]
-async fn resume(state: State<'_, AppState>, generation: u64) -> Result<()> {
-    let _guard = state.settings.lock().await;
-    state.host.resume(generation)
-}
-
-#[tauri::command]
-fn decide(state: State<'_, AppState>, id: u64, allow: bool) -> Result<()> {
-    state.host.decide(id, allow)
+async fn project_session(
+    state: State<'_, AppState>,
+    id: String,
+    action: ProjectState,
+    generation: u64,
+    global_generation: u64,
+) -> Result<()> {
+    if action == ProjectState::Running {
+        let _guard = state.settings.lock().await;
+        state
+            .host
+            .set_project_state(&id, action, generation, global_generation)?;
+    } else {
+        // Pause/Stop must not wait behind a slow setup or pairing request.
+        state
+            .host
+            .set_project_state(&id, action, generation, global_generation)?;
+    }
+    let _ = state.host.sync_phone_sessions().await;
+    Ok(())
 }
 
 #[derive(Serialize)]
@@ -596,9 +620,8 @@ pub fn run() {
             save_instructions,
             preview_connection,
             apply_connection,
-            pause,
-            resume,
-            decide,
+            emergency_stop,
+            project_session,
             capture_preview,
             start_preview,
             stop_preview

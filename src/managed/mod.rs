@@ -25,11 +25,13 @@ use tokio::{
     task::JoinHandle,
 };
 use tokio_util::sync::CancellationToken;
+mod bridge;
 mod proxy;
 mod session;
 mod wire;
+pub use bridge::BridgeStatus;
 pub use proxy::Proxy;
-pub use session::{Approval, ConnectionStatus};
+pub use session::{ConnectionStatus, ProjectSession, ProjectState};
 
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -73,10 +75,12 @@ enum Reply {
 }
 
 pub struct Host {
+    registry: Registry,
     cancel: CancellationToken,
     controller: Controller,
     session: Arc<session::Session>,
-    pause_generation: Mutex<u64>,
+    pause_generation: Arc<Mutex<u64>>,
+    bridge: Option<bridge::Bridge>,
     task: JoinHandle<()>,
     endpoint_path: PathBuf,
     key: String,
@@ -126,6 +130,22 @@ impl Host {
         let secret = key.clone();
         let session = Arc::new(session::Session::default());
         let requests = session.clone();
+        let pause_generation = Arc::new(Mutex::new(0));
+        let bridge_host_id = random_hex(16)?;
+        let bridge = controller.companion_bridge().map(|companion| {
+            bridge::Bridge::new(
+                companion,
+                registry.clone(),
+                session.clone(),
+                controller.clone(),
+                pause_generation.clone(),
+                bridge_host_id,
+            )
+        });
+        if let Some(bridge) = bridge.clone() {
+            tokio::spawn(bridge.run(cancel.clone()));
+        }
+        let host_registry = registry.clone();
         let task = tokio::spawn(async move {
             // Only 32 calls can be admitted; leave capacity for stop and setup requests.
             let slots = Arc::new(tokio::sync::Semaphore::new(64));
@@ -148,10 +168,12 @@ impl Host {
             tasks.abort_all();
         });
         Ok(Self {
+            registry: host_registry,
             cancel,
             controller,
             session,
-            pause_generation: Mutex::new(0),
+            pause_generation,
+            bridge,
             task,
             endpoint_path,
             key,
@@ -165,7 +187,7 @@ impl Host {
             .unwrap_or_else(|e| e.into_inner());
         *generation = generation.wrapping_add(1);
         self.controller.pause();
-        self.session.stop(None)
+        self.session.stop_all()
     }
     pub fn pause_generation(&self) -> u64 {
         *self
@@ -173,37 +195,68 @@ impl Host {
             .lock()
             .unwrap_or_else(|e| e.into_inner())
     }
-    pub fn resume(&self, expected_generation: u64) -> Result<()> {
-        let generation = self
+    pub fn project_session(&self, id: &str) -> ProjectSession {
+        self.session.project(id)
+    }
+    pub fn project_sessions(&self) -> Vec<ProjectSession> {
+        self.session.projects()
+    }
+    pub fn set_project_state(
+        &self,
+        id: &str,
+        state: ProjectState,
+        expected_generation: u64,
+        expected_global: u64,
+    ) -> Result<ProjectSession> {
+        let global = self
             .pause_generation
             .lock()
             .unwrap_or_else(|e| e.into_inner());
-        if *generation != expected_generation || self.cancel.is_cancelled() {
+        if *global != expected_global || self.cancel.is_cancelled() {
             return Err(Error::new(
                 "session_changed",
-                "The session was stopped after this Resume request; review its current state",
+                "An emergency stop occurred; use the current project controls",
             ));
         }
-        self.controller.resume();
-        Ok(())
+        let project = self.registry.get(id)?;
+        if state == ProjectState::Running && (!project.enabled || project.serial.is_none()) {
+            return Err(Error::new(
+                "project_not_ready",
+                "Enable this project and save its device before starting",
+            ));
+        }
+        let result = self
+            .session
+            .transition(id, state, Some(expected_generation))?;
+        if state == ProjectState::Running {
+            self.controller.resume();
+        }
+        Ok(result)
+    }
+    pub fn stop_project(&self, id: &str) -> usize {
+        self.session.stop(id)
     }
     pub fn is_paused(&self) -> bool {
-        self.controller.is_paused()
-    }
-    pub fn approvals(&self) -> Vec<Approval> {
-        self.session.approvals()
+        !self
+            .project_sessions()
+            .iter()
+            .any(|p| p.state == ProjectState::Running)
     }
     pub fn connections(&self) -> Vec<ConnectionStatus> {
         self.session.connections()
     }
-    pub fn decide(&self, id: u64, allow: bool) -> Result<()> {
-        if allow && self.is_paused() {
-            return Err(Error::new(
-                "control_paused",
-                "Resume the session before approving input",
-            ));
+
+    pub fn bridge_statuses(&self) -> Vec<BridgeStatus> {
+        self.bridge
+            .as_ref()
+            .map(|bridge| bridge.statuses())
+            .unwrap_or_default()
+    }
+    pub async fn sync_phone_sessions(&self) -> Result<()> {
+        match &self.bridge {
+            Some(bridge) => bridge.sync().await,
+            None => Ok(()),
         }
-        self.session.decide(id, allow)
     }
 
     pub fn shutdown(&self) {
@@ -375,10 +428,10 @@ async fn dispatch(
                 {
                     return Err(Error::invalid("adm_stop takes an empty object"));
                 }
-                let count = session.stop(Some(&project.id));
+                let count = session.stop(&project.id);
                 server.controller.stop();
                 return encode(CallToolResult::structured(
-                    json!({"success":true,"elapsed_ms":0.0,"data":{"cancelled_operations":count,"note":"Queued work and approval requests are cancelled. Input already accepted by Android may finish."}}),
+                    json!({"success":true,"elapsed_ms":0.0,"data":{"cancelled_operations":count,"note":"This project is stopped. Input already accepted by Android may finish."}}),
                 ));
             }
             crate::mcp::validate(&name, &arguments)?;
@@ -390,12 +443,6 @@ async fn dispatch(
                         .as_ref()
                         .is_some_and(|a| a.read_only_hint != Some(true))
                 });
-            if is_input && controller.is_paused() {
-                return Err(Error::new(
-                    "control_paused",
-                    "Resume the session in the desktop app before requesting input",
-                ));
-            }
             let timeout_ms = arguments
                 .get("timeout_ms")
                 .and_then(Value::as_u64)
@@ -403,16 +450,10 @@ async fn dispatch(
             crate::input::duration(timeout_ms, 1, 120000)?;
             let timeout = Duration::from_millis(timeout_ms);
             let started = Instant::now();
-            let admission = session.admit(&project.id, cancel.clone())?;
+            let _admission = session.admit(&project.id, is_input, cancel.clone())?;
             let execute = async {
                 if is_input {
-                    if controller.is_paused() {
-                        return Err(Error::new("control_paused", "Device input is paused"));
-                    }
-                    admission
-                        .approve(&project, &name, &arguments, timeout)
-                        .await?;
-                    // Recheck policy after human review: a changed device or allowlist invalidates approval.
+                    // Check the current saved scope immediately before dispatch.
                     let current = registry.authorize(&project.id, &request.working_directory)?;
                     if current.serial != project.serial
                         || current.allowed_tools != project.allowed_tools
@@ -430,7 +471,7 @@ async fn dispatch(
             tokio::select! {
                 biased;
                 _ = cancel.cancelled() => Err(Error::new("cancelled", "Managed request cancelled; observe before retrying input")),
-                result = tokio::time::timeout(timeout, execute) => result.map_err(|_| Error::new("timeout", "Managed request deadline expired, including approval time; observe before retrying input"))?,
+                result = tokio::time::timeout(timeout, execute) => result.map_err(|_| Error::new("timeout", "Device request deadline expired; observe before retrying input"))?,
             }
         }
     }

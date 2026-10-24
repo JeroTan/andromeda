@@ -45,6 +45,9 @@ public final class CompanionModule extends LynxModule {
                         throw new IllegalStateException("Could not remove the pairing. Try again.");
                 } else if ("stop".equals(action)) {
                     if (service != null) service.stopSession();
+                } else if (action.startsWith("project-pause:") || action.startsWith("project-resume:") || action.startsWith("project-stop:")) {
+                    String[] parts=action.split(":",2);
+                    if(service!=null && parts.length==2 && parts[1].matches("[0-9a-f]{32}")) service.changeProject(parts[1],parts[0].equals("project-pause")?"paused":parts[0].equals("project-resume")?"running":"stopped");
                 } else if ("refresh".equals(action)) {
                     // Return a fresh snapshot; Android owns accessibility service binding.
                 } else if ("accessibility".equals(action) || "accessibility-settings".equals(action)) {
@@ -90,6 +93,8 @@ public final class CompanionModule extends LynxModule {
         status.put("enabled", accessibilityEnabled());
         status.put("service_ready", service != null && service.ready() && !(BuildConfig.DEBUG && testServiceDisconnected));
         status.put("paired", !mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).getString("token", "").isEmpty());
+        status.put("desktop_connected", service != null && service.desktopConnected());
+        status.put("projects_json", service == null ? "[]" : service.projectsSnapshot().toString());
         status.put("session_active", service != null && service.sessionActive());
         status.put("session_expired", service != null && service.sessionExpired());
         status.put("last_contact_seconds", service == null ? -1 : service.lastContactSeconds());

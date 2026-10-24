@@ -611,3 +611,7 @@ Build an interface that lets your AI figure out the rest.
 ### Testing policy updated on 2026-10-23
 
 The operator cancelled GitHub Actions because of hosted-run costs. Keep Actions disabled and the workflow manual-only until the operator explicitly asks to enable or run it. Use appropriate local checks, including the available Android Studio/emulator, and clearly distinguish local validation from unverified platform checks. This overrides the earlier preference for full PR suites on GitHub.
+
+## Project session correction — 2026-10-23
+
+The user replaced per-action desktop approval with one explicit project Start. Implement [seamless project sessions](specs/seamless-project-sessions.md): independent project Pause/Resume and Stop, a global emergency stop, and synchronized phone/desktop status without a second phone Start. Previously saved directory/device/tool restrictions still apply to every request. This supersedes generic per-action managed approval requirements, including scrolling capture; agent-client sensitive-action approvals remain separate. Keep hosted Actions disabled.

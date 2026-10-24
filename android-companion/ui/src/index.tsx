@@ -1,7 +1,14 @@
 import { root, useEffect, useState, useGlobalProps } from "@lynx-js/react";
 import "./style.css";
 
+type ManagedProject = {
+  id: string;
+  name: string;
+  state: "running" | "paused" | "stopped";
+};
 type Status = {
+  desktop_connected: boolean;
+  projects_json: string;
   enabled: boolean;
   service_ready: boolean;
   paired: boolean;
@@ -20,6 +27,9 @@ type Status = {
   error?: string;
 };
 type Action =
+  | `project-pause:${string}`
+  | `project-resume:${string}`
+  | `project-stop:${string}`
   | "refresh"
   | "accessibility-settings"
   | "settings"
@@ -128,6 +138,7 @@ function App() {
         </text>
       </view>
     );
+  const projects: ManagedProject[] = JSON.parse(status.projects_json || "[]");
   const badgeSize = Math.max(36, Math.round((status.small_size || 12) * 2));
   const step = !status.enabled
     ? 0
@@ -151,8 +162,8 @@ function App() {
     : [
         "Enable accessibility so your paired computer can read accessible screens, enter text and perform gestures during a session.",
         "Your phone and computer need an introduction. Open pairing here, then choose this phone in Andromeda on your computer.",
-        "Start a session when you’re ready to use accessibility tools. You decide when it begins and ends.",
-        "This phone is ready to accept requests from your paired computer. Keep your task in view, and stop whenever you need.",
+        "Start your project in the desktop app. No second Start is needed here. Its status and controls appear below when your computer connects.",
+        "Your project is running. Allowed tools execute automatically. Pause or stop a project below; your desktop stays in sync.",
       ][step];
   const seconds = status.session_seconds;
   const remaining = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
@@ -191,7 +202,7 @@ function App() {
             className="stop-small"
             accessibility-element={true}
             accessibility-traits="button"
-            accessibility-label="Stop companion session"
+            accessibility-label="Stop all phone projects"
             accessibility-enable-tap={true}
             bindtap={() => act("stop")}
           >
@@ -299,121 +310,161 @@ function App() {
             </view>
           ) : (
             <>
-              <view className="hero panel">
-                <text
-                  accessibility-element={true}
-                  flatten={false}
-                  className="eyebrow"
-                  style={type(status.small_size)}
-                >
-                  YOUR PHONE, WITH REACH.
-                </text>
-                <text
-                  flatten={false}
-                  className="headline"
-                  style={type(status.title_size)}
-                  accessibility-element={true}
-                  accessibility-traits="header"
-                  accessibility-heading={true}
-                >
-                  {title}
-                </text>
-                <view
-                  className="art"
-                  accessibility-element={false}
-                  important-for-accessibility="no-hide-descendants"
-                >
-                  <view className="ring ring-a" />
-                  <view className="ring ring-b" />
-                  <view className="planet" />
-                  <view className="moon" />
-                  <view className="star-vertical" />
-                  <view className="star-horizontal" />
-                </view>
-                <text
-                  flatten={false}
-                  className="body"
-                  style={type(status.body_size)}
-                  accessibility-element={true}
-                >
-                  {description}
-                </text>
-                {waitingForService ? (
-                  <ActionButton
-                    status={status}
-                    busy={busy}
-                    onAction={act}
-                    action="refresh"
+              {projects.length === 0 && (
+                <view className="hero panel">
+                  <text
+                    accessibility-element={true}
+                    flatten={false}
+                    className="eyebrow"
+                    style={type(status.small_size)}
                   >
-                    Check connection
-                  </ActionButton>
-                ) : step === 0 ? (
-                  <ActionButton
-                    status={status}
-                    busy={busy}
-                    onAction={act}
-                    action="accessibility"
+                    YOUR PHONE, WITH REACH.
+                  </text>
+                  <text
+                    flatten={false}
+                    className="headline"
+                    style={type(status.title_size)}
+                    accessibility-element={true}
+                    accessibility-traits="header"
+                    accessibility-heading={true}
                   >
-                    Enable accessibility
-                  </ActionButton>
-                ) : pairing ? (
-                  <>
-                    <text
-                      flatten={false}
-                      className="pairing-time"
-                      style={type(status.body_size)}
-                      accessibility-element={true}
-                    >{`Pairing is open · ${status.pairing_seconds}s`}</text>
+                    {title}
+                  </text>
+                  <view
+                    className="art"
+                    accessibility-element={false}
+                    important-for-accessibility="no-hide-descendants"
+                  >
+                    <view className="ring ring-a" />
+                    <view className="ring ring-b" />
+                    <view className="planet" />
+                    <view className="moon" />
+                    <view className="star-vertical" />
+                    <view className="star-horizontal" />
+                  </view>
+                  <text
+                    flatten={false}
+                    className="body"
+                    style={type(status.body_size)}
+                    accessibility-element={true}
+                  >
+                    {description}
+                  </text>
+                  {waitingForService ? (
+                    <ActionButton
+                      status={status}
+                      busy={busy}
+                      onAction={act}
+                      action="refresh"
+                    >
+                      Check connection
+                    </ActionButton>
+                  ) : step === 0 ? (
+                    <ActionButton
+                      status={status}
+                      busy={busy}
+                      onAction={act}
+                      action="accessibility"
+                    >
+                      Enable accessibility
+                    </ActionButton>
+                  ) : pairing ? (
+                    <>
+                      <text
+                        flatten={false}
+                        className="pairing-time"
+                        style={type(status.body_size)}
+                        accessibility-element={true}
+                      >{`Pairing is open · ${status.pairing_seconds}s`}</text>
+                      <ActionButton
+                        status={status}
+                        busy={busy}
+                        onAction={act}
+                        action="stop"
+                        secondary={true}
+                      >
+                        Cancel pairing
+                      </ActionButton>
+                    </>
+                  ) : step === 1 ? (
+                    <ActionButton
+                      status={status}
+                      busy={busy}
+                      onAction={act}
+                      action="pair"
+                    >
+                      Pair this computer
+                    </ActionButton>
+                  ) : step === 3 ? (
                     <ActionButton
                       status={status}
                       busy={busy}
                       onAction={act}
                       action="stop"
-                      secondary={true}
                     >
-                      Cancel pairing
+                      Stop all phone projects
                     </ActionButton>
-                  </>
-                ) : step === 1 ? (
-                  <ActionButton
-                    status={status}
-                    busy={busy}
-                    onAction={act}
-                    action="pair"
-                  >
-                    Pair this computer
-                  </ActionButton>
-                ) : step === 2 ? (
-                  <ActionButton
-                    status={status}
-                    busy={busy}
-                    onAction={act}
-                    action="start"
-                  >
-                    Start session
-                  </ActionButton>
-                ) : (
-                  <ActionButton
-                    status={status}
-                    busy={busy}
-                    onAction={act}
-                    action="stop"
-                  >
-                    Stop session
-                  </ActionButton>
-                )}
-                {error ? (
+                  ) : null}
+                  {error ? (
+                    <text
+                      flatten={false}
+                      className="error"
+                      style={type(status.body_size)}
+                      accessibility-element={true}
+                      accessibility-label={error}
+                    >
+                      {error}
+                    </text>
+                  ) : null}
+                </view>
+              )}
+              {projects.map((project) => (
+                <view className="panel controls" key={project.id}>
                   <text
                     flatten={false}
-                    className="error"
+                    className="status-title"
                     style={type(status.body_size)}
                     accessibility-element={true}
-                    accessibility-label={error}
+                    accessibility-heading={true}
                   >
-                    {error}
+                    {project.name}
                   </text>
-                ) : null}
-              </view>
+                  <text
+                    flatten={false}
+                    className="body"
+                    style={type(status.body_size)}
+                    accessibility-element={true}
+                  >
+                    {project.state === "running"
+                      ? "Running"
+                      : project.state === "paused"
+                        ? "Paused"
+                        : "Stopped"}
+                  </text>
+                  {project.state !== "stopped" && (
+                    <>
+                      <ActionButton
+                        status={status}
+                        busy={busy}
+                        onAction={act}
+                        action={`${project.state === "running" ? "project-pause" : "project-resume"}:${project.id}`}
+                        disabled={!status.desktop_connected}
+                      >
+                        {project.state === "running"
+                          ? `Pause ${project.name}`
+                          : `Resume ${project.name}`}
+                      </ActionButton>
+                      <ActionButton
+                        status={status}
+                        busy={busy}
+                        onAction={act}
+                        action={`project-stop:${project.id}`}
+                        secondary={true}
+                      >{`Stop ${project.name}`}</ActionButton>
+                    </>
+                  )}
+                </view>
+              ))}
               <view className="status-panel panel">
                 <view className="status-heading">
                   <text
@@ -447,7 +498,9 @@ function App() {
                           : status.session_expired
                             ? "Session expired · start a new session to continue"
                             : status.paired
-                              ? "Computer paired · session stopped"
+                              ? status.desktop_connected
+                                ? "Desktop connected · no running projects"
+                                : "Saved pairing · desktop not connected"
                               : "Ready to pair"}
                 </text>
                 {status.paired && (
@@ -457,9 +510,9 @@ function App() {
                     className="small"
                     style={type(status.small_size)}
                   >
-                    {status.last_contact_seconds < 0
-                      ? "Waiting for a computer request. Pairing does not mean a computer is connected."
-                      : `Last computer request ${status.last_contact_seconds}s ago. Connection is checked when a request arrives.`}
+                    {status.desktop_connected
+                      ? "Phone and desktop connected. Project status updates automatically."
+                      : "Open Andromeda on your computer. If the desktop reports no saved pairing, open Pair this computer again to reconnect the bridge."}
                   </text>
                 )}
                 <text
@@ -468,42 +521,45 @@ function App() {
                   className="small"
                   style={type(status.small_size)}
                 >
-                  Set up your project and agent connection in the desktop app.
-                  Desktop Stop pauses all managed work.
+                  Start once from your project on the desktop. Pause keeps a
+                  project ready to resume; Stop ends it. Stop all affects every
+                  project on this phone.
                 </text>
               </view>
-              <view className="steps panel">
-                {[
-                  "Enable accessibility",
-                  "Pair your computer",
-                  "Start a session",
-                ].map((name, index) => (
-                  <view className="step" key={name}>
-                    <view
-                      className={`step-number ${step > index ? "complete" : ""}`}
-                      style={{
-                        width: `${badgeSize}px`,
-                        height: `${badgeSize}px`,
-                        borderRadius: `${badgeSize / 2}px`,
-                      }}
-                    >
+              {projects.length === 0 && (
+                <view className="steps panel">
+                  {[
+                    "Enable accessibility",
+                    "Pair your computer",
+                    "Start project on desktop",
+                  ].map((name, index) => (
+                    <view className="step" key={name}>
+                      <view
+                        className={`step-number ${step > index ? "complete" : ""}`}
+                        style={{
+                          width: `${badgeSize}px`,
+                          height: `${badgeSize}px`,
+                          borderRadius: `${badgeSize / 2}px`,
+                        }}
+                      >
+                        <text
+                          accessibility-element={false}
+                          flatten={false}
+                          className="step-number-text"
+                          style={type(status.small_size)}
+                          text-single-line-vertical-align="center"
+                        >{`0${index + 1}`}</text>
+                      </view>
                       <text
-                        accessibility-element={false}
                         flatten={false}
-                        className="step-number-text"
-                        style={type(status.small_size)}
-                        text-single-line-vertical-align="center"
-                      >{`0${index + 1}`}</text>
+                        className="step-label"
+                        style={type(status.body_size)}
+                        accessibility-element={true}
+                      >{`${name}${step > index ? " · done" : ""}`}</text>
                     </view>
-                    <text
-                      flatten={false}
-                      className="step-label"
-                      style={type(status.body_size)}
-                      accessibility-element={true}
-                    >{`${name}${step > index ? " · done" : ""}`}</text>
-                  </view>
-                ))}
-              </view>
+                  ))}
+                </view>
+              )}
               <view
                 flatten={false}
                 className="details-toggle"
@@ -538,6 +594,30 @@ function App() {
                     Accessibility permission belongs to you and can be disabled
                     at any time.
                   </text>
+                  {status.paired &&
+                    !status.desktop_connected &&
+                    !status.session_active && (
+                      <ActionButton
+                        status={status}
+                        busy={busy}
+                        onAction={act}
+                        action="start"
+                        secondary={true}
+                      >
+                        Start standalone session
+                      </ActionButton>
+                    )}
+                  {status.paired && !status.desktop_connected && (
+                    <ActionButton
+                      status={status}
+                      busy={busy}
+                      onAction={act}
+                      action="pair"
+                      secondary={true}
+                    >
+                      Pair this computer again
+                    </ActionButton>
+                  )}
                   {status.paired && (
                     <ActionButton
                       status={status}

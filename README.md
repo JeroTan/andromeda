@@ -8,7 +8,7 @@ Andromeda gives MCP agents tools to observe and control an Android device. The s
 
 ## Desktop preview
 
-The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and asks for approval before each managed input request. It includes device selection, an on-demand snapshot, an explicit live preview that runs until stopped, and a stop control that keeps input paused. See [desktop setup](docs/desktop.md) to build and run it. The [npm launcher](npm/README.md) resolves a local or platform desktop package; it has been tested against local builds, while published platform packages remain a release task.
+The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and runs allowed tools automatically after you start a project. It includes device selection, an on-demand snapshot, an explicit live preview that runs until stopped, project-level Start, Pause/Resume and Stop, and a global emergency stop. See [desktop setup](docs/desktop.md) to build and run it. The [npm launcher](npm/README.md) resolves a local or platform desktop package; it has been tested against local builds, while published platform packages remain a release task.
 
 ## Run locally
 

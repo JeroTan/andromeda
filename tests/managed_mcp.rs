@@ -92,26 +92,7 @@ async fn desktop_reports_when_a_managed_mcp_client_connects_and_disconnects() {
 }
 
 #[tokio::test]
-async fn a_later_operator_stop_invalidates_an_earlier_resume_request() {
-    let workspace = tempfile::tempdir().unwrap();
-    let registry = Registry::open(workspace.path().join("state")).unwrap();
-    let fixture = support::DeviceFixture::start(0).await;
-    let host = Host::start(
-        registry,
-        Controller::new(Adb::new(fixture.address), None, true),
-    )
-    .await
-    .unwrap();
-    let earlier = host.pause_generation();
-    host.stop_all();
-    assert_eq!(host.resume(earlier).unwrap_err().code, "session_changed");
-    assert!(host.is_paused());
-    host.resume(host.pause_generation()).unwrap();
-    assert!(!host.is_paused());
-}
-
-#[tokio::test]
-async fn managed_input_requires_operator_approval_and_stop_cancels_pending_approval() {
+async fn started_project_runs_allowed_input_without_per_action_approval() {
     let workspace = tempfile::tempdir().unwrap();
     let project = workspace.path().join("project");
     std::fs::create_dir(&project).unwrap();
@@ -133,39 +114,25 @@ async fn managed_input_requires_operator_approval_and_stop_cancels_pending_appro
     )
     .await
     .unwrap();
-    host.resume(host.pause_generation()).unwrap();
-    let client = Client::new(registry, saved.id, project).unwrap();
-    let proposal = tokio::spawn({
-        let client = client.clone();
-        async move {
-            client
-                .call(
-                    "adm_press_key".into(),
-                    json!({"key":"home"}),
-                    tokio_util::sync::CancellationToken::new(),
-                )
-                .await
-        }
-    });
-    let pending = tokio::time::timeout(std::time::Duration::from_secs(2), async {
-        loop {
-            if let Some(pending) = host.approvals().into_iter().next() {
-                break pending;
-            }
-            tokio::task::yield_now().await;
-        }
-    })
-    .await
+    host.set_project_state(
+        &saved.id,
+        andromeda::managed::ProjectState::Running,
+        0,
+        host.pause_generation(),
+    )
     .unwrap();
-    assert_eq!(pending.tool, "adm_press_key");
-    assert!(
-        fixture.commands.lock().unwrap().is_empty(),
-        "Input must not reach ADB before approval"
-    );
-    host.decide(pending.id, true).unwrap();
+    let client = Client::new(registry, saved.id.clone(), project).unwrap();
+    let result = client
+        .call(
+            "adm_press_key".into(),
+            json!({"key":"home", "timeout_ms":200}),
+            tokio_util::sync::CancellationToken::new(),
+        )
+        .await;
     assert_eq!(
-        proposal.await.unwrap().structured_content.unwrap()["success"],
-        true
+        result.structured_content.unwrap()["success"],
+        true,
+        "Allowed input must execute without a human approving each request"
     );
     assert!(
         fixture
@@ -174,51 +141,6 @@ async fn managed_input_requires_operator_approval_and_stop_cancels_pending_appro
             .unwrap()
             .iter()
             .any(|command| command == "input keyevent 3")
-    );
-
-    let proposal = tokio::spawn({
-        let client = client.clone();
-        async move {
-            client
-                .call(
-                    "adm_press_key".into(),
-                    json!({"key":"home"}),
-                    tokio_util::sync::CancellationToken::new(),
-                )
-                .await
-        }
-    });
-    tokio::time::timeout(std::time::Duration::from_secs(2), async {
-        while host.approvals().is_empty() {
-            tokio::task::yield_now().await;
-        }
-    })
-    .await
-    .unwrap();
-    let stopped = client
-        .call(
-            "adm_stop".into(),
-            json!({}),
-            tokio_util::sync::CancellationToken::new(),
-        )
-        .await;
-    assert_eq!(stopped.structured_content.unwrap()["success"], true);
-    assert_eq!(
-        proposal.await.unwrap().structured_content.unwrap()["error"]["code"],
-        "cancelled"
-    );
-    assert!(host.approvals().is_empty());
-    host.stop_all();
-    let blocked = client
-        .call(
-            "adm_press_key".into(),
-            json!({"key":"home"}),
-            tokio_util::sync::CancellationToken::new(),
-        )
-        .await;
-    assert_eq!(
-        blocked.structured_content.unwrap()["error"]["code"],
-        "control_paused"
     );
 }
 
@@ -245,7 +167,7 @@ async fn managed_mcp_enforces_tool_and_device_scope_on_the_server() {
     )
     .await
     .unwrap();
-    let proxy = Proxy::connect(Client::new(registry, saved.id, project).unwrap())
+    let proxy = Proxy::connect(Client::new(registry, saved.id.clone(), project).unwrap())
         .await
         .unwrap();
     let (client_io, server_io) = tokio::io::duplex(65536);
@@ -300,4 +222,182 @@ async fn managed_mcp_enforces_tool_and_device_scope_on_the_server() {
     );
     client.cancel().await.unwrap();
     task.await.unwrap();
+}
+
+#[tokio::test]
+async fn project_pause_and_stop_are_isolated_and_stale_start_cannot_undo_stop() {
+    use andromeda::managed::ProjectState;
+    let workspace = tempfile::tempdir().unwrap();
+    let registry = Registry::open(workspace.path().join("state")).unwrap();
+    let fixture = support::DeviceFixture::start(0).await;
+    let host = Host::start(
+        registry.clone(),
+        Controller::new(Adb::new(fixture.address), None, true),
+    )
+    .await
+    .unwrap();
+    let mut projects = Vec::new();
+    let mut clients = Vec::new();
+    for name in ["A", "B"] {
+        let root = workspace.path().join(name);
+        std::fs::create_dir(&root).unwrap();
+        let p = registry.register(&root).unwrap();
+        registry
+            .update(
+                &p.id,
+                Some("phone-A".into()),
+                vec!["adm_press_key".into(), "adm_get_device_info".into()],
+                "ANDROMEDA.md".into(),
+                true,
+            )
+            .unwrap();
+        clients.push(Client::new(registry.clone(), p.id.clone(), root).unwrap());
+        host.set_project_state(&p.id, ProjectState::Running, 0, host.pause_generation())
+            .unwrap();
+        projects.push(p);
+    }
+    let a = host.project_session(&projects[0].id);
+    host.set_project_state(
+        &a.project_id,
+        ProjectState::Paused,
+        a.generation,
+        host.pause_generation(),
+    )
+    .unwrap();
+    let call = |client: Client, name: &str, args| {
+        let name = name.to_owned();
+        async move {
+            client
+                .call(name, args, tokio_util::sync::CancellationToken::new())
+                .await
+                .structured_content
+                .unwrap()
+        }
+    };
+    assert_eq!(
+        call(clients[0].clone(), "adm_press_key", json!({"key":"home"})).await["error"]["code"],
+        "project_paused"
+    );
+    assert_eq!(
+        call(clients[1].clone(), "adm_press_key", json!({"key":"home"})).await["success"],
+        true
+    );
+    assert_eq!(
+        call(clients[0].clone(), "adm_get_device_info", json!({})).await["success"],
+        true
+    );
+    let earlier = host.project_session(&a.project_id);
+    host.stop_project(&a.project_id);
+    assert_eq!(
+        host.set_project_state(
+            &a.project_id,
+            ProjectState::Running,
+            earlier.generation,
+            host.pause_generation()
+        )
+        .unwrap_err()
+        .code,
+        "session_changed"
+    );
+    assert_eq!(
+        call(clients[0].clone(), "adm_press_key", json!({"key":"home"})).await["error"]["code"],
+        "project_stopped"
+    );
+    let b = host.project_session(&projects[1].id);
+    let epoch = host.pause_generation();
+    host.stop_all();
+    assert_eq!(
+        host.set_project_state(&b.project_id, ProjectState::Running, b.generation, epoch)
+            .unwrap_err()
+            .code,
+        "session_changed"
+    );
+    assert_eq!(
+        call(clients[1].clone(), "adm_press_key", json!({"key":"home"})).await["error"]["code"],
+        "project_stopped"
+    );
+}
+
+#[tokio::test]
+async fn pausing_an_active_project_cancels_its_batch_and_releases_other_projects() {
+    use andromeda::managed::ProjectState;
+    let workspace = tempfile::tempdir().unwrap();
+    let registry = Registry::open(workspace.path().join("state")).unwrap();
+    let fixture = support::DeviceFixture::start(0).await;
+    let host = Host::start(
+        registry.clone(),
+        Controller::new(Adb::new(fixture.address), None, true),
+    )
+    .await
+    .unwrap();
+    let mut projects = Vec::new();
+    let mut clients = Vec::new();
+    for name in ["A", "B"] {
+        let root = workspace.path().join(name);
+        std::fs::create_dir(&root).unwrap();
+        let p = registry.register(&root).unwrap();
+        registry
+            .update(
+                &p.id,
+                Some("phone-A".into()),
+                vec!["adm_batch_actions".into(), "adm_press_key".into()],
+                "ANDROMEDA.md".into(),
+                true,
+            )
+            .unwrap();
+        clients.push(Client::new(registry.clone(), p.id.clone(), root).unwrap());
+        host.set_project_state(&p.id, ProjectState::Running, 0, host.pause_generation())
+            .unwrap();
+        projects.push(p);
+    }
+    let batch = tokio::spawn({
+        let client = clients[0].clone();
+        async move {
+            client.call("adm_batch_actions".into(),json!({"actions":[{"action":"press_key","key":"home"},{"action":"pause","duration_ms":10000},{"action":"press_key","key":"home"}]}),tokio_util::sync::CancellationToken::new()).await
+        }
+    });
+    tokio::time::timeout(std::time::Duration::from_secs(2), async {
+        while !fixture
+            .commands
+            .lock()
+            .unwrap()
+            .iter()
+            .any(|c| c == "input keyevent 3")
+        {
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+    let a = host.project_session(&projects[0].id);
+    host.set_project_state(
+        &a.project_id,
+        ProjectState::Paused,
+        a.generation,
+        host.pause_generation(),
+    )
+    .unwrap();
+    assert_eq!(
+        batch.await.unwrap().structured_content.unwrap()["error"]["code"],
+        "cancelled"
+    );
+    let b = clients[1]
+        .call(
+            "adm_press_key".into(),
+            json!({"key":"home","timeout_ms":500}),
+            tokio_util::sync::CancellationToken::new(),
+        )
+        .await;
+    assert_eq!(b.structured_content.unwrap()["success"], true);
+    assert_eq!(
+        fixture
+            .commands
+            .lock()
+            .unwrap()
+            .iter()
+            .filter(|c| *c == "input keyevent 3")
+            .count(),
+        2,
+        "The cancelled batch must not dispatch its second key"
+    );
 }
