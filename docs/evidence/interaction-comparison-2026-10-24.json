@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-24",
+  "source_commit": "a3f7aa1",
+  "android_debug_probe_only": true,
+  "measurements": {
+    "emulator_endpoint_samples": 48,
+    "physical_endpoint_samples": 48,
+    "physical_max_endpoint_error_px": 0,
+    "emulator_dialog_tasks": 6,
+    "physical_dialog_tasks": 6,
+    "comparison_capture_samples": 160,
+    "comparison_home_samples": 80,
+    "comparison_tool_failures": 0
+  },
+  "harness_regressions": {
+    "raw_event_coordinates_replace_animated_view_location": true,
+    "native_dialog_case_handled": true,
+    "bounded_transient_ui_observation_retry": true,
+    "final_battery_failure_before_fix": "report absent; final CalledProcessError masked result",
+    "final_battery_failure_after_fix": "all 12 probe samples retained with battery_after=null and battery_after_error=CalledProcessError"
+  },
+  "restoration": {
+    "phone_main_activity": "io.andromeda.companion.MainActivity",
+    "project_state": "running",
+    "remote_temporary_comparison_pngs": 0,
+    "usb_disconnect": "After both timing runs; operator reconnected before final cleanup verification"
+  },
+  "limitations": [
+    "The debug pad measures first/last pointer positions and MotionEvent timestamps, not intermediate trajectory or display presentation time.",
+    "Task completion/recovery fixtures are deterministic; real-client Settings acceptance is recorded separately.",
+    "Mobile Next default JPEG/mobilecli mode was not measured; native-PNG comparison uses its documented ADB compatibility mode.",
+    "Home comparison has one ordering; capture has forward/reverse order.",
+    "Physical USB disconnected after timing, so zero measured failures is not a general connectivity reliability claim."
+  ],
+  "android_debug_apk_sha256": "5b6053197eff02b859c986c7edcebc49bb22721d99ce4145ded6360fbb833a9d",
+  "validation": {
+    "rust_workspace_all_targets_tests_passed": 62,
+    "android_debug_build": "passed",
+    "spec_review": "no unresolved findings",
+    "standards_review": "no unresolved findings",
+    "hosted_actions": "disabled; no runs started"
+  }
+}

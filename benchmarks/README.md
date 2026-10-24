@@ -24,7 +24,7 @@ The output refuses to overwrite an existing file. Build in release mode for perf
 
 `persistent_stream_png` reports `fps` from the measured frame timestamps. Its `elapsed_ms` values are frame intervals, not input latency. `controller_press_home` is a safe transport check, not a gesture-accuracy or task-completion test. The harness samples host CPU and RSS with `ps`; CPU averaging differs by platform and includes image processing, so it is not a device-power measurement.
 
-The raw direct-ADB and external-ADB cases issue the same PNG command. The controller cases additionally validate geometry and decode the image; scaled JPEG includes resizing/encoding. These are distinct workloads, not interchangeable speed claims. The harness does not yet cover gesture accuracy, completion/recovery, model/tool overhead or matched open-source alternatives. The release ledger retains those gates.
+The raw direct-ADB and external-ADB cases issue the same PNG command. The controller cases additionally validate geometry and decode the image; scaled JPEG includes resizing/encoding. These are distinct workloads, not interchangeable speed claims. This original harness does not cover gesture accuracy, completion/recovery, model/tool overhead or matched open-source alternatives. Later sections add dedicated interaction and comparison measurements; real-client overhead is recorded in the release ledger.
 
 ## Committed raw runs
 
@@ -33,7 +33,7 @@ The raw direct-ADB and external-ADB cases issue the same PNG command. The contro
 
 These are device-specific baselines, not product-comparison results. The physical phone's capture path is much slower than the emulator's, so do not combine the two rows into a speed claim. Re-run on the target hardware and keep the raw JSON next to any summary.
 
-External ADB is a transport baseline. Representative open-source MCP comparisons still need matched workloads, pinned versions and their own raw results. No fastest-product claim is established here.
+External ADB is a transport baseline. The matched open-source comparison below adds pinned versions and raw results for a native-PNG workload. No fastest-product claim is established here.
 
 ## Image codecs
 
@@ -93,3 +93,51 @@ The same protocol on the physical OnePlus CPH2653 (Android 16/API 36, USB, stati
 | WebP, width 720, quality 80 | 495.21 / 537.87 | 199.74 / 212.71 | 199.66 / 210.55 | 499.68 / 511.23 |
 
 All 240 physical requests succeeded; see [forward](results/accessibility-oneplus-2026-10-24-forward.json) and [reverse](results/accessibility-oneplus-2026-10-24-reverse.json) metadata. The installed release desktop's managed MCP connection also returned a companion image, and its on-demand preview displayed 94 ms in one acceptance observation. These measurements establish an improvement for this phone/build/screen. They are not general latency guarantees or measurements of model reasoning, live video, game completion, perceptual equivalence or other products.
+
+## Native gesture endpoints and deterministic recovery
+
+`benchmark_interaction.py` requires explicit `--allow-input` and refuses to act unless it observes Andromeda's private debug gesture pad. Build/install the debug companion, pair it, start its managed or standalone session, and open **Connection controls → Open gesture test pad**. Then run:
+
+```sh
+python3 benchmarks/benchmark_interaction.py \
+  --server target/release/andromeda --profile release --transport usb \
+  --device YOUR_SERIAL --state-dir YOUR_PRIVATE_STATE_DIRECTORY \
+  --adb /path/to/adb --samples 12 --allow-input --output NEW_RESULT.json
+```
+
+The pad records Android MotionEvent raw start/end coordinates and event durations. The harness compares them to requested native coordinates rather than treating a successful tool result as proof of arrival. It also opens/closes a test dialog three times and recovers with Back three times. Observation retries are bounded and counted; input is never retried. These fixtures do not establish success rates for arbitrary apps or model reasoning.
+
+On 2026-10-24, the [OnePlus USB run](results/interaction-oneplus-2026-10-24.json) completed all 48 samples: 12 taps, 12 diagonal swipes, 12 simultaneous two-finger gestures and 12 screenshot-then-tap sequences. Every recorded start/end point matched the requested coordinate (maximum error 0 px). Swipes requested 250, 500 or 1000 ms; maximum event-duration error was 11 ms for ADB swipes and 0 ms for the tested companion two-finger gestures. Intermediate trajectory accuracy and other pointer counts were not measured.
+
+Tap MCP acknowledgement p50/p95 was **64.86/93.66 ms**. Scripted JPEG-720 capture through tap acknowledgement was **163.57/184.51 ms**, excluding model thinking and the later completion check. All six dialog tasks completed with zero input retries. The [emulator run](results/interaction-emulator-2026-10-24.json) also completed 48/48 endpoint checks and six tasks; its maximum ADB swipe-duration error was 36 ms. Two transient `ui_unavailable` observations were retried on the emulator; none occurred on the phone. No warm-ups were discarded in these interaction runs. The debug measurement view adds its own event-processing work.
+
+Early harness probes exposed a coordinate-measurement error during window animation, uppercase native dialog labels, and transient missing accessibility roots during dialog transitions. The final harness uses the MotionEvent's raw coordinate offset, case-insensitive fixture labels and bounded observation polling. Those pilot failures were harness defects and are not counted as successful final samples. Raw failed probes retain the [animated-offset/dialog check](results/development/interaction-raw-offset-dialog-2026-10-24.json), [native label mismatch](results/development/interaction-dialog-case-2026-10-24.json), and [transient root failure](results/development/interaction-transient-root-2026-10-24.json).
+
+## Matched open-source native-PNG comparison
+
+The [comparison plan](../docs/research/mcp-comparison-plan.md) pins Mobile Next `@mobilenext/mobile-mcp@1.0.12` and MetaMask `@metamask/device-mcp@0.5.0` with their source revisions. `comparison/package-lock.json` pins the resolved dependency graph. Install it with `npm ci --ignore-scripts --prefix benchmarks/comparison`, then run:
+
+```sh
+python3 benchmarks/compare_mcp.py \
+  --andromeda target/release/andromeda --profile release --transport usb \
+  --state-dir YOUR_PRIVATE_STATE_DIRECTORY --packages benchmarks/comparison \
+  --device YOUR_SERIAL --adb /path/to/adb --samples 20 --warmup 2 \
+  --surface 'Static non-sensitive screen' --output NEW_RESULT.json
+```
+
+Repeat with `--reverse` and a new output. Optional `--allow-input` adds a separate repeated-Home acknowledgement phase after capture. It first prepares the launcher with Home; return the phone to its prior app afterward. Mobile Next telemetry is disabled, MetaMask uses an isolated empty working/temp directory, and all host screenshots are removed after each workload. No recording or helper APK is installed by the selected comparison paths.
+
+Both capture runs below used the same physical OnePlus, USB connection, 1080×2376 geometry, static debug pad, release Andromeda server, Node 24, two warm-ups and twenty measured samples per implementation. Actual PNG signatures, chunk checksums, decompression and native dimensions were verified outside measured latency. Each cell is p50 / p95 in milliseconds.
+
+| Native-PNG implementation | Forward order | Reverse order |
+|---|---:|---:|
+| Andromeda, companion API | 196.18 / 213.91 | 175.21 / 223.03 |
+| Andromeda, forced ADB | 383.63 / 415.11 | 372.33 / 406.59 |
+| Mobile Next, ADB compatibility mode | 499.97 / 526.52 | 504.94 / 539.00 |
+| MetaMask, default ADB | 434.60 / 460.47 | 440.99 / 477.67 |
+
+All **160 measured captures** succeeded. Mobile Next's default backend returns resized JPEG and was **not measured** here; compatibility mode is explicit so output format/dimensions match. This is not a ranking of default product performance. Geometry validation, disk writes, subprocesses and encoding differ and remain inside each tool's measured work. MetaMask's own remote temporary-file cleanup is included. CPU/RSS fields cover only server processes, excluding child ADB/mobilecli processes and client parsing; they are not total resource-use comparisons.
+
+The reverse run also measured 20 Home acknowledgements per configuration: Andromeda 36.45/40.64 ms with ADB capture selected and 36.56/40.22 ms with companion capture selected; both use the **same ADB key-input path**. Mobile Next compatibility mode measured 62.16/67.52 ms and MetaMask 56.59/59.79 ms. All 80 input samples succeeded. This input phase has one ordering only and does not measure when the launcher finished rendering.
+
+Raw [forward](results/mcp-comparison-oneplus-2026-10-24-forward.json) and [reverse](results/mcp-comparison-oneplus-2026-10-24-reverse.json) files retain startup, warm-ups, every sample, environment, battery and lock/binary hashes. USB disconnected after both measurements; after the operator reconnected it, no temporary comparison PNGs remained on the phone, and the original Running project was restored. These results support improvement for this native-PNG workload on this phone, not a fastest-product or general reliability claim.

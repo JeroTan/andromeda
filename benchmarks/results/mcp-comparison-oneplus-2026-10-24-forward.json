@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "screen": {
+    "height": 2376,
+    "rotation": 0,
+    "width": 1080
+  },
+  "device": {
+    "model": "CPH2653",
+    "manufacturer": "OnePlus",
+    "android_version": "16",
+    "api_level": "36"
+  },
+  "surface": "Andromeda debug gesture pad after interaction tests; no input during capture phase",
+  "andromeda_profile": "release",
+  "transport": "usb",
+  "host": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "node": "v24.21.0",
+    "os_release": "27.0.0"
+  },
+  "server_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6",
+  "dependency_lock_sha256": "2c7bfadafe6eb1e666516d7e77f479967f52fef4e23c1153c87745d26a2da24f",
+  "package_versions": {
+    "@mobilenext/mobile-mcp": "1.0.12",
+    "@metamask/device-mcp": "0.5.0"
+  },
+  "samples": 20,
+  "warmup": 2,
+  "interval_ms": 400,
+  "reverse": false,
+  "battery_before": {
+    "level": 95,
+    "temperature": 350
+  },
+  "allow_input": false,
+  "workloads": [
+    {
+      "implementation": "andromeda_adb",
+      "action": "capture",
+      "warmup_samples": [
+        {
+          "mcp_round_trip_ms": 388.33691700710915,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16128
+        },
+        {
+          "mcp_round_trip_ms": 359.5067920105066,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 16448
+        }
+      ],
+      "samples": [
+        {
+          "mcp_round_trip_ms": 369.045958010247,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111862,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16816
+        },
+        {
+          "mcp_round_trip_ms": 378.0416669906117,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111862,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 2.2,
+          "server_rss_kb": 16864
+        },
+        {
+          "mcp_round_trip_ms": 346.9631659972947,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 16912
+        },
+        {
+          "mcp_round_trip_ms": 415.1056249975227,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16928
+        },
+        {
+          "mcp_round_trip_ms": 384.8619589989539,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16928
+        },
+        {
+          "mcp_round_trip_ms": 390.20679201348685,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.6,
+          "server_rss_kb": 16944
+        },
+        {
+          "mcp_round_trip_ms": 386.9122909964062,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111881,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.3,
+          "server_rss_kb": 16976
+        },
+        {
+          "mcp_round_trip_ms": 357.1769169939216,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111268,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 16992
+        },
+        {
+          "mcp_round_trip_ms": 379.2790829902515,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111268,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 16992
+        },
+        {
+          "mcp_round_trip_ms": 384.2819159908686,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111268,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16992
+        },
+        {
+          "mcp_round_trip_ms": 383.6255419882946,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111308,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 17008
+        },
+        {
+          "mcp_round_trip_ms": 378.5000420175493,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111308,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.3,
+          "server_rss_kb": 17040
+        },
+        {
+          "mcp_round_trip_ms": 382.6498330163304,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111308,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.3,
+          "server_rss_kb": 17040
+        },
+        {
+          "mcp_round_trip_ms": 405.93312500277534,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111291,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.7,
+          "server_rss_kb": 17088
+        },
+        {
+          "mcp_round_trip_ms": 394.13854098529555,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111291,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.3,
+          "server_rss_kb": 17088
+        },
+        {
+          "mcp_round_trip_ms": 398.8859159871936,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 17088
+        },
+        {
+          "mcp_round_trip_ms": 405.08670898270793,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.6,
+          "server_rss_kb": 17088
+        },
+        {
+          "mcp_round_trip_ms": 343.4670419956092,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.6,
+          "server_rss_kb": 17088
+        },
+        {
+          "mcp_round_trip_ms": 353.6984999955166,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 17104
+        },
+        {
+          "mcp_round_trip_ms": 418.5873749956954,
+          "success": true,
+          "capture_backend": "adb",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 17104
+        }
+      ],
+      "complete": true,
+      "startup_ms": 1.8494579999241978,
+      "p50_ms": 383.6255419882946,
+      "p95_ms": 415.1056249975227,
+      "failures": 0
+    },
+    {
+      "implementation": "andromeda_companion",
+      "action": "capture",
+      "warmup_samples": [
+        {
+          "mcp_round_trip_ms": 185.66620800993405,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 16160
+        },
+        {
+          "mcp_round_trip_ms": 196.22045900905505,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.1,
+          "server_rss_kb": 16800
+        }
+      ],
+      "samples": [
+        {
+          "mcp_round_trip_ms": 190.54737500846386,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 16832
+        },
+        {
+          "mcp_round_trip_ms": 216.97991699329577,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.8,
+          "server_rss_kb": 17456
+        },
+        {
+          "mcp_round_trip_ms": 198.09083300060593,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17488
+        },
+        {
+          "mcp_round_trip_ms": 196.17924999329261,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.3,
+          "server_rss_kb": 17520
+        },
+        {
+          "mcp_round_trip_ms": 195.48995900549926,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 17552
+        },
+        {
+          "mcp_round_trip_ms": 137.80462500290014,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 17600
+        },
+        {
+          "mcp_round_trip_ms": 208.06820801226422,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17664
+        },
+        {
+          "mcp_round_trip_ms": 201.0881669993978,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111296,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17664
+        },
+        {
+          "mcp_round_trip_ms": 182.56754201138392,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.7,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 189.91183300386183,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 201.7614170035813,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 194.80191601905972,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111274,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.4,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 189.97404200490564,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111274,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 184.7142500046175,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111274,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 192.41245900047943,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111274,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.1,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 204.94024999788962,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 213.90537501429208,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.1,
+          "server_rss_kb": 17696
+        },
+        {
+          "mcp_round_trip_ms": 201.53695900808088,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.9,
+          "server_rss_kb": 17712
+        },
+        {
+          "mcp_round_trip_ms": 211.99258402339183,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.1,
+          "server_rss_kb": 17712
+        },
+        {
+          "mcp_round_trip_ms": 206.3100000086706,
+          "success": true,
+          "capture_backend": "companion",
+          "image_bytes": 111317,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.2,
+          "server_rss_kb": 17712
+        }
+      ],
+      "complete": true,
+      "startup_ms": 3.4185409895144403,
+      "p50_ms": 196.17924999329261,
+      "p95_ms": 213.90537501429208,
+      "failures": 0
+    },
+    {
+      "implementation": "mobile_next_adb_compat",
+      "action": "capture",
+      "warmup_samples": [
+        {
+          "mcp_round_trip_ms": 542.5041250127833,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 3.0,
+          "server_rss_kb": 83680
+        },
+        {
+          "mcp_round_trip_ms": 497.30104199261405,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.2,
+          "server_rss_kb": 84368
+        }
+      ],
+      "samples": [
+        {
+          "mcp_round_trip_ms": 468.98045801208355,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 85056
+        },
+        {
+          "mcp_round_trip_ms": 482.9771670047194,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 85696
+        },
+        {
+          "mcp_round_trip_ms": 462.9221250070259,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 86528
+        },
+        {
+          "mcp_round_trip_ms": 488.2814589946065,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 87360
+        },
+        {
+          "mcp_round_trip_ms": 516.4865409897175,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 88240
+        },
+        {
+          "mcp_round_trip_ms": 499.97350000194274,
+          "success": true,
+          "image_bytes": 111272,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.6,
+          "server_rss_kb": 89120
+        },
+        {
+          "mcp_round_trip_ms": 526.5161660208832,
+          "success": true,
+          "image_bytes": 111272,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 90064
+        },
+        {
+          "mcp_round_trip_ms": 410.600458009867,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 90896
+        },
+        {
+          "mcp_round_trip_ms": 504.59204099024646,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 91760
+        },
+        {
+          "mcp_round_trip_ms": 512.8430409822613,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 92624
+        },
+        {
+          "mcp_round_trip_ms": 516.3460829935502,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 93632
+        },
+        {
+          "mcp_round_trip_ms": 445.19058300647885,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 94368
+        },
+        {
+          "mcp_round_trip_ms": 402.4913749890402,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.7,
+          "server_rss_kb": 95168
+        },
+        {
+          "mcp_round_trip_ms": 442.58904200978577,
+          "success": true,
+          "image_bytes": 111314,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.7,
+          "server_rss_kb": 91280
+        },
+        {
+          "mcp_round_trip_ms": 502.83420900814235,
+          "success": true,
+          "image_bytes": 111272,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.4,
+          "server_rss_kb": 91792
+        },
+        {
+          "mcp_round_trip_ms": 528.8430000073276,
+          "success": true,
+          "image_bytes": 111272,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 92272
+        },
+        {
+          "mcp_round_trip_ms": 473.4399589942768,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.6,
+          "server_rss_kb": 92768
+        },
+        {
+          "mcp_round_trip_ms": 510.73091599391773,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 93264
+        },
+        {
+          "mcp_round_trip_ms": 516.5552499820478,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 93744
+        },
+        {
+          "mcp_round_trip_ms": 521.4629580150358,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.2,
+          "server_rss_kb": 94240
+        }
+      ],
+      "complete": true,
+      "startup_ms": 177.28875001193956,
+      "p50_ms": 499.97350000194274,
+      "p95_ms": 526.5161660208832,
+      "failures": 0
+    },
+    {
+      "implementation": "metamask_adb",
+      "action": "capture",
+      "warmup_samples": [
+        {
+          "mcp_round_trip_ms": 490.6025830132421,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 3.3,
+          "server_rss_kb": 76928
+        },
+        {
+          "mcp_round_trip_ms": 444.0161249949597,
+          "success": true,
+          "image_bytes": 111301,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.2,
+          "server_rss_kb": 77456
+        }
+      ],
+      "samples": [
+        {
+          "mcp_round_trip_ms": 433.05237498134375,
+          "success": true,
+          "image_bytes": 111301,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.3,
+          "server_rss_kb": 78016
+        },
+        {
+          "mcp_round_trip_ms": 440.8844170102384,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 78528
+        },
+        {
+          "mcp_round_trip_ms": 338.46183301648125,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 79104
+        },
+        {
+          "mcp_round_trip_ms": 460.7326250115875,
+          "success": true,
+          "image_bytes": 111279,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.0,
+          "server_rss_kb": 79728
+        },
+        {
+          "mcp_round_trip_ms": 373.5975830059033,
+          "success": true,
+          "image_bytes": 111279,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 80368
+        },
+        {
+          "mcp_round_trip_ms": 447.0276250212919,
+          "success": true,
+          "image_bytes": 111279,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.2,
+          "server_rss_kb": 81024
+        },
+        {
+          "mcp_round_trip_ms": 456.61945900064893,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.3,
+          "server_rss_kb": 81728
+        },
+        {
+          "mcp_round_trip_ms": 421.5636249864474,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 82352
+        },
+        {
+          "mcp_round_trip_ms": 459.7670830262359,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 82976
+        },
+        {
+          "mcp_round_trip_ms": 460.4694589797873,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.1,
+          "server_rss_kb": 83648
+        },
+        {
+          "mcp_round_trip_ms": 399.99229201930575,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.5,
+          "server_rss_kb": 84256
+        },
+        {
+          "mcp_round_trip_ms": 444.8338749934919,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 85024
+        },
+        {
+          "mcp_round_trip_ms": 442.23120898823254,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 85872
+        },
+        {
+          "mcp_round_trip_ms": 437.7050409966614,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.1,
+          "server_rss_kb": 86720
+        },
+        {
+          "mcp_round_trip_ms": 434.60137498914264,
+          "success": true,
+          "image_bytes": 111322,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.3,
+          "server_rss_kb": 87568
+        },
+        {
+          "mcp_round_trip_ms": 351.2413749995176,
+          "success": true,
+          "image_bytes": 111279,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.9,
+          "server_rss_kb": 88416
+        },
+        {
+          "mcp_round_trip_ms": 434.1571249824483,
+          "success": true,
+          "image_bytes": 111279,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.7,
+          "server_rss_kb": 80608
+        },
+        {
+          "mcp_round_trip_ms": 423.4680829977151,
+          "success": true,
+          "image_bytes": 111290,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 81104
+        },
+        {
+          "mcp_round_trip_ms": 448.1566250033211,
+          "success": true,
+          "image_bytes": 111290,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 0.8,
+          "server_rss_kb": 80944
+        },
+        {
+          "mcp_round_trip_ms": 387.6916669833008,
+          "success": true,
+          "image_bytes": 111290,
+          "width": 1080,
+          "height": 2376,
+          "server_cpu_percent": 1.5,
+          "server_rss_kb": 81424
+        }
+      ],
+      "complete": true,
+      "startup_ms": 143.99220902123488,
+      "p50_ms": 434.60137498914264,
+      "p95_ms": 460.4694589797873,
+      "failures": 0
+    }
+  ],
+  "limitations": [
+    "Same requested native PNG dimensions and same device; intrinsic geometry checks, encoding, disk files and transport work differ.",
+    "Mobile Next is explicitly in documented ADB compatibility mode, not its default JPEG/mobilecli backend. No claim about its default performance.",
+    "MetaMask writes temporary host/phone PNGs as part of normal operation; host files are isolated and removed after each workload. Its own phone cleanup remains in timed work.",
+    "MCP round trips include JSON/stdout parsing, not model reasoning, remote upload or original frame age. PNG checksum/decompression validation runs outside measured time.",
+    "Home acknowledgement is not a gesture-accuracy or presentation-latency measurement. Captures precede any Home input.",
+    "Sequential/reverse order exposes ordering variation; no thermal control or product-wide fastest claim.",
+    "Telemetry disabled using Mobile Next published environment flag; only inspected local ADB paths are exercised.",
+    "ps CPU/RSS covers only the server process, uses lifetime averaging, and excludes adb/mobilecli children and the Python client."
+  ],
+  "completed_run": true,
+  "battery_after": {
+    "level": 95,
+    "temperature": 351
+  },
+  "source_commit": "a3f7aa1",
+  "phone_artifacts_after_run": 0,
+  "post_run_device_cleanup_verification": "USB disconnected after both measurement runs; after operator reconnection, no device-mcp-screenshot PNGs remained in /data/local/tmp. Returned to Andromeda MainActivity and restored the prior Running project.",
+  "no_owned_build_or_tests_during_measurement": true
+}
