@@ -14,6 +14,8 @@ Run `andromeda tools` for the complete machine-readable input schemas. All tools
 | `adm_get_ui_tree` | None | Flat node array with parent IDs, labels, package, class, bounds and interaction flags |
 | `adm_list_apps` | `include_system: bool = false` | Sorted package names |
 
+Managed `adm_get_device_info` includes this project's `project_state` (`running`, `paused` or `stopped`). Its `control_enabled` is true only when this project's allowed tools authorize input, the project is running, and global input is enabled. Another running project does not enable this one's input. This is an observation at response time; the operator may change state before the next request.
+
 Image formats are `png`, `jpeg`, `webp`, `webp_lossless`, `auto` and optional `avif`. Size limits preserve aspect ratio and never upscale. Requested dimensions accept 1–8192 pixels; `quality` accepts 1–100 and defaults to 80 for JPEG, lossy WebP and AVIF. PNG and lossless WebP preserve the resized pixels. PNG remains the default. `auto` encodes PNG, JPEG at the requested quality, lossy WebP at that quality and lossless WebP, then returns the smallest byte count with its actual MIME type. Quality settings are not perceptually equivalent across codecs. Auto excludes AVIF for client compatibility. AVIF requires a build with `--features avif` and an AVIF-capable client/exporter; ordinary OpenAI/Claude vision clients do not list it as supported. Password nodes have empty text and descriptions; other private content may remain visible.
 
 `adm_get_view` reports `timings.geometry_before_ms`, `capture_ms`, `geometry_after_ms` and `image_processing_ms`, plus the chosen `mime_type`. Capture includes Android's PNG production and ADB transport; image processing includes decoding, resizing and encoding. These timings do not include client upload or model thinking. Compression reduces bytes; it does not necessarily reduce image tokens, which also depend on image dimensions.
@@ -34,7 +36,7 @@ Image formats are `png`, `jpeg`, `webp`, `webp_lossless`, `auto` and optional `a
 | `adm_open_uri` | `uri` | Common arguments |
 | `adm_batch_actions` | `actions: [...]` | `interval_ms = 0` |
 
-Input needs operator authorization with `--allow-control`. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. A long press is an `adm_swipe` with identical `from` and `to` points and the desired duration. These sequences are sequential. Simultaneous multi-touch is available through `adm_multi_touch` with an active companion session.
+Standalone input needs operator authorization with `--allow-control`. Managed input needs a running project session and the tool enabled in that project. A sequence contains 1–100 actions. `interval_ms` is a gap after the preceding action completes, from 0–10000 ms. Swipes last 1–10000 ms. A long press is an `adm_swipe` with identical `from` and `to` points and the desired duration. These sequences are sequential. Simultaneous multi-touch is available through `adm_multi_touch` with an active companion session.
 
 Keys: `home`, `back`, `recents`, `enter`, `delete`, `tab`, `escape`, `volume_up`, `volume_down`, `power`, `wakeup`.
 
@@ -73,7 +75,7 @@ Other variants are `touch`, `swipe`, `type_text` and `open_uri`, with the fields
 
 Text matches accessible text or descriptions and is case-sensitive. Pixel tolerance is the maximum absolute difference in each RGB channel. Every poll observes the device again. The operation ends on a match, error, deadline, cancellation notification, or `adm_stop`.
 
-`adm_stop` cancels every active operation in the current server. Future calls can run normally. Already dispatched Android input may finish. One input sequence runs at a time; other input requests receive `device_busy`, while observation and stop remain responsive.
+For a managed connection, `adm_stop` ends the current project session and cancels its work; input requires the operator to Start that project again. Other projects continue, and allowed observation tools remain available. For a standalone server, it cancels every active operation; future calls can run normally. Already dispatched Android input may finish. One input sequence runs at a time; other input requests receive `device_busy`, while observation and stop remain responsive.
 
 ## Errors
 

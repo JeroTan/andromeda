@@ -375,7 +375,7 @@ pub fn tools() -> Vec<Tool> {
         ),
         define::<Empty>(
             "adm_stop",
-            "Cancel all active operations in this server. Input already accepted by Android may finish; observe before resuming.",
+            "Managed connection: stop this project session and cancel its work; the operator must Start it again for input. Standalone server: cancel active operations; later calls remain available. Input already accepted by Android may finish; observe before retrying.",
             false,
         ),
     ]

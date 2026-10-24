@@ -466,7 +466,20 @@ async fn dispatch(
                 }
                 let remaining = timeout.saturating_sub(started.elapsed()).as_millis().max(1) as u64;
                 arguments["timeout_ms"] = json!(remaining);
-                encode(server.call(&name, arguments, cancel.clone()).await)
+                let mut result = server.call(&name, arguments, cancel.clone()).await;
+                if name == "adm_get_device_info"
+                    && let Some(status) = result.structured_content.as_mut()
+                    && status["success"] == true
+                {
+                    let state = session.project(&project.id).state;
+                    status["data"]["control_enabled"] = json!(
+                        status["data"]["control_enabled"] == true && state == ProjectState::Running
+                    );
+                    status["data"]["project_state"] = json!(state);
+                    // Keep the text result and structured result consistent for both client styles.
+                    result = CallToolResult::structured(status.clone());
+                }
+                encode(result)
             };
             tokio::select! {
                 biased;
