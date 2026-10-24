@@ -73,3 +73,13 @@ python3 benchmarks/benchmark_mcp_capture.py \
 ```
 
 Repeat with `--reverse` and a different output path to inspect ordering/thermal effects. Each source is explicit, so fallback cannot silently enter a comparison. Native PNG, 720-pixel JPEG and 720-pixel WebP share requested dimensions and nominal quality across sources; Android and Rust encoders/resizers are not perceptually calibrated. The report separates the full stdio/JSON MCP round trip from controller execution and records warm-ups, failures, timing components, bytes, CPU/RSS samples, battery/temperature, host/device metadata and the server binary digest. API timestamp age is not original presentation age. Client/model inference and remote upload are excluded.
+
+On 2026-10-24, an Android API 37 emulator using SwiftShader and a static Andromeda screen produced these full MCP round trips with a release server. Each cell is p50 / p95 in milliseconds; each workload used two warm-ups and twenty measured samples. No compilation or tests ran during either measurement.
+
+| Requested image | ADB first | Companion second | Companion first | ADB second |
+|---|---:|---:|---:|---:|
+| Native PNG | 156.16 / 161.47 | 115.99 / 117.36 | 115.22 / 116.47 | 154.33 / 158.04 |
+| JPEG, width 720, quality 80 | 170.91 / 173.68 | 52.43 / 55.63 | 51.37 / 52.67 | 168.96 / 172.16 |
+| WebP, width 720, quality 80 | 196.01 / 200.76 | 92.81 / 94.78 | 92.13 / 93.07 | 194.68 / 198.38 |
+
+All 240 measured requests succeeded. Raw [forward](results/accessibility-emulator-2026-10-24-forward.json) and [reverse](results/accessibility-emulator-2026-10-24-reverse.json) reports include timing components, bytes and artifact hashes. These results support an improvement on this emulator; they do not establish physical-phone latency, perceptual equivalence, model response time, live-preview performance or superiority over another product. Physical capability-upgrade and timing checks remain open.

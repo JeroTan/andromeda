@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "pixels_retained": false,
+  "debug_fault_injection": true,
+  "normal_capture": {
+    "width": 720,
+    "height": 1600,
+    "native_width": 1080,
+    "native_height": 2400,
+    "bytes": 92542,
+    "capture_ms": 9,
+    "processing_ms": 30
+  },
+  "fractional_dimensions_rejected": true,
+  "slot_held_after_timeout": true,
+  "late_callback_released_slot": true,
+  "disconnect_during_callback_recovered": true,
+  "device_kind": "isolated Android API 37 emulator",
+  "source_commit": "cb0d56176fa59cfd261d71201acf984b2fa4e3ec",
+  "apk_sha256": "1625fbdcc44809ae4e7231dab37ae866ec7c95fee2ce656ac916530164f79b54",
+  "upgrade_test": {
+    "baseline_capability": false,
+    "updated_capability": true,
+    "accessibility_regranted": false,
+    "capture_succeeded": true,
+    "physical_phone_upgrade_verified": false
+  },
+  "protected_window_test": {
+    "flag_secure": true,
+    "capture_succeeded": true,
+    "protected_area_black": true,
+    "image_retained_in_git": false
+  },
+  "limitations": [
+    "Emulator acceptance only; physical capability upgrade and latency remain open.",
+    "Debug callback delay covers late buffer cleanup and native concurrency; it does not simulate every Android/OEM failure.",
+    "Full-display FLAG_SECURE may black out protected pixels instead of returning an error."
+  ],
+  "native_lossless_webp": {
+    "success": true,
+    "backend": "companion",
+    "mime_type": "image/webp",
+    "dimensions": [
+      720,
+      1600
+    ],
+    "bytes": 172114
+  }
+}
