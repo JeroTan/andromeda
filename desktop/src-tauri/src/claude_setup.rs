@@ -156,7 +156,7 @@ impl Plan {
             previous,
         })
     }
-    pub async fn apply(self) -> Result<()> {
+    pub async fn apply(self) -> Result<String> {
         if self.root.canonicalize()? != self.root
             || existing(&self.config_path, &self.root)? != self.previous
         {
@@ -165,22 +165,31 @@ impl Plan {
                 "Claude or the project changed after preview; open Connect Claude again",
             ));
         }
-        if self.previous.is_none() {
-            let configuration = serde_json::to_string(&self.connection)
-                .map_err(|_| Error::new("invalid_config", "Cannot encode Claude connection"))?;
-            run(
-                &self.cli,
-                &self.root,
-                &[
-                    "mcp",
-                    "add-json",
-                    "--scope",
-                    "local",
-                    "andromeda",
-                    &configuration,
-                ],
-            )
-            .await?;
+        let added = self.previous.is_none();
+        if added {
+            let command = self.connection["command"]
+                .as_str()
+                .ok_or_else(|| Error::new("invalid_config", "Claude command is missing"))?;
+            let mut arguments = vec![
+                "mcp",
+                "add",
+                "andromeda",
+                "--scope",
+                "local",
+                "--transport",
+                "stdio",
+                "--",
+                command,
+            ];
+            let server_args = self.connection["args"].as_array().ok_or_else(|| {
+                Error::new("invalid_config", "Claude server arguments are missing")
+            })?;
+            for argument in server_args {
+                arguments.push(argument.as_str().ok_or_else(|| {
+                    Error::new("invalid_config", "Claude server argument is not text")
+                })?);
+            }
+            run(&self.cli, &self.root, &arguments).await?;
         }
         let status = run(&self.cli, &self.root, &["mcp", "get", "andromeda"]).await?;
         if !status
@@ -192,7 +201,12 @@ impl Plan {
                 "Claude registration is saved, but its connection check did not succeed. Keep Andromeda open and check Claude's MCP status.",
             ));
         }
-        Ok(())
+        Ok(if added {
+            "Andromeda ran Claude's add command and verified the connection."
+        } else {
+            "Andromeda is already registered for this project. Claude's connection check passed."
+        }
+        .into())
     }
 }
 async fn run(cli: &Path, root: &Path, args: &[&str]) -> Result<String> {

@@ -67,6 +67,7 @@ type PreviewError = {
 };
 type DialogState =
   | { kind: "connection"; client: string; change: Change }
+  | { kind: "connection_result"; client: string; result: string }
   | { kind: "instructions"; project: Project; document: Instructions }
   | { kind: "remove"; project: Project };
 
@@ -945,7 +946,7 @@ function App() {
                     <p className="connection-state" role="status">
                       {connection?.clients
                         ? `MCP connected · ${connection.clients} client${connection.clients === 1 ? "" : "s"}`
-                        : "MCP disconnected"}
+                        : "Waiting for an agent to load Andromeda"}
                     </p>
                     {connection?.initialization_error && (
                       <p className="field-error">
@@ -1123,7 +1124,7 @@ function App() {
           <span>
             ANDROMEDA <span aria-hidden="true">↗</span> A LITTLE MORE REACH.
           </span>
-          <span>LOCAL CONTROL · VERSION 0.1.0 · PREVIEW</span>
+          <span>LOCAL CONTROL · VERSION 0.1.1 · PREVIEW</span>
         </footer>
       </main>
       {dialog && (
@@ -1132,11 +1133,13 @@ function App() {
           title={
             dialog.kind === "connection"
               ? `Connect ${dialog.client === "codex" ? "Codex" : "Claude"}`
-              : dialog.kind === "instructions"
-                ? "Project instructions"
-                : dialog.kind === "remove"
-                  ? "Remove project"
-                  : "Review device input"
+              : dialog.kind === "connection_result"
+                ? "Claude connection configured"
+                : dialog.kind === "instructions"
+                  ? "Project instructions"
+                  : dialog.kind === "remove"
+                    ? "Remove project"
+                    : "Review device input"
           }
           onClose={() => {
             if (!busy) setDialog(null);
@@ -1187,7 +1190,15 @@ function App() {
                         id: dialog.change.id,
                         allowReplacement: replace,
                       });
-                      setDialog(null);
+                      if (dialog.client === "claude") {
+                        setDialog({
+                          kind: "connection_result",
+                          client: dialog.client,
+                          result,
+                        });
+                      } else {
+                        setDialog(null);
+                      }
                       setNotice(result);
                     })
                   }
@@ -1208,6 +1219,24 @@ function App() {
                   Cancel
                 </button>
               </div>
+            </>
+          )}
+          {dialog.kind === "connection_result" && (
+            <>
+              <p role="status">{dialog.result}</p>
+              <h3>Already have a Claude chat open?</h3>
+              <p>
+                That conversation keeps its existing tool list. Reconnect
+                Andromeda from Claude's MCP panel or reopen the conversation to
+                load the newly configured tools.
+              </p>
+              <p className="field-hint">
+                The add command registers a server; it cannot refresh a running
+                Claude conversation. No further Andromeda approval is needed.
+              </p>
+              <button className="primary" onClick={() => setDialog(null)}>
+                Done
+              </button>
             </>
           )}
           {dialog.kind === "remove" && (
