@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-24",
+  "npm_scope": "@jrw",
+  "npm_account_authenticated": false,
+  "candidate_manifest": {
+    "schema_version": 1,
+    "version": "0.1.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "launcher_package": "@jrw/andromeda",
+    "platform_package": "@jrw/desktop-darwin-arm64",
+    "private_preview": true,
+    "ready_to_publish": false,
+    "notices_complete": false,
+    "source_commit": "6fdc19134331153e1bd919ba7443137d919b13b8",
+    "source_dirty": true,
+    "app_files": 4,
+    "desktop_sha256": "3c4bc162c3f7c3f97979920cf1ed454d79938761a8f661d0b7d5e72663b024b9",
+    "cli_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6",
+    "artifacts": [
+      {
+        "filename": "jrw-desktop-darwin-arm64-0.1.0.tgz",
+        "sha256": "87c63293c55e163cb57849a33e570fff62c795e5574290b357f16d8eebede604",
+        "integrity": "sha512-9wjPjrDvcfE29UMXtiz6u4zuxvMXH4kKH6btXgoAFAkcQN+FqKbiQk1RA3AJz+6rIwPQRVn04P/hR34HogowVw=="
+      },
+      {
+        "filename": "jrw-andromeda-0.1.0.tgz",
+        "sha256": "51e238ee46da8fe9e2c9087365de43b8c7eb0f716a1770f0a1b9539b9c2c9084",
+        "integrity": "sha512-wEM/fRlNnSPD5bJDWBfLk8YHOy0PIKfmcelkB44EI7K2wNTBS/D6YtK4t7S/83NLrORnw5aIMK/bz9mpF1glZg=="
+      },
+      {
+        "filename": "Andromeda-0.1.0-darwin-arm64-preview.zip",
+        "sha256": "ee017b84f60822fa0977ce043c3c47065d0380f1dce68c76c6801f0bbbf4c2e0"
+      }
+    ],
+    "limitations": [
+      "Private local package staging does not establish npm scope ownership.",
+      "Signing/notarization and full release acceptance must be checked separately.",
+      "Notices completeness is reported from the supplied inventory; staging does not resolve missing licenses."
+    ]
+  },
+  "npm_install": {
+    "offline": true,
+    "ignore_scripts": true,
+    "installed_platform_resolution": true,
+    "native_cold_launch_observed": true,
+    "isolated_state_empty_projects": true,
+    "exited_successfully": true,
+    "user_installed_app_restored_running": true
+  },
+  "dmg": {
+    "schema_version": 1,
+    "platform": "macOS arm64",
+    "dmg_sha256": "24ed84cac1bee8458d3cae8feff7cc9cb3ece61b86b3fde51a9adc4dad848cdf",
+    "dmg_checksum_verified": true,
+    "readonly_mount_verified": true,
+    "application_bundle_present": true,
+    "applications_drop_link_correct": true,
+    "bundled_cli_version": "0.1.0",
+    "bundled_cli_tool_count": 18,
+    "bundled_cli_sha256": "3e9585d8cb2f6d5827966f422b1ae91ee9270258ffecdc757cb516a739fd12f6",
+    "desktop_sha256": "3c4bc162c3f7c3f97979920cf1ed454d79938761a8f661d0b7d5e72663b024b9",
+    "limitations": [
+      "Development candidate; signing/notarization and notice completeness remain open.",
+      "Mounted DMG contents and bundled CLI were verified; npm candidate cold launch was checked separately.",
+      "Windows EXE and Linux packages have not been rebuilt or run in this check."
+    ]
+  },
+  "notice_candidate": {
+    "components": 304,
+    "unique_texts": 193,
+    "review_gaps": 10,
+    "complete": false
+  },
+  "windows_exe": "NSIS build target configured; not executed on Windows",
+  "linux": "Not executed in this check",
+  "android": "Existing debug APK installed and release unsigned APK built; public signing remains open"
+}

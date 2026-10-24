@@ -262,7 +262,7 @@ The main Andromeda interface runs on the user's Mac or PC alongside Codex and Cl
 - Keep credentials in private application storage. Configuration copied to another project must not silently authorize that project.
 - Show device and MCP connection states, an explicitly enabled screen preview, session state and an accessible stop control.
 - Explain how project scoping works and where the operating-system user remains the trust boundary.
-- Provide a tested npm launch command and downloadable desktop executables/packages that open the interface with minimal setup.
+- Provide a tested npm launch command and downloadable desktop executables/packages that open the interface with minimal setup. The user clarified on 2026-10-24: the Lynx phone UI ships as an Android APK, macOS ships a DMG, and Windows ships an EXE installer. npm (`@jrw/andromeda`) is an optional launch route, not a replacement for native installers.
 
 **Visual direction**
 

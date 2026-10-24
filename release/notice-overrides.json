@@ -1,0 +1,511 @@
+{
+  "components": [
+    {
+      "declared_license": "BSD-3-Clause",
+      "ecosystem": "cargo",
+      "git_revision": "ae42d22078b98549e987d2f03d12df7b984fde47",
+      "manifest_identity_verified": true,
+      "name": "alloc-stdlib",
+      "original_files": [
+        {
+          "file": "release/notices/c0c56f26d9c051cac4d200c34c84e7ae9aaa853e01a982a1df08b09931e518ae.txt",
+          "original_path": "LICENSE",
+          "role": "original_license_or_notice",
+          "sha256": "c0c56f26d9c051cac4d200c34c84e7ae9aaa853e01a982a1df08b09931e518ae",
+          "upstream_url": "https://raw.githubusercontent.com/dropbox/rust-alloc-no-stdlib/ae42d22078b98549e987d2f03d12df7b984fde47/LICENSE"
+        }
+      ],
+      "path_in_vcs": "alloc-stdlib",
+      "registry_checksum": "0e76a019e91224d279006ff972f1e984179a6e9feb050adba6ce8274aef23195",
+      "repository": "https://github.com/dropbox/rust-alloc-no-stdlib",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "77cff698112ee833c7c2e2b42c2b51677502ee04ca4a0c213155e3494a80fec3",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/dropbox/rust-alloc-no-stdlib/ae42d22078b98549e987d2f03d12df7b984fde47/alloc-stdlib/Cargo.toml",
+      "vcs_info_sha256": "5d07554db80324e6f09a3074928e6ae0e7cea58248f4c1db3f32d9ce0ec85efb",
+      "version": "0.2.4"
+    },
+    {
+      "declared_license": "MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "b4167b582b2f75f9a1be75495c41b765344fd03c",
+      "manifest_identity_verified": true,
+      "name": "block2",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/b4167b582b2f75f9a1be75495c41b765344fd03c/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "crates/block2",
+      "registry_checksum": "cdeb9d870516001442e364c5220d3574d2da8dc765554b4a617230d33fa58ef5",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "d18aec0c39956f1a29b6d157c13ec51ce53d7c2a2982c307528215f8870720ac",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/b4167b582b2f75f9a1be75495c41b765344fd03c/crates/block2/Cargo.toml",
+      "vcs_info_sha256": "5b87885cad87999d141e83cc8af4b073192f584b2b92cea77e2d87636621a264",
+      "version": "0.6.2"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "8852b424193ca41602281b3d7540d7c8ed51e49a",
+      "manifest_identity_verified": true,
+      "name": "dispatch2",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/8852b424193ca41602281b3d7540d7c8ed51e49a/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "crates/dispatch2",
+      "registry_checksum": "1e0e367e4e7da84520dedcac1901e4da967309406d1e51017ae1abfb97adbd38",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "f6aeef4bfe348b9e65e33db2bfb079be4149f9ab0f4b0b3bf3f5d04c144545af",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/8852b424193ca41602281b3d7540d7c8ed51e49a/crates/dispatch2/Cargo.toml",
+      "vcs_info_sha256": "26f5e6d699ba3ce13b8eea253ad7a7f7feb9345e9da3c01bb9b9bd911a6a7dba",
+      "version": "0.3.1"
+    },
+    {
+      "declared_license": "MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "d7d2fa23ceaa5e6096c923b081040e5d81b3b9df",
+      "manifest_identity_verified": true,
+      "name": "objc2",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/d7d2fa23ceaa5e6096c923b081040e5d81b3b9df/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "crates/objc2",
+      "registry_checksum": "08849bbd4767dfae9457696856ae1c84fe4e0281bbe4a7abff2d0e06fb7981f8",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "4a1e1561612efc4a8aea4dd574c781f6215fa5416696425227558fc782353cba",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/d7d2fa23ceaa5e6096c923b081040e5d81b3b9df/crates/objc2/Cargo.toml",
+      "vcs_info_sha256": "5f7c8e095d3933c477ff1f71021b551cbfe497a62346a1dc8615debd9846e257",
+      "version": "0.6.5"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "manifest_identity_verified": true,
+      "name": "objc2-app-kit",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "framework-crates/objc2-app-kit",
+      "registry_checksum": "d49e936b501e5c5bf01fda3a9452ff86dc3ea98ad5f283e1455153142d97518c",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "a15eb82815ce282d59a2f5be179556695ce678790129c30e1d86567c1e2c684e",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/framework-crates/objc2-app-kit/Cargo.toml",
+      "vcs_info_sha256": "07762c2a438c287ac124300928c9da0f96cefc1932ff8cadac13716fd1e195eb",
+      "version": "0.3.2"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "manifest_identity_verified": true,
+      "name": "objc2-core-foundation",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "framework-crates/objc2-core-foundation",
+      "registry_checksum": "2a180dd8642fa45cdb7dd721cd4c11b1cadd4929ce112ebd8b9f5803cc79d536",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "44cd6a4440c3ea1ba85df240ab9b9e7a95da3a5873ce623ac426ac5acfbe507f",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/framework-crates/objc2-core-foundation/Cargo.toml",
+      "vcs_info_sha256": "1c1a87985a2bd25015f5e2413f4041379bea0172b2fce88dae3e6482b50aab26",
+      "version": "0.3.2"
+    },
+    {
+      "declared_license": "MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "8d214f5477365ffcbcbb7de058c86ed9a518efb7",
+      "manifest_identity_verified": true,
+      "name": "objc2-encode",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "crates/objc2-encode",
+      "registry_checksum": "ef25abbcd74fb2609453eb695bd2f860d389e457f67dc17cafc8b8cbc89d0c33",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "12972b1faf213492f9e78226f23642c461284b739f7be5437d9401465a2869a6",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/crates/objc2-encode/Cargo.toml",
+      "vcs_info_sha256": "b23c761215887d90ac44e18b18c8b386f93139c65a4a14f110e22405830cb3f1",
+      "version": "4.1.0"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "8d214f5477365ffcbcbb7de058c86ed9a518efb7",
+      "manifest_identity_verified": true,
+      "name": "objc2-exception-helper",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "crates/objc2-exception-helper",
+      "registry_checksum": "c7a1c5fbb72d7735b076bb47b578523aedc40f3c439bea6dfd595c089d79d98a",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "b8bf2ffec7fd293d53a316893362ca12e06c3f1fef1fa2d476161e256214ee6e",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/8d214f5477365ffcbcbb7de058c86ed9a518efb7/crates/objc2-exception-helper/Cargo.toml",
+      "vcs_info_sha256": "c7e239421c2f7dc6ec239f8d464ca656be3d325c801c780a341dfa99c79a0949",
+      "version": "0.1.1"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "gap": "Exact revision LICENSE.md links external license texts, but contains no full MIT/Zlib/Apache grant or copyright statement. This evidence does not resolve the missing original license-text gate.",
+      "git_revision": "7b1abfd750a2cacaea71d6a56ecfb83cb7de560b",
+      "manifest_identity_verified": true,
+      "name": "objc2-web-kit",
+      "original_files": [
+        {
+          "file": "release/notices/7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54.txt",
+          "original_path": "LICENSE.md",
+          "role": "incomplete_license_evidence",
+          "sha256": "7f976f7e9cb2d87df7230606feb932c3f21ac0e664045a775b600046ff850c54",
+          "upstream_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/LICENSE.md"
+        }
+      ],
+      "path_in_vcs": "framework-crates/objc2-web-kit",
+      "registry_checksum": "b2e5aaab980c433cf470df9d7af96a7b46a9d892d521a2cbbb2f8a4c16751e7f",
+      "repository": "https://github.com/madsmtm/objc2",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "c18d575811ed67608266557f3c5b673b2430accb55c86c6547a833000dd78a40",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/madsmtm/objc2/7b1abfd750a2cacaea71d6a56ecfb83cb7de560b/framework-crates/objc2-web-kit/Cargo.toml",
+      "vcs_info_sha256": "af77e35da92d2c30dde7cd40ff3723ce9f312cddb639a388ae447979af630a30",
+      "version": "0.3.2"
+    },
+    {
+      "declared_license": "MPL-2.0",
+      "ecosystem": "cargo",
+      "gap": "Exact revision selectors/lib.rs carries the original MPL-2.0 header. No complete MPL license file was found for selectors at this revision; this source evidence does not resolve the full-text gate.",
+      "git_revision": "635e1a19d02960588a00e189bd4bd5bdb150ec3d",
+      "manifest_identity_verified": true,
+      "name": "selectors",
+      "original_files": [
+        {
+          "file": "release/notices/d54c6e13e9e952dac17d209171df8657e3cae93beaddace4906150cdec8d02e9.txt",
+          "original_path": "selectors/lib.rs",
+          "role": "incomplete_license_evidence",
+          "sha256": "d54c6e13e9e952dac17d209171df8657e3cae93beaddace4906150cdec8d02e9",
+          "upstream_url": "https://raw.githubusercontent.com/servo/stylo/635e1a19d02960588a00e189bd4bd5bdb150ec3d/selectors/lib.rs"
+        }
+      ],
+      "path_in_vcs": "selectors",
+      "registry_checksum": "c5d9c0c92a92d33f08817311cf3f2c29a3538a8240e94a6a3c622ce652d7e00c",
+      "repository": "https://github.com/servo/stylo",
+      "status": "unresolved_full_license_text",
+      "upstream_manifest_sha256": "be6ed6441d04b710178c3b50052672755e15e5cf3780060ca9fdd2c8aba1d392",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/servo/stylo/635e1a19d02960588a00e189bd4bd5bdb150ec3d/selectors/Cargo.toml",
+      "vcs_info_sha256": "b9b619f8e31f591cd1326578b87ccb14b4f3687af65b505674522513ed4d276d",
+      "version": "0.36.1"
+    },
+    {
+      "declared_license": "Apache-2.0 OR MIT",
+      "ecosystem": "cargo",
+      "git_revision": "6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a",
+      "manifest_identity_verified": true,
+      "name": "tauri-plugin",
+      "original_files": [
+        {
+          "file": "release/notices/9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d.txt",
+          "original_path": "LICENSE_MIT",
+          "role": "original_license_or_notice",
+          "sha256": "9dd42ea92cff2ede5cd477cbfcce051b2d0115c0ac7f368ee88cb545055dff1d",
+          "upstream_url": "https://raw.githubusercontent.com/tauri-apps/tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_MIT"
+        },
+        {
+          "file": "release/notices/0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594.txt",
+          "original_path": "LICENSE_APACHE-2.0",
+          "role": "original_license_or_notice",
+          "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+          "upstream_url": "https://raw.githubusercontent.com/tauri-apps/tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/LICENSE_APACHE-2.0"
+        }
+      ],
+      "path_in_vcs": "crates/tauri-plugin",
+      "registry_checksum": "74be5dd4bed9afbd145e5716b5fa2ec28cbc29c34ffa61c258c9273d896c8020",
+      "repository": "https://github.com/tauri-apps/tauri",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "cb733ae0ff8eae3102f43bbd4f2d7b0dba57de0e9df941685878f6c8f4173d34",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/tauri-apps/tauri/6f6ab1207bb3923c2721fbc67d2fdb1c8deb0c7a/crates/tauri-plugin/Cargo.toml",
+      "vcs_info_sha256": "080e80c84c44a6de683f2ddfa9a7173bd2d5a6732f5c4a3957f832824f578f48",
+      "version": "2.6.3"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "ecosystem": "cargo",
+      "git_revision": "5878605364af97a3358368a6eaef02104af2e016",
+      "manifest_identity_verified": true,
+      "name": "unic-char-property",
+      "original_files": [
+        {
+          "file": "release/notices/23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3.txt",
+          "original_path": "LICENSE-MIT",
+          "role": "original_license_or_notice",
+          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT"
+        },
+        {
+          "file": "release/notices/a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2.txt",
+          "original_path": "LICENSE-APACHE",
+          "role": "original_license_or_notice",
+          "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE"
+        },
+        {
+          "file": "release/notices/f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b.txt",
+          "original_path": "COPYRIGHT.md",
+          "role": "original_license_or_notice",
+          "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md"
+        },
+        {
+          "file": "release/notices/2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09.txt",
+          "original_path": "AUTHORS",
+          "role": "original_license_or_notice",
+          "sha256": "2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/AUTHORS"
+        }
+      ],
+      "path_in_vcs": "unic/char/property",
+      "registry_checksum": "a8c57a407d9b6fa02b4795eb81c5b6652060a15a7903ea981f3d723e6c0be221",
+      "repository": "https://github.com/open-i18n/rust-unic",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "132a2ace33bbc5f54a2c4a4b522f96b7260c9e0fdb7756a753b4017e101e86d0",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/unic/char/property/Cargo.toml",
+      "vcs_info_sha256": "72a0e361aab8e7af18af799a6046b290a930d94b76c551bf0667e0726f9d42d1",
+      "version": "0.9.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "ecosystem": "cargo",
+      "git_revision": "5878605364af97a3358368a6eaef02104af2e016",
+      "manifest_identity_verified": true,
+      "name": "unic-char-range",
+      "original_files": [
+        {
+          "file": "release/notices/23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3.txt",
+          "original_path": "LICENSE-MIT",
+          "role": "original_license_or_notice",
+          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT"
+        },
+        {
+          "file": "release/notices/a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2.txt",
+          "original_path": "LICENSE-APACHE",
+          "role": "original_license_or_notice",
+          "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE"
+        },
+        {
+          "file": "release/notices/f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b.txt",
+          "original_path": "COPYRIGHT.md",
+          "role": "original_license_or_notice",
+          "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md"
+        },
+        {
+          "file": "release/notices/2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09.txt",
+          "original_path": "AUTHORS",
+          "role": "original_license_or_notice",
+          "sha256": "2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/AUTHORS"
+        }
+      ],
+      "path_in_vcs": "unic/char/range",
+      "registry_checksum": "0398022d5f700414f6b899e10b8348231abf9173fa93144cbc1a43b9793c1fbc",
+      "repository": "https://github.com/open-i18n/rust-unic",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "d176bfd5d70a75b4b8b27ee24e9a8bdd3138aaa3bf0903a7f58497b4e4490f59",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/unic/char/range/Cargo.toml",
+      "vcs_info_sha256": "72a0e361aab8e7af18af799a6046b290a930d94b76c551bf0667e0726f9d42d1",
+      "version": "0.9.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "ecosystem": "cargo",
+      "git_revision": "5878605364af97a3358368a6eaef02104af2e016",
+      "manifest_identity_verified": true,
+      "name": "unic-common",
+      "original_files": [
+        {
+          "file": "release/notices/23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3.txt",
+          "original_path": "LICENSE-MIT",
+          "role": "original_license_or_notice",
+          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT"
+        },
+        {
+          "file": "release/notices/a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2.txt",
+          "original_path": "LICENSE-APACHE",
+          "role": "original_license_or_notice",
+          "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE"
+        },
+        {
+          "file": "release/notices/f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b.txt",
+          "original_path": "COPYRIGHT.md",
+          "role": "original_license_or_notice",
+          "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md"
+        },
+        {
+          "file": "release/notices/2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09.txt",
+          "original_path": "AUTHORS",
+          "role": "original_license_or_notice",
+          "sha256": "2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/AUTHORS"
+        }
+      ],
+      "path_in_vcs": "unic/common",
+      "registry_checksum": "80d7ff825a6a654ee85a63e80f92f054f904f21e7d12da4e22f9834a4aaa35bc",
+      "repository": "https://github.com/open-i18n/rust-unic",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "5c74ebf8b8eede95170fbef14b6050735ce8993ce265978f41562386cb0c2bb9",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/unic/common/Cargo.toml",
+      "vcs_info_sha256": "72a0e361aab8e7af18af799a6046b290a930d94b76c551bf0667e0726f9d42d1",
+      "version": "0.9.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "ecosystem": "cargo",
+      "git_revision": "8a6ce83063d90b91ae2ce59eddb803edd393fca9",
+      "manifest_identity_verified": true,
+      "name": "unic-ucd-ident",
+      "original_files": [
+        {
+          "file": "release/notices/23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3.txt",
+          "original_path": "LICENSE-MIT",
+          "role": "original_license_or_notice",
+          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-MIT"
+        },
+        {
+          "file": "release/notices/a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2.txt",
+          "original_path": "LICENSE-APACHE",
+          "role": "original_license_or_notice",
+          "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/LICENSE-APACHE"
+        },
+        {
+          "file": "release/notices/f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b.txt",
+          "original_path": "COPYRIGHT.md",
+          "role": "original_license_or_notice",
+          "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/COPYRIGHT.md"
+        },
+        {
+          "file": "release/notices/2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09.txt",
+          "original_path": "AUTHORS",
+          "role": "original_license_or_notice",
+          "sha256": "2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/AUTHORS"
+        }
+      ],
+      "path_in_vcs": "unic/ucd/ident",
+      "registry_checksum": "e230a37c0381caa9219d67cf063aa3a375ffed5bf541a452db16e744bdab6987",
+      "repository": "https://github.com/open-i18n/rust-unic",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "9c1c7cfc028e70f52a6a5bdc126c9348837783e5e3e059429c05fadb9af8ec8d",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/8a6ce83063d90b91ae2ce59eddb803edd393fca9/unic/ucd/ident/Cargo.toml",
+      "vcs_info_sha256": "64e154b113a16828624a2baedc6e70e8e6ea8f5c8cf8455d2c255762c0f43a8a",
+      "version": "0.9.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "ecosystem": "cargo",
+      "git_revision": "5878605364af97a3358368a6eaef02104af2e016",
+      "manifest_identity_verified": true,
+      "name": "unic-ucd-version",
+      "original_files": [
+        {
+          "file": "release/notices/23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3.txt",
+          "original_path": "LICENSE-MIT",
+          "role": "original_license_or_notice",
+          "sha256": "23f18e03dc49df91622fe2a76176497404e46ced8a715d9d2b67a7446571cca3",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-MIT"
+        },
+        {
+          "file": "release/notices/a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2.txt",
+          "original_path": "LICENSE-APACHE",
+          "role": "original_license_or_notice",
+          "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/LICENSE-APACHE"
+        },
+        {
+          "file": "release/notices/f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b.txt",
+          "original_path": "COPYRIGHT.md",
+          "role": "original_license_or_notice",
+          "sha256": "f5c342c49f3ac804f3e8e7bb62a8040a44c50d47bb36902b1abd13f66a1adf8b",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/COPYRIGHT.md"
+        },
+        {
+          "file": "release/notices/2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09.txt",
+          "original_path": "AUTHORS",
+          "role": "original_license_or_notice",
+          "sha256": "2748c1a1fba7616917c61d455e8d715ab952671ead63f2026ad0124410596b09",
+          "upstream_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/AUTHORS"
+        }
+      ],
+      "path_in_vcs": "unic/ucd/version",
+      "registry_checksum": "96bd2f2237fe450fcd0a1d2f5f4e91711124f7857ba2e964247776ebeeb7b0c4",
+      "repository": "https://github.com/open-i18n/rust-unic",
+      "status": "original_texts_verified",
+      "upstream_manifest_sha256": "6411d1d10e5bf720a19366db6ab5f4c84cf1156c7033fafbd941f64729bd027c",
+      "upstream_manifest_url": "https://raw.githubusercontent.com/open-i18n/rust-unic/5878605364af97a3358368a6eaef02104af2e016/unic/ucd/version/Cargo.toml",
+      "vcs_info_sha256": "72a0e361aab8e7af18af799a6046b290a930d94b76c551bf0667e0726f9d42d1",
+      "version": "0.9.0"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "Missing original Cargo notice files in macOS candidate; this is not a complete release notice bundle. Unresolved records must not satisfy a complete-notices gate."
+}

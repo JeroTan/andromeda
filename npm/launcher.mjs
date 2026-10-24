@@ -8,6 +8,10 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
 const packageJson = require(join(root, "package.json"));
+const platformScope = packageJson.andromedaPlatformScope ?? "@jrw";
+if (!/^@[a-z0-9][a-z0-9-]*$/.test(platformScope)) {
+  throw new Error("Invalid Andromeda platform package scope");
+}
 const isWindows = process.platform === "win32";
 const executable = isWindows ? "andromeda-desktop.exe" : "andromeda-desktop";
 const app = process.platform === "darwin" ? "Andromeda.app" : null;
@@ -21,7 +25,7 @@ Usage:
 Opens the Andromeda desktop interface. The launcher resolves, in order:
   1. ANDROMEDA_DESKTOP_BIN
   2. ANDROMEDA_DESKTOP_APP (macOS application bundle)
-  3. @andromeda/desktop-<platform>-<arch> beside this package
+  3. ${platformScope}/desktop-<platform>-<arch> beside this package
   4. a local desktop build under desktop/src-tauri/target
 
 Development:
@@ -37,7 +41,7 @@ Environment:
 function candidates() {
   const paths = [];
   try {
-    const platformPackage = `@andromeda/desktop-${process.platform}-${process.arch}`;
+    const platformPackage = `${platformScope}/desktop-${process.platform}-${process.arch}`;
     const packageRoot = dirname(
       require.resolve(`${platformPackage}/package.json`, { paths: [root] }),
     );

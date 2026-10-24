@@ -1,0 +1,70 @@
+# Release packaging
+
+The native deliverables are an Android **APK** containing the Lynx phone interface, a macOS **DMG**, and a Windows **EXE installer**. The desktop UI uses Tauri with the Rust controller. Linux also needs a validated package. The optional npm launcher is `@jrw/andromeda`; platform packages use `@jrw/desktop-<platform>-<arch>`. The unrelated bare npm package `andromeda` must not be used to install this project.
+
+## Native builds
+
+From `desktop/`, run:
+
+```sh
+npm ci
+npm run installer
+```
+
+The helper selects `dmg` on macOS, `nsis` on Windows, and `deb` on Linux. Run it on the corresponding OS with the documented Tauri prerequisites. Outputs are under the workspace's `target/release/bundle/` directory. `npm run installer -- --debug` produces development packages. NSIS produces an `.exe` installer, and a DMG contains the app plus the Applications drop target. See the official [Windows installer](https://v2.tauri.app/distribute/windows-installer/) and [DMG](https://v2.tauri.app/distribute/dmg/) guides.
+
+For Android, build the offline Lynx bundle before Gradle:
+
+```sh
+npm --prefix android-companion/ui ci
+npm --prefix android-companion/ui run build
+cd android-companion
+./gradlew :app:assembleRelease
+```
+
+The current Gradle release output is `app/build/outputs/apk/release/app-release-unsigned.apk`. It still needs the project's release signing configuration. The existing debug APK is for local acceptance, not the public release. An npm package does not replace this APK or either desktop installer.
+
+GitHub Actions remains disabled and manual-only. Changing its configured package targets does not authorize a run. Windows NSIS and current Linux installer validation remain open; historical MSI checks do not establish EXE acceptance.
+
+## Notice collection and local npm staging
+
+Install the pinned collector outside the published artifact:
+
+```sh
+cargo install cargo-about --version 0.9.2 --features cli --locked --root .scratch/notices-tools
+python3 scripts/collect-notices.py \
+  --cargo-about .scratch/notices-tools/bin/cargo-about \
+  --out .scratch/macos-notices
+```
+
+This collects macOS arm64 Rust/default-feature dependencies and desktop npm runtime candidates. It verifies cached Rust archive checksums against Cargo.lock, includes nested native notices, preserves full texts by SHA-256, and validates checked-in upstream overrides against the exact crate/VCS hashes. `release/notice-overrides.json` records source revisions and unresolved original-text cases. The generated inventory deliberately retains `complete: false` until source and final-bundle review is complete. Android/Lynx and other target inventories remain separate work; see [research](research/release-notices.md).
+
+Stage an existing macOS bundle as private local packages:
+
+```sh
+node scripts/stage-macos-package.mjs \
+  --app /Applications/Andromeda.app \
+  --notices .scratch/macos-notices \
+  --out .scratch/macos-packages
+```
+
+The command refuses an existing output directory. It checks Mach-O architecture, app/CLI version agreement, preserves and verifies every app file and executable bit through `npm pack`, includes project/dependency notices beside the app, and writes SHA256SUMS plus an artifact manifest. These are private previews with `ready_to_publish: false`. The ZIP is a verification/support archive; the macOS end-user installer remains the DMG.
+
+Verify a local install without registry publication:
+
+```sh
+npm install --prefix .scratch/package-check --ignore-scripts --offline --no-audit --no-fund \
+  .scratch/macos-packages/jrw-desktop-darwin-arm64-0.1.0.tgz \
+  .scratch/macos-packages/jrw-andromeda-0.1.0.tgz
+.scratch/package-check/node_modules/.bin/andromeda --print-path
+.scratch/package-check/node_modules/.bin/andromeda
+```
+
+The selected npm scope still needs authenticated ownership/publishing access on the release host. Publishing is pending; neither tarball staging nor a registry 404 proves scope ownership.
+
+## Remaining release checks
+
+- Resolve notice gaps, supply corresponding MPL source and reconcile generated UI/native code. Integrate the final notice bundle into every native installer/APK; a candidate alongside npm packages does not complete the DMG/APK gate.
+- Configure release signing for Android, macOS signing/notarization, and the Windows signing decision.
+- Build/run the current Windows EXE and Linux packages on their native systems, including accessibility and scaling checks.
+- Verify final checksums and a cold launch of each signed/distributable artifact, then publish platform packages, installers and v0.1.0 only after the remaining product acceptance gates pass.
