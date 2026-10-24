@@ -351,8 +351,7 @@ async fn apply_connection(
         }
         PendingConnection::Claude(plan) => {
             state.registry.authorize(&plan.project_id, &plan.root)?;
-            plan.apply().await?;
-            Ok("Claude setup verified for this project. Refresh MCP in any already-open Claude conversation.".into())
+            plan.apply().await
         }
     }
 }

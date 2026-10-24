@@ -1,6 +1,6 @@
 {
   "name": "@jrw/andromeda",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Local Android observation and control for MCP agents",
   "type": "module",

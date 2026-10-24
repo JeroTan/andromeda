@@ -38,3 +38,7 @@ The desktop **Connect Claude** action registers Andromeda through Claude Code's 
 Claude Code or its VS Code extension must be installed. Andromeda finds the native CLI in its standard installation locations; advanced setups can specify `ANDROMEDA_CLAUDE_BIN`. A different existing local server named `andromeda` is not silently replaced. Already-open Claude conversations may need their MCP connection refreshed to discover the newly registered server.
 
 A manually maintained shared `.mcp.json` still follows Claude's project-server approval rules. Merely saving that file does not mean Claude has approved or loaded it. See [Claude's local scope and approval documentation](https://code.claude.com/docs/en/mcp#local-scope).
+
+The desktop runs the equivalent of `claude mcp add andromeda --scope local --transport stdio -- EXECUTABLE ARGS...` when registration is missing, then `claude mcp get andromeda`. An identical existing registration is verified without removing/re-adding it. The result remains visible in the desktop dialog.
+
+Registration and a running conversation's tool catalog are different states. The add command does not hot-reload an already-open Claude conversation. In that conversation, use its MCP reconnect control or reopen it once; no manual add command or new Andromeda approval is needed. The desktop does not claim that its separate CLI health check refreshed that conversation.

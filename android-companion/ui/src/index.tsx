@@ -670,7 +670,7 @@ function App() {
                 className="footer"
                 style={type(status.small_size)}
               >
-                {"A LITTLE MORE REACH.\nANDROMEDA / 0.1.0"}
+                {"A LITTLE MORE REACH.\nANDROMEDA / 0.1.1"}
               </text>
             </>
           )}
