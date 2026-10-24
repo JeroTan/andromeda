@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-24",
+  "source_commit": "cea0bdc4648dc004d20291c09a21c7399054d090",
+  "platform": "macOS arm64 native WKWebView",
+  "build": "release with embedded assets; isolated application identifier and private state",
+  "binary_sha256": "e58d828eed72b68b73802fb72564027ca90a230974827f7a7e347cdeda153c2a",
+  "regression": {
+    "before": "Installed 0.1.1: keyboard-open Edit instructions, Escape; focus returned to HTML content and next Tab selected Add a project.",
+    "cause": "The asynchronous operation disabled the triggering button before the dialog captured document.activeElement.",
+    "after": "The button is captured at activation and focused after the dialog is removed and asynchronous work has finished."
+  },
+  "verified_cases": [
+    "Edit instructions opened by pointer; Escape restored focus to Edit instructions",
+    "Edit instructions reopened with Return; Save instructions restored focus to Edit instructions",
+    "Next Tab after editor save reached Remove project instead of page start",
+    "Remove project opened with Return; Escape restored focus to Remove project without removal",
+    "Connect Codex opened with keyboard; Escape restored focus to Connect Codex",
+    "Connect Claude opened with keyboard; Escape restored focus to Connect Claude without registering a client"
+  ],
+  "compact_layout": {
+    "logical_window": [
+      780,
+      620
+    ],
+    "themes_inspected": [
+      "light main workspace",
+      "dark instruction dialog"
+    ],
+    "observed": "Labels, dialog heading, close/Stop controls and keyboard indicators rendered; vertical scrolling remains necessary."
+  },
+  "static_color_check": {
+    "normal_text_min_contrast_on_canvas_or_paper": {
+      "light": 5.49,
+      "dark": 7.88
+    },
+    "focus_color_min_contrast_on_canvas_or_paper": {
+      "light": 5.37,
+      "dark": 8.23
+    },
+    "scope": "CSS ink/muted/focus tokens against canvas/paper only; excludes gradients, disabled controls and rendered antialiasing."
+  },
+  "validation": {
+    "typescript_and_vite_build": "passed",
+    "prettier_check": "passed",
+    "native_release_build": "passed",
+    "standards_review": "no actionable findings",
+    "spec_review": "no actionable findings"
+  },
+  "privacy": {
+    "phone_actions": 0,
+    "agent_connections_registered": 0,
+    "real_project_settings_changed": false,
+    "screenshots_committed": false
+  },
+  "limitations": [
+    "This is native keyboard and scoped visual acceptance, not full VoiceOver or TalkBack certification.",
+    "The installed user app and immutable v0.1.1 release assets were not replaced; this fix is for the next build.",
+    "No Windows/Linux runtime acceptance or hosted Actions run."
+  ]
+}

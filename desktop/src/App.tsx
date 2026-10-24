@@ -159,13 +159,10 @@ function Modal({
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const dialog = ref.current!;
-    const previous = document.activeElement;
     dialog.showModal();
     dialog.querySelector("h2")?.focus();
     return () => {
       dialog.close();
-      if (previous instanceof HTMLElement && previous.isConnected)
-        previous.focus();
     };
   }, []);
   return (
@@ -209,6 +206,7 @@ function App() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [dialog, setDialog] = useState<DialogState | null>(null);
+  const dialogTrigger = useRef<HTMLButtonElement | null>(null);
   const [documentText, setDocumentText] = useState("");
   const [replace, setReplace] = useState(false);
   const [preview, setPreview] = useState<Preview | null>(null);
@@ -365,6 +363,15 @@ function App() {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem("andromeda-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (dialog || busy) return;
+    // Async setup disables the trigger before the dialog mounts. Restore it
+    // only after the dialog is removed and the triggering control is enabled.
+    const trigger = dialogTrigger.current;
+    dialogTrigger.current = null;
+    if (trigger?.isConnected && !trigger.disabled) trigger.focus();
+  }, [dialog, busy]);
 
   async function run(name: string, action: () => Promise<void>) {
     setBusy(name);
@@ -909,7 +916,10 @@ function App() {
                       <button
                         className="text-button"
                         type="button"
-                        onClick={() => void editInstructions()}
+                        onClick={(event) => {
+                          dialogTrigger.current = event.currentTarget;
+                          void editInstructions();
+                        }}
                         disabled={!!busy || dirty}
                       >
                         Edit instructions
@@ -926,7 +936,10 @@ function App() {
                       <button
                         className="text-button danger"
                         type="button"
-                        onClick={() => setDialog({ kind: "remove", project })}
+                        onClick={(event) => {
+                          dialogTrigger.current = event.currentTarget;
+                          setDialog({ kind: "remove", project });
+                        }}
                         disabled={!!busy || dirty || !paused}
                         title={
                           !paused
@@ -960,7 +973,10 @@ function App() {
                     <div className="agent-buttons">
                       <button
                         className="secondary"
-                        onClick={() => void connect("codex")}
+                        onClick={(event) => {
+                          dialogTrigger.current = event.currentTarget;
+                          void connect("codex");
+                        }}
                         disabled={!!busy || dirty}
                       >
                         Connect Codex
@@ -968,7 +984,10 @@ function App() {
                       </button>
                       <button
                         className="secondary"
-                        onClick={() => void connect("claude")}
+                        onClick={(event) => {
+                          dialogTrigger.current = event.currentTarget;
+                          void connect("claude");
+                        }}
                         disabled={!!busy || dirty}
                       >
                         Connect Claude
