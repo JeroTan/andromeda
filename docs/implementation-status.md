@@ -10,6 +10,12 @@ Temporary compiler/toolchain outputs, dependency installations, old local releas
 
 The adaptive-held-gesture investigation is [recorded separately](research/adaptive-held-gestures.md). Continuation is feasible at the Android API level; implementation remains planned as specified. No model-response timing guarantee is made.
 
+## Desktop keyboard correction after 0.1.1 — 2026-10-24
+
+Native inspection found that closing the asynchronously loaded instruction editor lost its triggering button: the next Tab returned to Add a project. Dialog entry points now remember their button before loading disables it, then restore focus after closing and completion. The native release build passed editor Escape/Save, removal Cancel and both client-preview Cancel paths in an isolated project. Scoped light/dark checks also ran at the minimum 780×620 window size. See [keyboard evidence](evidence/desktop-keyboard-2026-10-24.json).
+
+The user's running project and installed app were left intact. Published 0.1.1 binaries do not contain this later fix; it belongs in the next build. These checks reduce the Mac keyboard-validation gap but do not establish full screen-reader coverage.
+
 ## Screenshot acceleration — 2026-10-24
 
 Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. Live preview retains its existing ADB capture loop.
