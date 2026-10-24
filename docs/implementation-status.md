@@ -8,7 +8,9 @@ Fresh on-demand screenshots can use the paired Android accessibility API, with b
 
 Local verification passed 62 Rust workspace tests, strict all-feature Clippy, Android debug/release builds, and the macOS release app build. Standards and Spec reviews have no unresolved findings. The isolated emulator retained accessibility through the capability update, protected a secure test window, passed late-callback/disconnect recovery, and supplied valid lossless WebP. See [acceptance evidence](evidence/accessibility-capture-emulator-2026-10-24.json).
 
-The [matched MCP benchmarks](../benchmarks/README.md#compare-capture-backends-through-mcp) recorded 240 successful requests in forward/reverse order. Emulator JPEG width 720 improved from 169–171 ms median through ADB to 51–52 ms through the companion. Physical upgrade/performance and installed desktop acceptance remain pending: the Mac and phone were locked at inspection. The installed applications have not been replaced by this capture build. Hosted Actions remains disabled with no active runs; release gates below remain open.
+The [matched MCP benchmarks](../benchmarks/README.md#compare-capture-backends-through-mcp) recorded 240 successful emulator requests in forward/reverse order. Emulator JPEG width 720 improved from 169–171 ms median through ADB to 51–52 ms through the companion. [PR #6](https://github.com/JeroTan/andromeda/pull/6) merged this implementation as `0cdea93`.
+
+After the operator unlocked the devices, the physical phone upgrade retained accessibility and pairing without regrant or re-pairing. The macOS release app was installed and the existing project restored to Running; both interfaces showed the same project state and separate Pause and Stop controls. Its installed managed MCP connection returned a companion image, which was visually inspected, and desktop preview displayed 94 ms in one acceptance observation. Physical forward/reverse benchmarks recorded another 240 successful requests: JPEG width 720 improved from 458–461 ms median through ADB to 73–80 ms through the companion. See [physical evidence](evidence/accessibility-capture-physical-2026-10-24.json). No game actions were performed. These checks close this device's capture-upgrade acceptance, not the remaining release gates. Hosted Actions remains disabled with no active runs.
 
 ## Current session flow — 2026-10-23 correction
 
@@ -168,7 +170,7 @@ These are the concrete items behind the unchecked boxes. Items marked **blocked*
 ### 5. Representative open-source comparisons — not started
 
 - Select comparable local Android-control tools and document why each is comparable. Run matched device/transport/build/task measurements; include failures, not only successful latency.
-- The current README and benchmark report deliberately make no speed claim. This gate stays open until raw comparable results exist.
+- The current README and benchmark report deliberately make no speed claim against other products. This gate stays open until raw comparable results exist.
 
 ### 6. Release packaging and artifact verification — release work
 
