@@ -1,6 +1,6 @@
 # Release audit: 0.1.1
 
-Snapshot for 0.1.1. The subsequent [0.1.2 artifact record](evidence/native-release-0.1.2.json), [publication receipt](evidence/release-publication-0.1.2.json) and [native keyboard checks](evidence/desktop-keyboard-2026-10-24.json) update packaging and focus behavior; full human accessibility acceptance remains open.
+Snapshot for 0.1.1. The subsequent [0.1.2 artifact record](evidence/native-release-0.1.2.json), [publication receipt](evidence/release-publication-0.1.2.json) and [native keyboard checks](evidence/desktop-keyboard-2026-10-24.json) update packaging and focus behavior; full human accessibility validation remains unverified and is now explicitly deferred for this preview.
 
 Checked on 2026-10-24 against the [original specification](intial_prompt.md), its session/capture amendments, the working tree and GitHub. The native preview is published. This audit separates shipped implementation from checks that remain unverified; it does not certify every platform or accessibility path.
 
@@ -38,6 +38,6 @@ Checked on 2026-10-24 against the [original specification](intial_prompt.md), it
 
 The operator deferred Windows-native testing and asked to finish the available artifacts without further testing expansion. The EXE is cross-compiled and its payload inspected; it has not been executed on Windows. macOS and Windows packages are unsigned; the Mac app is not notarized. Linux has historical build/package evidence but no 0.1.1 installer download.
 
-Full human TalkBack traversal, wider desktop keyboard/screen-reader coverage and current native Windows/Linux UI acceptance are not proven. These checks remain open in the original validation scope. Publishing a preview does not turn them into passes.
+Full human TalkBack traversal, wider desktop keyboard/screen-reader coverage and current native Windows/Linux UI acceptance are not proven. On 2026-10-24 the operator explicitly deferred broader accessibility checks for this preview; Windows-native testing was already deferred. These qualifications remain recorded for future validation and do not block closing the preview-delivery task. Publishing a preview does not turn them into passes.
 
 Android release installs can update with the retained release key. Existing debug installations use a different certificate; they were preserved rather than uninstalled. Notice/source-provenance qualifications remain inside the packages. The repository's visibility remains the owner's decision.

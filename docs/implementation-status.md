@@ -2,6 +2,12 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger records implementation and dated acceptance results. See the [current release audit](release-audit-0.1.1.md) for shipped artifacts, evidence and remaining validation limits. Historical pending items below may be resolved by later entries; unchecked verification is not a claim of a pass. A passing mock test does not prove Android behavior or client compatibility.
 
+## Preview acceptance closed — 2026-10-24
+
+The operator explicitly deferred full human TalkBack navigation and broader desktop screen-reader coverage for this preview. Windows-native testing was already deferred. With that scope decision, the implementation, native APK/DMG/EXE delivery, publication verification and cleanup requirements for the preview are satisfied. Deferred checks remain unverified future validation; they are not relabeled as passes.
+
+The release is [v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2). Its [artifact evidence](evidence/native-release-0.1.2.json), [publication receipt](evidence/release-publication-0.1.2.json), [cleanup receipt](evidence/release-cleanup-0.1.2.json) and [requirement audit](release-audit-0.1.1.md) retain the verification and limits. Hosted Actions stays disabled. The repository remains private for the owner to publish.
+
 ## Published release and cleanup — 2026-10-24
 
 [v0.1.1](https://github.com/JeroTan/andromeda/releases/tag/v0.1.1) is published with Android APK, Apple silicon DMG and Windows x64 EXE installers. All five uploaded assets, including the manifest and checksums, were matched against local SHA-256 hashes after publication. See [publication evidence](evidence/release-publication-0.1.1.json). The repository remains private until the owner changes its visibility.
@@ -26,7 +32,7 @@ The installed user apps were preserved. Full human screen-reader/wider-platform 
 
 [v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) is published at `948eaac`. All five uploaded asset digests match the local files; see the [publication receipt](evidence/release-publication-0.1.2.json). PR #20 merged the packages and standalone-install guidance. Earlier feature/release branches are removed, and build outputs, temporary compiler installations and old local downloads were cleaned up again. Final packages, private signing material and installed user apps are preserved; see [cleanup receipt](evidence/release-cleanup-0.1.2.json).
 
-The release delivery is verified. The full original accessibility/platform acceptance remains open pending a human pass or an explicit scope decision. No human screen-reader pass is inferred from native accessibility-tree checks or preview publication.
+The release delivery is verified. The operator subsequently deferred the remaining human accessibility checks for this preview, as recorded in the acceptance decision above. No human screen-reader pass is inferred from native accessibility-tree checks or preview publication.
 
 ## Screenshot acceleration — 2026-10-24
 
