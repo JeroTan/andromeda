@@ -2,6 +2,14 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger tracks the full scope; unchecked gates are unfinished. A passing mock test does not prove Android behavior or client compatibility.
 
+## Screenshot acceleration — 2026-10-24
+
+Fresh on-demand screenshots can use the paired Android accessibility API, with bounded on-device scaling/encoding and validated codec passthrough. Older or unavailable bridges retain ADB fallback; protected-content and invalid-data errors do not trigger another backend. Live preview retains its existing ADB capture loop.
+
+Local verification passed 62 Rust workspace tests, strict all-feature Clippy, Android debug/release builds, and the macOS release app build. Standards and Spec reviews have no unresolved findings. The isolated emulator retained accessibility through the capability update, protected a secure test window, passed late-callback/disconnect recovery, and supplied valid lossless WebP. See [acceptance evidence](evidence/accessibility-capture-emulator-2026-10-24.json).
+
+The [matched MCP benchmarks](../benchmarks/README.md#compare-capture-backends-through-mcp) recorded 240 successful requests in forward/reverse order. Emulator JPEG width 720 improved from 169–171 ms median through ADB to 51–52 ms through the companion. Physical upgrade/performance and installed desktop acceptance remain pending: the Mac and phone were locked at inspection. The installed applications have not been replaced by this capture build. Hosted Actions remains disabled with no active runs; release gates below remain open.
+
 ## Current session flow — 2026-10-23 correction
 
 The user superseded the earlier per-action approval/global Resume design with [seamless project sessions](specs/seamless-project-sessions.md). Start each configured project once; its saved allowed tools execute without further Andromeda approval prompts. Each project has independent Pause/Resume and Stop, and Stop all projects is the emergency control. Phone and desktop replicate project state over authenticated bounded heartbeat messages; the phone needs no second Start. Saved pairing is shown separately from actual connectivity. Earlier sections below describing per-request approval are historical and superseded by this correction.

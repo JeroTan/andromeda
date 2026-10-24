@@ -22,6 +22,9 @@ struct Cli {
     /// Authorize ordinary device input for this session. Ask the human before sensitive actions.
     #[arg(long)]
     allow_control: bool,
+    /// Screenshot acquisition: auto prefers a paired bridge, adb forces the baseline.
+    #[arg(long, value_enum, default_value_t = andromeda::actions::CaptureBackend::Auto)]
+    capture_backend: andromeda::actions::CaptureBackend,
     /// Private application state used by the desktop app and managed connections.
     #[arg(long, env = "ANDROMEDA_STATE_DIR")]
     state_dir: Option<PathBuf>,
@@ -100,7 +103,8 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
         cli.device.clone(),
         cli.allow_control,
     )
-    .with_companion(store.clone());
+    .with_companion(store.clone())
+    .with_capture_backend(cli.capture_backend);
     let server = Server {
         controller: controller.clone(),
     };
@@ -166,6 +170,10 @@ async fn run() -> Result<ExitCode, Box<dyn std::error::Error>> {
         Command::Managed { project } => {
             if cli.allow_control
                 || direct_device_override
+                || !matches!(
+                    cli.capture_backend,
+                    andromeda::actions::CaptureBackend::Auto
+                )
                 || cli.adb_server != "127.0.0.1:5037".parse::<SocketAddr>()?
             {
                 return Err("Managed devices and control are configured in the desktop app".into());

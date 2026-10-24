@@ -20,6 +20,8 @@ public final class ProbeActivity extends Activity {
         EditText text=new EditText(this);text.setId(R.id.unicode_input);text.setHint("Type or replace Unicode text here");text.setSingleLine(false);text.setMinHeight(64);layout.addView(text,new LinearLayout.LayoutParams(-1,-2));
         Pad pad=new Pad();pad.setId(R.id.gesture_pad);
         Button reset=new Button(this);reset.setText("Reset gesture counters");reset.setAllCaps(false);reset.setOnClickListener(v->pad.reset());layout.addView(reset);
+        Switch protectedWindow=new Switch(this);protectedWindow.setText("Protect test window from screenshots");protectedWindow.setMinHeight((int)(48*getResources().getDisplayMetrics().density));
+        protectedWindow.setOnCheckedChangeListener((button,checked)->{if(checked)getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);else getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);});layout.addView(protectedWindow);
         layout.addView(pad,new LinearLayout.LayoutParams(-1,0,1));setContentView(layout);
     }
     private final class Pad extends View {

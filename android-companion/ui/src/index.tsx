@@ -160,7 +160,7 @@ function App() {
   const description = waitingForService
     ? "Accessibility permission is already enabled. Waiting for Android to connect the service; this updates automatically. Your saved pairing is kept."
     : [
-        "Enable accessibility so your paired computer can read accessible screens, enter text and perform gestures during a session.",
+        "Allow screenshots and accessible screen inspection for your paired computer. Text and gestures follow your project’s session controls.",
         "Your phone and computer need an introduction. Open pairing here, then choose this phone in Andromeda on your computer.",
         "Start your project in the desktop app. No second Start is needed here. Its status and controls appear below when your computer connects.",
         "Your project is running. Allowed tools execute automatically. Pause or stop a project below; your desktop stays in sync.",

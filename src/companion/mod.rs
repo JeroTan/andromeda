@@ -157,7 +157,7 @@ impl Companion {
             return Err(Error::invalid("Companion request exceeds 1 MiB"));
         }
         tokio::time::timeout(Duration::from_secs(15),async {
-            let mut socket=self.adb.service(serial,"localabstract:andromeda-v1").await.map_err(|mut error|{if error.code=="adb_rejected" {error.code="companion_unavailable".into();error.message="Enable Andromeda accessibility on the selected phone; reconnect USB if the device is offline".into();}error})?;
+            let mut socket=self.adb.service(serial,"localabstract:andromeda-v1").await.map_err(|mut error|{if error.code=="adb_rejected" {error.code="companion_unavailable".into();error.message="Phone bridge is unavailable. Open Andromeda on the phone to check its current status; reconnect USB if needed".into();}error})?;
             socket.write_u32(bytes.len() as u32).await?;socket.write_all(&bytes).await?;
             let length=socket.read_u32().await? as usize;
             if length==0 || length>4*1024*1024{return Err(Error::new("companion_protocol","Invalid companion response size"));}

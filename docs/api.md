@@ -110,3 +110,13 @@ Both swipe endpoints must be inside the viewport. Choose the actual scrolling re
 ## Image-format compatibility and measurements
 
 For routine chat screenshots, try `{"image":{"format":"auto","max_width":720,"quality":80}}`. Choose `webp_lossless` when exact resized pixels matter. AVIF is an explicit export/compatible-client option, not an automatic chat candidate. Supported image types are documented by [OpenAI](https://developers.openai.com/api/docs/guides/images-vision) and [Claude](https://platform.claude.com/docs/en/build-with-claude/vision). See the [codec comparison](../benchmarks/README.md) for measured bytes and processing time rather than assuming one format always wins.
+
+## Capture acquisition
+
+`adm_get_view` keeps the same image options and native-coordinate metadata. With an updated, paired Android 11+ bridge it prefers the accessibility screenshot API, which checks geometry around acquisition on the phone and scales/encodes before transfer. PNG and lossless WebP retain their fidelity modes; JPEG/WebP already encoded in the requested mode are validated and passed through rather than recompressed. `auto` and optional AVIF acquire lossless PNG before host-side selection/encoding.
+
+Results identify `capture_backend` (`companion` or `adb`). ADB fallback also identifies `capture_fallback_code` when the attempted API is unavailable or rate-limited. Explicit protected-content errors and invalid response data do not trigger another backend. Full-display protected content may instead arrive as black pixels; capture success does not prove that protected UI content is visible.
+
+`timings.capture_ms` measures acquisition and device/ADB transport at the host. Companion results add `device_capture_ms`, `device_image_processing_ms`, and `api_timestamp_age_ms`; the latter uses the device uptime clock and is not original presentation age. The two host geometry timings are zero when `geometry_source` is `companion_checked`; the Android service performed those checks inside the measured acquisition request. Host decode/validation/optional conversion remains `image_processing_ms`. Model thinking and remote upload are outside these timings.
+
+For standalone diagnostics, `--capture-backend adb` forces the original path and `--capture-backend companion` requires the new API without fallback. The SDK equivalent is `Controller::with_capture_backend`. Managed MCP proxies use their desktop host's configuration. The accessibility API rate-limits closely spaced captures; use a supported cadence and inspect fallback/error metadata. This remains on-demand capture, not a video stream. `adm_get_long_view`, pixel waits and the current live-preview stream retain their ADB capture paths.

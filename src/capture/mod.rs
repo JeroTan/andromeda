@@ -1,5 +1,7 @@
+mod companion;
 mod long;
 use crate::errors::{Error, Result};
+pub(crate) use companion::from_companion;
 use image::{GenericImageView, ImageFormat, ImageReader, Limits};
 pub use long::{Scroll, Viewport, default_pages, default_settle_ms};
 use schemars::JsonSchema;
@@ -20,6 +22,17 @@ pub enum Format {
     Auto,
     /// Opt-in AVIF encoder. Only use with clients/exporters that accept image/avif.
     Avif,
+}
+
+impl Format {
+    pub(crate) fn companion_encoding(self) -> (&'static str, &'static str) {
+        match self {
+            Self::Jpeg => ("jpeg", "image/jpeg"),
+            Self::Webp => ("webp", "image/webp"),
+            Self::WebpLossless => ("webp_lossless", "image/webp"),
+            _ => ("png", "image/png"),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Default, Deserialize, JsonSchema)]
@@ -66,7 +79,17 @@ pub struct Image {
 }
 
 pub fn decode(png: &[u8]) -> Result<image::DynamicImage> {
-    let mut reader = ImageReader::with_format(Cursor::new(png), ImageFormat::Png);
+    decode_reader(ImageReader::with_format(Cursor::new(png), ImageFormat::Png))
+}
+
+pub(crate) fn decode_encoded(bytes: &[u8]) -> Result<image::DynamicImage> {
+    let reader = ImageReader::new(Cursor::new(bytes))
+        .with_guessed_format()
+        .map_err(|_| Error::new("invalid_image", "Cannot identify screenshot image format"))?;
+    decode_reader(reader)
+}
+
+fn decode_reader(mut reader: ImageReader<Cursor<&[u8]>>) -> Result<image::DynamicImage> {
     let mut limits = Limits::default();
     limits.max_image_width = Some(8192);
     limits.max_image_height = Some(8192);
