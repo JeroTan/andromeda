@@ -30,12 +30,7 @@ impl Controller {
         if !matches!(self.capture_backend, CaptureBackend::Adb) {
             if let Some(companion) = &self.companion {
                 if companion.is_paired(serial)? {
-                    let format = match options.format {
-                        capture::Format::Jpeg => "jpeg",
-                        capture::Format::Webp => "webp",
-                        capture::Format::WebpLossless => "webp_lossless",
-                        _ => "png",
-                    };
+                    let (format, _) = options.format.companion_encoding();
                     let started = Instant::now();
                     match companion.call(serial,"screenshot",json!({"format":format,"max_width":options.max_width.unwrap_or(8192),"max_height":options.max_height.unwrap_or(8192),"quality":options.quality.unwrap_or(80)})).await {
                         Ok(frame)=>{

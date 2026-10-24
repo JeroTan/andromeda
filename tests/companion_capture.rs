@@ -270,3 +270,63 @@ async fn a_lossy_source_cannot_be_relabelled_as_a_lossless_png_capture() {
     assert!(result.content.iter().all(|c| c.as_image().is_none()));
     peer.abort();
 }
+
+#[tokio::test]
+async fn a_lossy_webp_payload_cannot_claim_the_lossless_mode() {
+    let mut response = capture_response();
+    let pixels = image::RgbaImage::from_pixel(36, 80, image::Rgba([23, 45, 67, 255]));
+    let webp = webp::Encoder::from_rgba(pixels.as_raw(), 36, 80)
+        .encode(80.0)
+        .to_vec();
+    response["data"]["format"] = json!("webp_lossless");
+    response["data"]["mime_type"] = json!("image/webp");
+    response["data"]["bytes"] = json!(webp.len());
+    response["data"]["image_base64"] =
+        json!(base64::engine::general_purpose::STANDARD.encode(webp));
+    let (_root, peer, _requests, server) = fixture(response).await;
+    let result = server
+        .call(
+            "adm_get_view",
+            json!({"image":{"format":"webp_lossless","max_width":36},"timeout_ms":500}),
+            CancellationToken::new(),
+        )
+        .await;
+    assert_eq!(
+        result.structured_content.unwrap()["error"]["code"],
+        "companion_protocol"
+    );
+    peer.abort();
+}
+
+#[tokio::test]
+async fn lossless_webp_preserves_exact_pixels_and_encoded_bytes() {
+    let mut response = capture_response();
+    let pixels = image::RgbaImage::from_fn(36, 80, |x, y| image::Rgba([x as u8, y as u8, 67, 255]));
+    let webp = webp::Encoder::from_rgba(pixels.as_raw(), 36, 80)
+        .encode_lossless()
+        .to_vec();
+    response["data"]["format"] = json!("webp_lossless");
+    response["data"]["mime_type"] = json!("image/webp");
+    response["data"]["bytes"] = json!(webp.len());
+    response["data"]["image_base64"] =
+        json!(base64::engine::general_purpose::STANDARD.encode(&webp));
+    let (_root, peer, _requests, server) = fixture(response).await;
+    let result = server
+        .call(
+            "adm_get_view",
+            json!({"image":{"format":"webp_lossless","max_width":36},"timeout_ms":500}),
+            CancellationToken::new(),
+        )
+        .await;
+    assert_eq!(result.structured_content.unwrap()["success"], true);
+    let image = result.content.iter().find_map(|c| c.as_image()).unwrap();
+    let returned = base64::engine::general_purpose::STANDARD
+        .decode(&image.data)
+        .unwrap();
+    assert_eq!(returned, webp);
+    assert_eq!(
+        image::load_from_memory(&returned).unwrap().to_rgba8(),
+        pixels
+    );
+    peer.abort();
+}

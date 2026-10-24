@@ -160,3 +160,23 @@ async fn lossy_webp_honors_the_requested_dimensions_and_returns_valid_pixels() {
     }
     assert_eq!(content["data"]["scale_to_screen"]["x"], 3.0);
 }
+
+#[tokio::test]
+async fn adb_capture_rejects_jpeg_bytes_instead_of_labelling_them_as_png() {
+    let pixels = image::RgbImage::from_pixel(36, 80, image::Rgb([23, 45, 67]));
+    let mut jpeg = Vec::new();
+    image::codecs::jpeg::JpegEncoder::new_with_quality(&mut jpeg, 80)
+        .encode_image(&pixels)
+        .unwrap();
+    let fixture = support::DeviceFixture::with_capture(jpeg).await;
+    let server = Server {
+        controller: Controller::new(Adb::new(fixture.address), Some("phone-A".into()), false),
+    };
+    let result = server
+        .call("adm_get_view", json!({}), CancellationToken::new())
+        .await;
+    assert_eq!(
+        result.structured_content.unwrap()["error"]["code"],
+        "invalid_image"
+    );
+}

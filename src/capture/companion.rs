@@ -1,4 +1,4 @@
-use super::{Format, Image, Options, decode, encode_pixels};
+use super::{Format, Image, Options, decode_encoded, encode_pixels};
 use crate::{
     device::Screen,
     errors::{Error, Result},
@@ -59,17 +59,7 @@ pub(crate) fn from_companion(
     {
         return Err(invalid());
     }
-    let requested_format = match options.format {
-        Format::Jpeg => "jpeg",
-        Format::Webp => "webp",
-        Format::WebpLossless => "webp_lossless",
-        _ => "png",
-    };
-    let expected_mime = match requested_format {
-        "jpeg" => "image/jpeg",
-        "webp" | "webp_lossless" => "image/webp",
-        _ => "image/png",
-    };
+    let (requested_format, expected_mime) = options.format.companion_encoding();
     if frame.format != requested_format || frame.mime_type != expected_mime {
         return Err(invalid());
     }
@@ -88,7 +78,10 @@ pub(crate) fn from_companion(
     if image::guess_format(&bytes).ok() != Some(format) {
         return Err(invalid());
     }
-    let pixels = decode(&bytes)?;
+    if matches!(options.format, Format::WebpLossless) && !is_lossless_webp(&bytes) {
+        return Err(invalid());
+    }
+    let pixels = decode_encoded(&bytes)?;
     if pixels.dimensions() != (frame.width, frame.height) {
         return Err(invalid());
     }
@@ -133,4 +126,47 @@ pub(crate) fn from_companion(
         frame.screen,
         frame.timings,
     ))
+}
+
+// Validate the still-image bitstream mode, not just its generic WebP MIME.
+// https://developers.google.com/speed/webp/docs/riff_container
+fn is_lossless_webp(bytes: &[u8]) -> bool {
+    if bytes.len() < 12 || &bytes[..4] != b"RIFF" || &bytes[8..12] != b"WEBP" {
+        return false;
+    }
+    let Ok(size_bytes) = bytes[4..8].try_into() else {
+        return false;
+    };
+    let declared = u32::from_le_bytes(size_bytes) as usize;
+    if declared.checked_add(8) != Some(bytes.len()) {
+        return false;
+    }
+    let mut offset = 12;
+    let mut lossless = false;
+    while offset < bytes.len() {
+        let Some(header) = bytes.get(offset..offset + 8) else {
+            return false;
+        };
+        let Ok(size_bytes) = header[4..8].try_into() else {
+            return false;
+        };
+        let length = u32::from_le_bytes(size_bytes) as usize;
+        let Some(end) = (offset + 8).checked_add(length) else {
+            return false;
+        };
+        if end > bytes.len() {
+            return false;
+        }
+        match &header[..4] {
+            b"VP8 " | b"ANIM" | b"ANMF" => return false,
+            b"VP8L" if !lossless => lossless = true,
+            b"VP8L" => return false,
+            _ => {}
+        }
+        if length % 2 == 1 && bytes.get(end) != Some(&0) {
+            return false;
+        }
+        offset = end + length % 2;
+    }
+    lossless && offset == bytes.len()
 }
