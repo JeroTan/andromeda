@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Collect reviewable macOS notice inputs; never label an incomplete inventory complete."""
 import argparse
+import base64
+import io
 import hashlib
 import json
 import pathlib
@@ -9,6 +11,9 @@ import shutil
 import subprocess
 import tempfile
 import tomllib
+import tarfile
+import urllib.request
+import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 NOTICE = re.compile(r'^(?:licen[cs]e|copying|notice|copyright|unlicense|patents|authors)(?:[._-].*)?$', re.I)
@@ -16,6 +21,26 @@ NOTICE = re.compile(r'^(?:licen[cs]e|copying|notice|copyright|unlicense|patents|
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()
+
+
+def verified_files(archive_bytes, prefix, source):
+    result = {}
+    with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode='r:gz') as archive:
+        for member in archive.getmembers():
+            if not member.isfile():
+                if not member.isdir():
+                    raise ValueError('Source archive contains an unsupported link or special file')
+                continue
+            path = pathlib.PurePosixPath(member.name)
+            if not path.parts or path.parts[0] != prefix or '..' in path.parts or path.is_absolute():
+                raise ValueError('Unexpected source archive member path')
+            relative = pathlib.Path(*path.parts[1:])
+            content = archive.extractfile(member).read()
+            installed = source / relative
+            if installed.is_symlink() or not installed.is_file() or installed.read_bytes() != content:
+                raise ValueError(f'Installed source differs from verified archive: {prefix}/{relative}')
+            result[relative.as_posix()] = content
+    return result
 
 
 def collect(about, output):
@@ -64,18 +89,19 @@ def collect(about, output):
             key = (package['name'], package['version'])
             source = pathlib.Path(package['manifest_path']).parent
             originals = []
-            # Include nested native notices (e.g. libwebp), preserving relative paths.
-            for path in sorted(source.rglob('*')):
-                if path.is_file() and not path.is_symlink() and NOTICE.match(path.name):
-                    originals.append(dict(save(path.read_bytes()), original_path=path.relative_to(source).as_posix()))
             checksum = checksums[key]
             archive = source.parents[2] / 'cache' / source.parent.name / f'{key[0]}-{key[1]}.crate'
-            if not checksum or digest(archive.read_bytes()) != checksum:
+            archive_bytes = archive.read_bytes()
+            if not checksum or digest(archive_bytes) != checksum:
                 raise ValueError(f'Cached crate archive does not match Cargo.lock: {key}')
+            archived = verified_files(archive_bytes, f'{key[0]}-{key[1]}', source)
+            for relative, content in sorted(archived.items()):
+                if NOTICE.match(pathlib.PurePosixPath(relative).name):
+                    originals.append(dict(save(content), original_path=relative))
             override = overrides.get(key)
             verified_original = bool(originals)
             if override:
-                if override['registry_checksum'] != checksum or digest((source / '.cargo_vcs_info.json').read_bytes()) != override['vcs_info_sha256']:
+                if override['registry_checksum'] != checksum or digest(archived['.cargo_vcs_info.json']) != override['vcs_info_sha256']:
                     raise ValueError(f'Notice override does not match the exact locked source: {key}')
                 for original in override['original_files']:
                     data = (ROOT / original['file']).read_bytes()
@@ -91,14 +117,25 @@ def collect(about, output):
             if not path or metadata.get('dev'):
                 continue
             source = ROOT / 'desktop' / path
-            package = json.loads((source / 'package.json').read_text())
+            url = metadata.get('resolved', '')
+            parsed = urllib.parse.urlparse(url)
+            if parsed.scheme != 'https' or parsed.hostname != 'registry.npmjs.org' or parsed.username or parsed.query:
+                raise ValueError('Expected an HTTPS npm registry archive URL from the lockfile')
+            with urllib.request.urlopen(url, timeout=30) as response:
+                archive_bytes = response.read(64 * 1024 * 1024 + 1)
+            if len(archive_bytes) > 64 * 1024 * 1024:
+                raise ValueError('npm archive exceeds 64 MiB collection bound')
+            integrity = metadata.get('integrity', '')
+            if not integrity.startswith('sha512-') or base64.b64encode(hashlib.sha512(archive_bytes).digest()).decode() != integrity[7:]:
+                raise ValueError(f'npm archive integrity differs from lockfile: {path}')
+            archived = verified_files(archive_bytes, 'package', source)
+            package = json.loads(archived['package.json'])
+            if package['version'] != metadata['version'] or package['name'] != path.rsplit('node_modules/', 1)[-1]:
+                raise ValueError(f'npm package identity differs from lockfile: {path}')
             originals = []
-            for file in sorted(source.rglob('*')):
-                relative = file.relative_to(source)
-                if 'node_modules' in relative.parts:
-                    continue
-                if file.is_file() and not file.is_symlink() and NOTICE.match(file.name):
-                    originals.append(dict(save(file.read_bytes()), original_path=relative.as_posix()))
+            for relative, content in sorted(archived.items()):
+                if NOTICE.match(pathlib.PurePosixPath(relative).name):
+                    originals.append(dict(save(content), original_path=relative))
             entries.append({'ecosystem': 'npm', 'name': package['name'], 'version': package['version'], 'declared_license': package.get('license'), 'integrity': metadata.get('integrity'), 'source_archive': metadata.get('resolved'), 'original_files': originals})
             if not originals:
                 gaps.append({'component': f"{package['name']}@{package['version']}", 'reason': 'No packaged license/notice file found'})

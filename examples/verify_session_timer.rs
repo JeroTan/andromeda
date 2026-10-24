@@ -13,6 +13,18 @@ use std::{
 };
 use tokio_util::sync::CancellationToken;
 
+struct RegisteredProbe {
+    registry: Registry,
+    id: String,
+}
+impl Drop for RegisteredProbe {
+    fn drop(&mut self) {
+        if let Err(error) = self.registry.remove(&self.id) {
+            eprintln!("Could not remove temporary timer project: {error}");
+        }
+    }
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().skip(1).collect();
@@ -34,6 +46,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let workspace = tempfile::tempdir()?;
     let project = registry.register(workspace.path())?;
+    let _registration = RegisteredProbe {
+        registry: registry.clone(),
+        id: project.id.clone(),
+    };
     registry.update(
         &project.id,
         Some(serial.clone()),

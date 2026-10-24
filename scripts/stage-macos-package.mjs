@@ -235,22 +235,24 @@ try {
         private_preview: true,
         ready_to_publish: false,
         notices_complete: noticeInventory.complete === true,
-        source_commit: execFileSync("git", ["rev-parse", "HEAD"], {
+        staging_commit: execFileSync("git", ["rev-parse", "HEAD"], {
           cwd: repo,
           encoding: "utf8",
         }).trim(),
-        source_dirty: Boolean(
+        staging_tree_dirty: Boolean(
           execFileSync("git", ["status", "--porcelain"], {
             cwd: repo,
             encoding: "utf8",
           }).trim(),
         ),
+        app_source_revision: null,
         app_files: appFiles.length,
         desktop_sha256: hash(executable),
         cli_sha256: hash(cli),
         artifacts,
         limitations: [
           "Private local package staging does not establish npm scope ownership.",
+          "Staging Git metadata identifies this packaging checkout; app source revision is not inferred from a supplied binary.",
           "Signing/notarization and full release acceptance must be checked separately.",
           "Notices completeness is reported from the supplied inventory; staging does not resolve missing licenses.",
         ],
