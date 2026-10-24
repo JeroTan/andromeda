@@ -31,5 +31,13 @@
     "Mobile Next default JPEG/mobilecli mode was not measured; native-PNG comparison uses its documented ADB compatibility mode.",
     "Home comparison has one ordering; capture has forward/reverse order.",
     "Physical USB disconnected after timing, so zero measured failures is not a general connectivity reliability claim."
-  ]
+  ],
+  "android_debug_apk_sha256": "5b6053197eff02b859c986c7edcebc49bb22721d99ce4145ded6360fbb833a9d",
+  "validation": {
+    "rust_workspace_all_targets_tests_passed": 62,
+    "android_debug_build": "passed",
+    "spec_review": "no unresolved findings",
+    "standards_review": "no unresolved findings",
+    "hosted_actions": "disabled; no runs started"
+  }
 }
