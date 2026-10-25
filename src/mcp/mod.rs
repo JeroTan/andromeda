@@ -318,7 +318,7 @@ pub fn tools() -> Vec<Tool> {
         ),
         define::<View>(
             "adm_get_view",
-            "Capture as PNG (default), JPEG, WebP or smallest-compatible auto. Use image.format=auto and image.max_width=720 to reduce payloads; webp_lossless preserves pixels. Optional AVIF requires a compatible client/build and is excluded from auto. Coordinates use native screen pixels; multiply scaled-image coordinates by scale_to_screen.",
+            "Capture as PNG (default), JPEG, WebP or smallest-compatible auto. Use image.format=auto and image.max_width=720 to reduce payloads; webp_lossless preserves pixels. Optional AVIF requires a compatible client/build and is excluded from auto. Coordinates use native screen pixels; use native_x=image_x*scale_to_screen.x and native_y=image_y*scale_to_screen.y.",
             true,
         ),
         define::<LongView>(
