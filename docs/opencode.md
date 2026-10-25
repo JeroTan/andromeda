@@ -23,3 +23,9 @@ opencode mcp add andromeda -- /absolute/path/to/andromeda --device YOUR_SERIAL -
 ```
 
 The standalone command explicitly enables ordinary input and follows the client approval policy for sensitive actions. Omit `--allow-control` for observation-only use.
+
+## Tool-call troubleshooting
+
+The MCP connection can be healthy while an agent supplies invalid arguments. Read the tool's current schema before calling it. `adm_swipe` requires a nested `swipe` object and fresh native `screen` geometry; a top-level duration alone is not a swipe request.
+
+`adm_wait_for` watches an actual text/resource/pixel condition. A made-up text condition used as a sleep will expire. For a deliberate delay, use `adm_batch_actions` with an explicit `pause` action. JavaScript timers such as `setTimeout` are not guaranteed in a client's Code Mode sandbox. Keep screenshot dimensions consistent and use each returned image's native-coordinate scale when choosing touch points. A model's reasoning time is separate from device/tool latency.
