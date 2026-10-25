@@ -1,16 +1,52 @@
 <p align="center"><img src="docs/assets/andromeda.svg" alt="Andromeda. Give your AI agent a phone." width="960"></p>
 
-Andromeda gives MCP agents tools to observe and control an Android device. The server is written in Rust and talks directly to your local ADB server over USB or an explicitly authorized ADB connection.
+**Connect your Android phone to your favorite AI agent.**
 
-[Add to Claude Code](docs/claude-code.md) · [Add to Codex](docs/codex.md) · [Add to OpenCode](docs/opencode.md) · [Other MCP clients](docs/clients.md) · [Tool reference](docs/api.md) · [Examples](docs/examples.md) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md)
+Use Claude Code, OpenAI Codex or OpenCode to see your screen, tap, swipe, type, and work through Android apps. Andromeda is the Rust-powered bridge that gives your agent those controls through the Model Context Protocol (MCP).
 
-**v0.1.2 native preview:** [download the Windows EXE, Mac DMG and Android APK](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2). The Mac app runs standalone and includes the Rust MCP server; npm is optional. Preview qualifications and deferred work are recorded in the release notes and [implementation-status.md](docs/implementation-status.md).
+You choose the task, the device and the allowed tools. Your agent observes the screen, takes action and checks the result.
 
-## Desktop preview
+[Download the native apps](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md) · [Tool reference](docs/api.md)
 
-The desktop app registers project directories, previews Codex/Claude MCP configuration, edits project instructions, and runs allowed tools automatically after you start a project. It includes device selection, an on-demand snapshot, an explicit live preview that runs until stopped, project-level Start, Pause/Resume and Stop, and a global emergency stop. See [desktop setup](docs/desktop.md) to build and run it. The [npm launcher](npm/README.md) resolves a local or platform desktop package; it has been tested against local builds, while published platform packages remain a release task.
+## Bring your favorite agent
 
-## Run locally
+| Agent | Connect with Andromeda |
+| --- | --- |
+| **Claude Code** | [Connect from the desktop app](docs/claude-code.md). A real-device Settings task has been verified. |
+| **OpenAI Codex** | [Connect from the desktop app](docs/codex.md). A real-device Settings task has been verified. |
+| **OpenCode 2** | [Connect from the desktop app](docs/opencode.md). Connection verified with OpenCode 2.0.22; available in current source builds, after the v0.1.2 release. |
+| **Cursor and other MCP clients** | [Configure a stdio connection](docs/clients.md). These clients need their own compatibility checks. |
+
+Your agent brings the reasoning. Andromeda supplies the phone controls, so the same tools can work across different apps.
+
+## Give your agent the phone chores
+
+Gacha dailies can feel like a second job. Long dialogue piles up when you just want to play. A quick look at your feed turns into an hour of scrolling. These are the kinds of tasks that inspired Andromeda.
+
+Try prompts like these with a connected agent. They are ideas for workflows, not claims that every app or task has been tested:
+
+- **Gacha dailies and story catch-up:** “Check which daily activities remain. For this story section, advance the dialogue and summarize what happened.”
+- **Less doomscrolling:** “Review the next ten posts in this feed and summarize the ones about topics I follow.”
+- **Mobile-only work:** “Open my work app, collect the visible status updates, and tell me what needs my attention.”
+- **Dating profiles:** “Help me review profiles against the interests I gave you. I'll choose whom to contact.”
+- **Portfolio check-ins:** “Summarize the holdings and changes shown in my portfolio app. Leave trades for me.”
+- **Game experiments:** “Try the controls in my single-player prototype and report where you get stuck.”
+
+Tasks depend on what the app exposes and how well your agent handles it. Start with a small task, watch the result, then expand what you delegate.
+
+## Get started
+
+The [v0.1.2 native preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) includes a Windows EXE, Apple silicon Mac DMG and Android APK. The desktop apps include the Rust MCP server and run without npm. The optional phone companion adds multi-touch, Unicode input and faster screenshots on supported devices.
+
+1. Install the desktop app and [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools). Connect your Android device and authorize USB debugging.
+2. In Andromeda, choose your project folder, device and allowed tools. Add your device-use instructions to `ANDROMEDA.md` through **Edit instructions**.
+3. Connect your agent from the desktop app and load the connection in that client. Use **Start project** when you're ready for input.
+
+Each project has its own Start, Pause/Resume and Stop controls. **Stop all projects** is the emergency control. Sessions stay open until you stop them by default; the phone's optional timer lives under Settings → Session.
+
+See the [installation guide](docs/installation.md) for setup and troubleshooting. Desktop packages are unsigned previews, Windows runtime testing is deferred, and broader accessibility checks remain unverified. Release notes and the [evidence ledger](docs/implementation-status.md) record the limits. The [npm launcher](npm/README.md) is an optional local launch route; it is not published to npm.
+
+## Build the command-line server
 
 Install [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools) and Rust 1.88 or later. Enable USB debugging on a test phone, connect it, and accept its authorization prompt.
 
@@ -52,14 +88,6 @@ The device layer opens ADB services directly, without launching a host `adb` pro
 
 The capture, persistent-stream and input benchmark harness, plus Android 17 emulator and OnePlus physical baselines, are in [benchmarks](benchmarks/README.md). Matched native-PNG comparisons with two pinned open-source MCP implementations are also recorded, with their mode-specific limitations. There is no claim that Andromeda is the fastest Android MCP implementation.
 
-## Control and privacy
-
-Andromeda runs locally over stdio and only connects to a loopback ADB server. Select a device explicitly. Screenshots are returned to the client without being saved by the server. Accessibility inspection briefly uses a private file on the device and removes it after reading. The client may retain tool results in its conversation history.
-
-Use client approval controls for purchases, financial transactions, messages, and other account-changing actions. Coordinate input cannot determine the meaning of the button underneath it. Protected screens may be blank, and some apps expose little accessible information. Follow each app's automation rules.
-
-Read [SECURITY.md](SECURITY.md) before exposing a device to an agent.
-
 ## Develop
 
 ```sh
@@ -71,3 +99,11 @@ cargo test --all-targets
 The reusable Rust device/controller library has no dependency on an AI vendor. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [original specification](docs/intial_prompt.md) for scope and test expectations.
 
 Original Andromeda code is available under MIT or Apache-2.0, at your option. Third-party dependencies retain their own licenses; see the [license review](docs/licenses.md).
+
+## Privacy and responsible use
+
+Andromeda runs locally over stdio and connects to a loopback ADB server. It returns screenshots to your agent without saving them; your AI client may retain or transmit those images and other tool results. Accessibility inspection briefly uses a private file on the device and removes it after reading. Protected screens may be blank, and some apps expose little accessible information.
+
+Use your agent client's approval controls for messages, purchases, trades, money transfers and other account-changing actions. Coordinate input cannot determine the meaning of the button underneath it. Follow each app's automation and fair-play rules; automated gameplay can lead to account penalties. The game examples are for permitted personal tasks and test environments.
+
+Andromeda is an independent project, unaffiliated with the AI providers or apps mentioned here. Read [SECURITY.md](SECURITY.md) for device access, project scope and privacy boundaries.
