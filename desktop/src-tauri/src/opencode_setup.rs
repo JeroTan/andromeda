@@ -86,15 +86,32 @@ async fn status(cli: &Path, root: &Path) -> Result<String> {
     Ok(state.to_owned())
 }
 
-pub(super) async fn verify(
-    cli: &Path,
-    root: &Path,
-    connection: &Value,
-    changed: bool,
-) -> Result<String> {
-    let state = status(cli, root).await?;
-    if state == "connected" && !changed {
-        return Ok("OpenCode's connection check passed for this project.".into());
+pub(super) async fn verify(cli: &Path, root: &Path, connection: &Value) -> Result<String> {
+    let mut state = status(cli, root).await?;
+    if state == "pending" {
+        let wait = async {
+            loop {
+                tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+                let current = status(cli, root).await?;
+                if current != "pending" {
+                    return Ok::<_, Error>(current);
+                }
+            }
+        };
+        state = tokio::time::timeout(std::time::Duration::from_secs(5), wait)
+            .await
+            .map_err(|_| {
+                Error::new(
+                    "opencode_not_connected",
+                    "OpenCode is still connecting; its in-flight connection was left intact",
+                )
+            })??;
+    }
+    if !matches!(state.as_str(), "connected" | "failed" | "missing") {
+        return Err(Error::new(
+            "opencode_not_connected",
+            "OpenCode has disabled this connection, requires authentication, or is still connecting. Its policy was preserved; check this project's MCP status.",
+        ));
     }
     // Apply the exact reviewed connection only in this project. Do not reload
     // the shared server: that would interrupt unrelated projects and sessions.
@@ -150,6 +167,10 @@ query=urllib.parse.parse_qs(urllib.parse.urlsplit(path).query)
 assert query['location[directory]']==[root]
 if args[1]=='GET':
  status='connected' if state.exists() else {initial}
+ if status=='pending_then_connected':
+  marker=log.with_suffix('.pending')
+  status='connected' if marker.exists() else 'pending'
+  marker.write_text('seen')
  data=[] if status=='missing' else [{{'name':'andromeda','status':{{'status':status}}}}]
  print(json.dumps({{'location':{{'directory':str(pathlib.Path(root).parent) if {wrong_root} else root}},'data':data}}))
 elif args[1]=='PUT':
@@ -189,7 +210,6 @@ else:raise Exception('Unapproved command')
                 &f.cli,
                 &f.root,
                 &serde_json::json!({"type":"local","command":["reviewed-server"]}),
-                false,
             )
             .await
             .unwrap();
@@ -208,18 +228,54 @@ else:raise Exception('Unapproved command')
     }
 
     #[tokio::test]
-    async fn an_unchanged_healthy_connection_is_checked_without_restarting_it() {
+    async fn a_connected_runtime_name_is_not_assumed_to_match_the_reviewed_command() {
         let f = Fixture::new("connected", false);
-        verify(&f.cli, &f.root, &serde_json::json!({}), false)
-            .await
-            .unwrap();
-        assert_eq!(f.calls().len(), 1);
+        verify(
+            &f.cli,
+            &f.root,
+            &serde_json::json!({"type":"local","command":["reviewed-server"]}),
+        )
+        .await
+        .unwrap();
+        assert_eq!(f.calls().len(), 3);
+        assert_eq!(f.calls()[1][1], "PUT");
+    }
+
+    #[tokio::test]
+    async fn disabled_authentication_and_unknown_states_are_not_rewritten() {
+        for state in ["disabled", "needs_auth", "unknown_policy_state"] {
+            let f = Fixture::new(state, false);
+            assert_eq!(
+                verify(&f.cli, &f.root, &serde_json::json!({}))
+                    .await
+                    .unwrap_err()
+                    .code,
+                "opencode_not_connected"
+            );
+            assert_eq!(f.calls().len(), 1);
+        }
+    }
+
+    #[tokio::test]
+    async fn asynchronous_startup_settles_before_the_reviewed_connection_is_applied() {
+        let f = Fixture::new("pending_then_connected", false);
+        verify(
+            &f.cli,
+            &f.root,
+            &serde_json::json!({"type":"local","command":["reviewed-server"]}),
+        )
+        .await
+        .unwrap();
+        assert_eq!(f.calls().len(), 4);
+        assert_eq!(f.calls()[0][1], "GET");
+        assert_eq!(f.calls()[1][1], "GET");
+        assert_eq!(f.calls()[2][1], "PUT");
     }
 
     #[tokio::test]
     async fn a_different_project_response_never_mutates_that_projects_mcp() {
         let f = Fixture::new("failed", true);
-        let error = verify(&f.cli, &f.root, &serde_json::json!({}), false)
+        let error = verify(&f.cli, &f.root, &serde_json::json!({}))
             .await
             .unwrap_err();
         assert_eq!(error.code, "project_scope_mismatch");

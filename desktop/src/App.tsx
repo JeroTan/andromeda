@@ -1201,7 +1201,7 @@ function App() {
                 {dialog.client === "claude"
                   ? "This registers Andromeda in your private Claude setup for this project and checks the connection. Other projects and servers are preserved."
                   : dialog.client === "opencode"
-                    ? "For OpenCode 2. Saves this project's connection, reconnects it if needed, and checks the result. Other projects and sessions are preserved."
+                    ? "For OpenCode 2. Applies the reviewed connection to this OpenCode project and checks the result. Other projects and sessions are preserved."
                     : "Your other client settings are preserved. Reopen the project or reconnect MCP afterward; your client may ask you to trust this connection."}
               </p>
               {dialog.change.replaces_existing && (

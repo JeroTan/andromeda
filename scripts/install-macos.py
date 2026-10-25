@@ -22,24 +22,32 @@ def run(command):
     return result.stdout
 
 
+def regular_file(app, relative):
+    path = app
+    for component in pathlib.Path(relative).parts:
+        path = path / component
+        if path.is_symlink():
+            raise RuntimeError("Bundle metadata and executable paths cannot contain symbolic links")
+    if not path.is_file() or not path.resolve().is_relative_to(app.resolve()):
+        raise RuntimeError("Bundle file is missing or resolves outside the application")
+    return path
+
+
 def info(app):
-    with (app / "Contents/Info.plist").open("rb") as file:
+    with regular_file(app, "Contents/Info.plist").open("rb") as file:
         metadata = plistlib.load(file)
     if metadata.get("CFBundleIdentifier") != IDENTIFIER:
         raise RuntimeError("Source and destination must be Andromeda application bundles")
     executable = metadata.get("CFBundleExecutable", "")
     if not executable or pathlib.Path(executable).name != executable:
         raise RuntimeError("Invalid application executable name")
-    if (app / "Contents/MacOS" / executable).is_symlink() or not (app / "Contents/MacOS" / executable).is_file():
-        raise RuntimeError("Application executable is missing")
+    regular_file(app, "Contents/MacOS/" + executable)
     return metadata
 
 
 def verify(app):
     metadata = info(app)
-    cli = app / "Contents/Resources/bin/andromeda"
-    if cli.is_symlink() or not cli.is_file():
-        raise RuntimeError("Bundled MCP server must be a regular executable")
+    cli = regular_file(app, "Contents/Resources/bin/andromeda")
     run(["/usr/bin/codesign", "--verify", "--deep", "--strict", str(app)])
     version = run([str(cli), "--version"]).strip()
     if version != "andromeda-mcp " + metadata["CFBundleShortVersionString"]:
@@ -75,9 +83,8 @@ def install(source, destination):
         candidate = temporary / destination.name
         previous = destination.parent / (".andromeda-previous-" + uuid.uuid4().hex + ".app")
         shutil.copytree(source, candidate, symlinks=True)
-        cli = candidate / "Contents/Resources/bin/andromeda"
-        if cli.is_symlink() or not cli.is_file():
-            raise RuntimeError("Bundled MCP server must be a regular executable")
+        info(candidate)
+        cli = regular_file(candidate, "Contents/Resources/bin/andromeda")
         # Local ad-hoc signing supplies bundle integrity, not Developer ID or notarization.
         run(["/usr/bin/codesign", "--force", "--sign", "-", str(cli)])
         run(["/usr/bin/codesign", "--force", "--sign", "-", str(candidate)])

@@ -1,5 +1,6 @@
 """Native integration checks for repeated updates and rejection without losing an install."""
 import os
+import json
 import pathlib
 import plistlib
 import subprocess
@@ -19,14 +20,15 @@ class InstallTests(unittest.TestCase):
         self.destination = self.root / "installed/Andromeda.app"
         self.destination.parent.mkdir()
 
-    def bundle(self, name, version):
+    def bundle(self, name, version, fail_at_destination=False):
         app = self.root / name / "Andromeda.app"
         (app / "Contents/MacOS").mkdir(parents=True)
         (app / "Contents/Resources/bin").mkdir(parents=True)
         info = {"CFBundleIdentifier": "io.andromeda.desktop", "CFBundleExecutable": "andromeda-desktop", "CFBundleName": "Andromeda", "CFBundlePackageType": "APPL", "CFBundleShortVersionString": version}
         (app / "Contents/Info.plist").write_bytes(plistlib.dumps(info))
         source = app.parent / "fixture.c"
-        source.write_text('#include <stdio.h>\n#include <string.h>\nint main(int argc,char**argv){ if(argc>1 && !strcmp(argv[1],"tools")) puts("[{\\"name\\":\\"adm_stop\\"}]"); else puts("andromeda-mcp ' + version + '"); return 0;}\n')
+        guard = ('if (!strcmp(argv[0], ' + json.dumps(str(self.destination / "Contents/Resources/bin/andromeda")) + ')) return 23;') if fail_at_destination else ''
+        source.write_text('#include <stdio.h>\n#include <string.h>\nint main(int argc,char**argv){ ' + guard + ' if(argc>1 && !strcmp(argv[1],"tools")) puts("[{\\"name\\":\\"adm_stop\\"}]"); else puts("andromeda-mcp ' + version + '"); return 0;}\n')
         cli = app / "Contents/Resources/bin/andromeda"
         subprocess.run(["/usr/bin/clang", str(source), "-o", str(cli)], check=True, capture_output=True)
         (app / "Contents/MacOS/andromeda-desktop").write_bytes(cli.read_bytes())
@@ -67,6 +69,33 @@ class InstallTests(unittest.TestCase):
         self.assertNotEqual(self.invoke(original, link).returncode, 0)
         self.assertEqual(installed.read_bytes(), old)
 
+
+    def test_post_swap_failure_restores_the_prior_signed_executable(self):
+        original = self.bundle("first", "0.1.1")
+        self.assertEqual(self.invoke(original).returncode, 0)
+        cli = self.destination / "Contents/Resources/bin/andromeda"
+        old = cli.read_bytes()
+        candidate = self.bundle("post-swap-failure", "0.1.2", fail_at_destination=True)
+        self.assertNotEqual(self.invoke(candidate).returncode, 0)
+        self.assertEqual(cli.read_bytes(), old)
+        self.assertIn("0.1.1", subprocess.check_output([str(cli), "--version"], text=True))
+        self.assertEqual(subprocess.run(["codesign", "--verify", "--deep", "--strict", str(self.destination)], capture_output=True).returncode, 0)
+        self.assertFalse(list(self.destination.parent.glob(".andromeda-previous-*")))
+
+    def test_executable_ancestor_symlinks_never_modify_external_files(self):
+        original = self.bundle("first", "0.1.1")
+        self.assertEqual(self.invoke(original).returncode, 0)
+        for index, relative in enumerate(["Contents/Resources/bin", "Contents/MacOS", "Contents"]):
+            app = self.bundle("symlink-" + str(index), "0.1.2")
+            outside = self.root / ("outside-" + str(index))
+            source = app / relative
+            source.rename(outside)
+            source.symlink_to(outside, target_is_directory=True)
+            before = {str(p.relative_to(outside)): p.read_bytes() for p in outside.rglob("*") if p.is_file()}
+            self.assertNotEqual(self.invoke(app).returncode, 0)
+            after = {str(p.relative_to(outside)): p.read_bytes() for p in outside.rglob("*") if p.is_file()}
+            self.assertEqual(after, before)
+            self.assertIn("0.1.1", subprocess.check_output([str(self.destination / "Contents/Resources/bin/andromeda"), "--version"], text=True))
 
 if __name__ == "__main__":
     unittest.main()

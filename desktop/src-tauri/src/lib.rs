@@ -379,15 +379,11 @@ async fn apply_connection(
             } else {
                 serde_json::Value::Null
             };
-            let changed = serde_json::from_str::<serde_json::Value>(&change.before)
-                .ok()
-                .as_ref()
-                != Some(&connection);
             state
                 .registry
                 .apply_client_config(change, allow_replacement)?;
             if let Some(cli) = opencode_cli {
-                return opencode_setup::verify(&cli, &root, &connection, changed).await;
+                return opencode_setup::verify(&cli, &root, &connection).await;
             }
             Ok("Connection saved. Reconnect MCP in your agent to use it.".into())
         }
