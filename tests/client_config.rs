@@ -160,6 +160,10 @@ fn opencode_setup_preserves_jsonc_settings_and_adds_a_scoped_v2_connection() {
     let entry: serde_json::Value = serde_json::from_str(&change.after).unwrap();
     assert_eq!(entry["type"], "local");
     assert_eq!(
+        entry["codemode"], false,
+        "Phone controls should expose complete native schemas to OpenCode by default"
+    );
+    assert_eq!(
         entry["command"][0],
         server.canonicalize().unwrap().to_str().unwrap()
     );

@@ -90,7 +90,7 @@ pub(super) fn edit(
         .chain(args.iter().copied())
         .collect();
     let connection = serde_json::json!({
-        "type": "local", "command": command,
+        "type": "local", "command": command, "codemode": false,
         "timeout": {"startup": 10000, "catalog": 10000, "execution": 130000}
     });
     let previous = old.as_ref().and_then(|node| node.to_serde_value());
@@ -99,7 +99,7 @@ pub(super) fn edit(
     let after = serde_json::to_string_pretty(&connection)
         .map_err(|_| Error::new("invalid_config", "Cannot encode OpenCode connection"))?;
     let value = jsonc_parser::json!({
-        "type": "local", "command": command,
+        "type": "local", "command": command, "codemode": false,
         "timeout": {"startup": 10000, "catalog": 10000, "execution": 130000}
     });
     if let Some(existing) = servers.get("andromeda") {

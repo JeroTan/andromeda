@@ -631,3 +631,7 @@ Fix the underlying startup/update path rather than repairing individual installa
 ## Android background reliability — 2026-10-25
 
 Detect battery optimization and Android background restriction state automatically. Add a Background connection settings section and a home-screen link when attention is needed. Request a battery-optimization exemption using Android's owner-approved system flow only when not already exempt; refresh after returning, preserve sessions and provide safe fallbacks. Explain Xiaomi/OEM-specific controls without claiming to change or detect them through unsupported APIs. Report optional battery diagnostics through companion status. Do not interrupt another app with recurring permission/settings prompts or silently change power settings. Keep desktop gateway failures distinct from Android background restrictions.
+
+## Agent tool-selection guidance — 2026-10-25
+
+Make MCP tool selection and required argument shapes clearer. Include executable schema examples for screenshots, taps, swipes, condition waits and fixed batch pauses. Explain native/image coordinate conversion, accessibility limitations in rendered UIs, real conditions versus timers, and correction after validation errors. OpenCode connections should expose complete schemas directly by default (`codemode: false`) while retaining existing project/device/tool scope and client permission policy. Do not claim that descriptions/configuration guarantee model accuracy.

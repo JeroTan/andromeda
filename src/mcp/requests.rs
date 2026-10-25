@@ -50,6 +50,7 @@ request!(Touch {
 });
 request!(TouchMany { points:Vec<Point>, screen:Screen, #[serde(default)] interval_ms:u64 });
 request!(SwipeOne {
+    /// Required gesture object containing from, to and duration_ms.
     swipe: Swipe,
     screen: Screen
 });
@@ -66,7 +67,11 @@ request!(MultiTouch { strokes:Vec<Stroke>, screen:Screen });
 request!(LaunchApp { package: String });
 request!(OpenUri { uri: String });
 request!(Batch { actions:Vec<Action>, #[serde(default)] interval_ms:u64 });
-request!(Wait { condition:Condition, poll_ms:Option<u64> });
+request!(Wait {
+    /// Required real condition to observe. Use batch pause for a fixed delay instead.
+    condition: Condition,
+    poll_ms: Option<u64>
+});
 
 #[derive(Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
