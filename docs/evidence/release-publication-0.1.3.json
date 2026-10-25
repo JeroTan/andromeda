@@ -1,0 +1,30 @@
+{
+  "url": "https://github.com/JeroTan/andromeda/releases/tag/v0.1.3",
+  "tag": "v0.1.3",
+  "commit": "a62f067889730649b984be74c34557c23711c1e5",
+  "prerelease": true,
+  "published_at": "2026-10-25T05:12:35Z",
+  "uploaded_assets": [
+    {
+      "name": "Andromeda-0.1.3-android.apk",
+      "bytes": 44937711,
+      "sha256": "8b7514c4f3cfa781d91f2cac3f762863ae6774fc63a78fbc3ce6cc7cdf436ec3"
+    },
+    {
+      "name": "Andromeda-0.1.3-macos-arm64.dmg",
+      "bytes": 7869192,
+      "sha256": "81c5380da600b1d8b0f1ba0501078dc7b346cd00e495c703736991aa052fd55a"
+    },
+    {
+      "name": "release-manifest.json",
+      "bytes": 1862,
+      "sha256": "63f927117bd05248b0aa4d4b16c1f4e8d03dffbd164d6e0398883981bd299a48"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "bytes": 280,
+      "sha256": "7a117baf41b663a39507d90795a4c9596e8042785b5f539b3aab2f1252909d23"
+    }
+  ],
+  "all_uploaded_hashes_match_local": true
+}
