@@ -6,6 +6,7 @@ import {
   mkdirSync,
   mkdtempSync,
   rmSync,
+  realpathSync,
   symlinkSync,
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -15,7 +16,7 @@ if (process.platform !== "darwin" || process.argv.length !== 4) {
     "Usage on macOS: node scripts/create-dmg.mjs APP.app OUTPUT.dmg",
   );
 }
-const app = resolve(process.argv[2]);
+const app = realpathSync(resolve(process.argv[2]));
 const output = resolve(process.argv[3]);
 if (!app.endsWith(".app") || !existsSync(join(app, "Contents/Info.plist"))) {
   throw new Error("A built application bundle is required");
