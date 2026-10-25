@@ -113,3 +113,7 @@ npm run install:macos --prefix desktop
 The installer stages a fresh complete bundle beside the destination, signs and verifies it, checks the bundled MCP version/tool catalog, swaps directories and repeats verification at the installed path. Failed installed-path validation restores the previous app; a failed rollback preserves its backup. It never merges new executable bytes into the installed bundle. Private project/pairing state remains outside the app. Build preparation likewise stages the MCP executable at a new inode before replacement.
 
 Regression checks: `npm run test:packaging --prefix desktop` and `python3 -m unittest discover -s scripts -p test_install_macos.py`. The native installer checks require macOS/Clang/code-signing tools. Desktop connection setup now starts the bundled server with `--version` before writing client configuration, reporting a killed or mismatched executable directly.
+
+## Headless macOS DMG creation
+
+`npm run installer --prefix desktop` builds the signed app bundle, then packages it with `desktop/scripts/create-dmg.mjs`. The image contains Andromeda.app and an Applications link. The helper verifies the staged signature and final image checksum, refuses an existing output, and does not open Finder or depend on `.DS_Store` layout timing. This avoids the reproducible temporary-image unmount failures seen with the previous Finder-driven helper on this Mac.
