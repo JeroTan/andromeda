@@ -39,6 +39,33 @@ public final class CompanionUiProbe extends Instrumentation {
                 finish(Activity.RESULT_OK, result);
                 return;
             }
+            if ("background-settings".equals(arguments.getString("scenario"))) {
+                boolean exempt = BackgroundAccess.batteryExempt(getTargetContext());
+                click(automation, "Settings");
+                click(automation, "Background connection");
+                awaitLabel(automation, exempt ? "Battery optimization exemption is active" : "Battery optimization may limit background use");
+                if (!hasStopControl(automation.getRootInActiveWindow())) throw new AssertionError("Stop is missing from background settings");
+                if (exempt) {
+                    awaitLabel(automation, "Allow background connection, unavailable");
+                } else {
+                    click(automation, "Allow background connection");
+                    waitForRoot(automation, "com.android.settings");
+                    if (BackgroundAccess.batteryExempt(getTargetContext())) throw new AssertionError("Battery policy changed without owner approval");
+                    automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK);
+                    awaitLabel(automation, "Background connection");
+                }
+                click(automation, "Open app battery settings");
+                waitForRoot(automation, "com.android.settings");
+                automation.performGlobalAction(android.accessibilityservice.AccessibilityService.GLOBAL_ACTION_BACK);
+                awaitLabel(automation, "Background connection");
+                click(automation, "Back to Settings");
+                click(automation, "Back to home");
+                result.putString("status", "passed");
+                result.putBoolean("battery_exempt", exempt);
+                result.putBoolean("background_settings", true);
+                finish(Activity.RESULT_OK, result);
+                return;
+            }
             if ("timer-persistence".equals(arguments.getString("scenario"))) {
                 click(automation, "Settings");
                 click(automation, "Session");
@@ -160,7 +187,7 @@ public final class CompanionUiProbe extends Instrumentation {
         int count = 0;
         while (!nodes.isEmpty() && count++ < 1000) {
             AccessibilityNodeInfo node = nodes.removeFirst();
-            if ("Stop companion session".contentEquals(node.getContentDescription() == null ? "" : node.getContentDescription())) return true;
+            if ("Stop all phone projects".contentEquals(node.getContentDescription() == null ? "" : node.getContentDescription())) return true;
             for (int i = 0; i < node.getChildCount(); i++) { AccessibilityNodeInfo child = node.getChild(i); if (child != null) nodes.add(child); }
         }
         return false;

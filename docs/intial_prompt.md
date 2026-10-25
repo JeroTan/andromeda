@@ -627,3 +627,7 @@ Add Connect OpenCode to the desktop app, alongside Codex and Claude. Target the 
 ## Core MCP startup correction — 2026-10-25
 
 Fix the underlying startup/update path rather than repairing individual installations. Stage executable replacements at fresh inodes, ad-hoc sign and verify complete local macOS bundles, verify the installed MCP executable, and retain rollback for failed updates. Connection setup must check the bundled server before writing client configuration. Connect OpenCode must verify the selected project's actual MCP status and recover failed or missing runtime connections using the reviewed entry, without globally reloading unrelated sessions. Preserve directory/device/tool scope and keep hosted Actions disabled.
+
+## Android background reliability — 2026-10-25
+
+Detect battery optimization and Android background restriction state automatically. Add a Background connection settings section and a home-screen link when attention is needed. Request a battery-optimization exemption using Android's owner-approved system flow only when not already exempt; refresh after returning, preserve sessions and provide safe fallbacks. Explain Xiaomi/OEM-specific controls without claiming to change or detect them through unsupported APIs. Report optional battery diagnostics through companion status. Do not interrupt another app with recurring permission/settings prompts or silently change power settings. Keep desktop gateway failures distinct from Android background restrictions.

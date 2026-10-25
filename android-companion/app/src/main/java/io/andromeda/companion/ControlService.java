@@ -274,7 +274,7 @@ public final class ControlService extends AccessibilityService {
         if(expected.length!=64 || !MessageDigest.isEqual(expected,token.getBytes(StandardCharsets.UTF_8)))throw new Problem("unauthorized","Pair this computer again from the phone");
         lastAuthenticatedAt=SystemClock.elapsedRealtime();
         if(method.equals("session_sync"))return success(syncSessions(request));
-        if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("session_seconds",sessionSeconds()).put("gesture_active",gestureActive.get()));
+        if(method.equals("status"))return success(new JSONObject().put("version",1).put("session_active",armed()).put("session_seconds",sessionSeconds()).put("gesture_active",gestureActive.get()).put("battery_exempt",BackgroundAccess.batteryExempt(this)).put("background_restricted",BackgroundAccess.restricted(this)));
         if(method.equals("stop")){stopSession();return success(new JSONObject().put("stopped",true).put("note","Already dispatched Android input may finish"));}
         RequestLease requestGeneration=lease(request);
         return switch(method){
