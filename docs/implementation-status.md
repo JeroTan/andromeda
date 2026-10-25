@@ -2,6 +2,12 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger records implementation and dated acceptance results. See the [current release audit](release-audit-0.1.1.md) for shipped artifacts, evidence and remaining validation limits. Historical pending items below may be resolved by later entries; unchecked verification is not a claim of a pass. A passing mock test does not prove Android behavior or client compatibility.
 
+## v0.1.3 publication and cleanup — 2026-10-25
+
+Published the [Mac/Android v0.1.3 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) at `a62f067`. All four uploaded asset hashes match the local files; see [publication evidence](evidence/release-publication-0.1.3.json). Windows v0.1.2 remains the previous preview. The Mac DMG contains the current signed bundle and five executable tool examples; the Android APK uses versionCode 4 and the retained release key.
+
+Temporary emulator, build caches, interface dependencies, test state and screenshots were removed. Final downloads and signing material were preserved; see [cleanup evidence](evidence/release-cleanup-0.1.3.json). The user chose to install the final Mac update after the current OpenCode run finishes. At publication time the core-fixed Mac app stays open, and ZZZ already uses direct schemas. Android installation and its battery approval remain owner actions on the Xiaomi device. No full OEM/Doze or model-accuracy certification is claimed.
+
 ## Background connection and tool guidance — 2026-10-25
 
 Added Android Settings → Background connection, automatic exemption/restriction checks, an owner-approved exemption request with fallbacks, and a home link while attention may be needed. Already-exempt devices do not reopen the request. Xiaomi-specific controls are explained without claiming automatic detection or changes. Optional companion status fields expose battery state. Emulator optimized/exempt settings flows and a five-second background switch passed; long Doze/OEM survival and physical Xiaomi behavior remain unverified.
