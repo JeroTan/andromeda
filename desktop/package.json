@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "format:check": "prettier --check src scripts index.html package.json vite.config.ts",
-    "installer": "node scripts/build-installer.mjs"
+    "installer": "node scripts/build-installer.mjs",
+    "install:macos": "python3 ../scripts/install-macos.py --app ../target/release/bundle/macos/Andromeda.app",
+    "test:packaging": "node --test scripts/stage-executable.test.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.11.1",

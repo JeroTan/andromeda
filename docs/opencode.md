@@ -1,6 +1,6 @@
 # Add to OpenCode
 
-In Andromeda, select your saved project, choose **Connect OpenCode**, review the proposed connection, then choose **Save connection**. Open or reload OpenCode in that project and start the Andromeda project when you want to allow input. Keep Andromeda open while connected.
+In Andromeda, select your saved project, choose **Connect OpenCode**, review the proposed connection, then choose **Connect this project**. Andromeda checks the bundled server, applies the reviewed connection to that OpenCode project and verifies its live status. A stale failed connection is replaced automatically without reloading unrelated sessions. Start the Andromeda project when you want to allow input. Keep Andromeda open while connected.
 
 This connector targets **OpenCode 2**, including the installed 2.0.22 client. It adds a local stdio server under `mcp.servers.andromeda`, using OpenCode's command array and per-server startup, catalog and execution timeouts. OpenCode 1 uses a different schema; migrate its configuration before using this connector. See the official [OpenCode 2 MCP guide](https://opencode.ai/v2/docs/mcp-servers/).
 
@@ -14,7 +14,7 @@ To inspect the connection from the selected project:
 opencode mcp list
 ```
 
-If a running OpenCode instance retains its earlier configuration, run `opencode reload` from the project or reopen it. Higher-precedence system settings, nested project configs or explicit runtime overrides may change what OpenCode loads. See [configuration precedence](https://opencode.ai/v2/docs/config/).
+If setup fails, the desktop reports the failure instead of treating a saved file as a connected server. Higher-precedence system settings, nested project configs or explicit runtime overrides may change what OpenCode loads. See [configuration precedence](https://opencode.ai/v2/docs/config/).
 
 For a standalone server instead of desktop-managed access, use OpenCode 2's CLI:
 

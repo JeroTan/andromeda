@@ -1,4 +1,6 @@
 mod claude_setup;
+mod cli_process;
+mod opencode_setup;
 use andromeda::{
     actions::{Controller, Operation, RunOptions},
     capture,
@@ -29,7 +31,11 @@ struct PreviewTask {
 }
 
 enum PendingConnection {
-    File(ConfigChange),
+    File {
+        change: ConfigChange,
+        root: PathBuf,
+        opencode_cli: Option<PathBuf>,
+    },
     Claude(claude_setup::Plan),
 }
 
@@ -318,7 +324,20 @@ async fn preview_connection(
                 before: change.before.clone(),
                 after: change.after.clone(),
             };
-            (PendingConnection::File(change), preview)
+            let root = state.registry.get(&id)?.root;
+            let opencode_cli = if matches!(client, Client::Opencode) {
+                Some(opencode_setup::find_cli(&root)?)
+            } else {
+                None
+            };
+            (
+                PendingConnection::File {
+                    change,
+                    root,
+                    opencode_cli,
+                },
+                preview,
+            )
         }
     };
     let mut changes = state.changes.lock().unwrap_or_else(|e| e.into_inner());
@@ -331,6 +350,7 @@ async fn preview_connection(
 
 #[tauri::command]
 async fn apply_connection(
+    app: tauri::AppHandle,
     state: State<'_, AppState>,
     id: u64,
     allow_replacement: bool,
@@ -342,11 +362,33 @@ async fn apply_connection(
         .unwrap_or_else(|e| e.into_inner())
         .remove(&id)
         .ok_or_else(|| Error::new("preview_expired", "Open a fresh connection preview"))?;
+    let root = match &change {
+        PendingConnection::File { root, .. } => root,
+        PendingConnection::Claude(plan) => &plan.root,
+    };
+    cli_process::check_server(&server_path(&app)?, root).await?;
     match change {
-        PendingConnection::File(change) => {
+        PendingConnection::File {
+            change,
+            root,
+            opencode_cli,
+        } => {
+            let connection: serde_json::Value = if opencode_cli.is_some() {
+                serde_json::from_str(&change.after)
+                    .map_err(|_| Error::new("invalid_config", "OpenCode preview is invalid"))?
+            } else {
+                serde_json::Value::Null
+            };
+            let changed = serde_json::from_str::<serde_json::Value>(&change.before)
+                .ok()
+                .as_ref()
+                != Some(&connection);
             state
                 .registry
                 .apply_client_config(change, allow_replacement)?;
+            if let Some(cli) = opencode_cli {
+                return opencode_setup::verify(&cli, &root, &connection, changed).await;
+            }
             Ok("Connection saved. Reconnect MCP in your agent to use it.".into())
         }
         PendingConnection::Claude(plan) => {

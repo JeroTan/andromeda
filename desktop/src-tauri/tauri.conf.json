@@ -36,6 +36,9 @@
     "resources": {
       "binaries/": "bin/",
       "notices/": "third-party-notices/"
+    },
+    "macOS": {
+      "signingIdentity": "-"
     }
   }
 }
