@@ -97,5 +97,27 @@ class InstallTests(unittest.TestCase):
             self.assertEqual(after, before)
             self.assertIn("0.1.1", subprocess.check_output([str(self.destination / "Contents/Resources/bin/andromeda"), "--version"], text=True))
 
+    def test_dmg_from_a_source_alias_contains_a_real_self_contained_bundle(self):
+        source = self.bundle("first", "0.1.2")
+        self.assertEqual(self.invoke(source).returncode, 0)
+        alias = self.root / "Current.app"
+        alias.symlink_to(self.destination, target_is_directory=True)
+        output = self.root / "alias-input.dmg"
+        helper = SCRIPT.parent.parent / "desktop/scripts/create-dmg.mjs"
+        result = subprocess.run(["node", str(helper), str(alias), str(output)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        mount = self.root / "mount"
+        mount.mkdir()
+        subprocess.run(["hdiutil", "attach", "-readonly", "-nobrowse", "-mountpoint", str(mount), str(output)], check=True, capture_output=True)
+        try:
+            app = mount / "Andromeda.app"
+            self.assertTrue(app.is_dir())
+            self.assertFalse(app.is_symlink())
+            self.assertIn("0.1.2", subprocess.check_output([str(app / "Contents/Resources/bin/andromeda"), "--version"], text=True))
+        finally:
+            detached = subprocess.run(["hdiutil", "detach", str(mount)], capture_output=True)
+            if detached.returncode:
+                subprocess.run(["hdiutil", "detach", "-force", str(mount)], check=True, capture_output=True)
+
 if __name__ == "__main__":
     unittest.main()
