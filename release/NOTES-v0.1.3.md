@@ -6,7 +6,7 @@ Andromeda 0.1.3 adds Android background-connection setup and clearer agent tool 
 - **Andromeda-0.1.3-macos-arm64.dmg** — Apple silicon desktop/MCP bundle with valid ad-hoc code signatures. It is not Developer ID signed or notarized.
 - **release-manifest.json** and **SHA256SUMS.txt** — artifact details and hashes.
 
-The previous [Windows x64 preview remains available in v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2); this release does not provide an updated Windows installer or claim Windows runtime verification.
+The previous [Windows x64 preview remains available in v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2); this release does not provide an updated Windows installer or claim Windows runtime verification. That older installer predates the OpenCode connector and current core fixes.
 
 ### Changes
 

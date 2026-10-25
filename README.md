@@ -14,7 +14,7 @@ You choose the task, the device and the allowed tools. Your agent observes the s
 | --- | --- |
 | **Claude Code** | [Connect from the desktop app](docs/claude-code.md). A real-device Settings task has been verified. |
 | **OpenAI Codex** | [Connect from the desktop app](docs/codex.md). A real-device Settings task has been verified. |
-| **OpenCode 2** | [Connect from the desktop app](docs/opencode.md). Connection verified with OpenCode 2.0.22 and 2.1.4; complete schemas are exposed directly by default. |
+| **OpenCode 2** | [Connect from the desktop app](docs/opencode.md). Connection verified with OpenCode 2.0.22 and 2.1.4; direct schemas by default. Included in the Mac preview/source builds; Windows v0.1.2 predates this connector. |
 | **Cursor and other MCP clients** | [Configure a stdio connection](docs/clients.md). These clients need their own compatibility checks. |
 
 Your agent brings the reasoning. Andromeda supplies the phone controls, so the same tools can work across different apps.
