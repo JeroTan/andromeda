@@ -2,6 +2,12 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger records implementation and dated acceptance results. See the [current release audit](release-audit-0.1.1.md) for shipped artifacts, evidence and remaining validation limits. Historical pending items below may be resolved by later entries; unchecked verification is not a claim of a pass. A passing mock test does not prove Android behavior or client compatibility.
 
+## Core MCP startup/update recovery — 2026-10-25
+
+Fixed the underlying macOS executable/bundle update path: fresh-inode staging, Tauri ad-hoc signatures, verified whole-bundle installation and rollback. A bundled-server startup/version preflight now runs before client settings are written. OpenCode connection setup applies the reviewed runtime entry in the selected project and verifies the actual connection, while preserving disabled/auth-required states and unrelated sessions.
+
+Native regression checks cover the old inode-overwrite failure, repeated installs, invalid candidates, post-swap rollback and executable-ancestor symlinks. An actual OpenCode 2.1.4 fixture went from process-exited failure to connected through the desktop flow. The updated Mac app passes full code-signature verification; Claude/OpenCode are connected for ZZZ and its Running state was restored. See [core recovery evidence](evidence/mcp-core-recovery-2026-10-25.json). Published 0.1.2 downloads remain unchanged; these corrections are in the local/source build.
+
 ## OpenCode connector — 2026-10-24
 
 The desktop now includes **Connect OpenCode** for OpenCode 2. It previews and saves project-local JSON/JSONC configuration, retaining comments, other settings and server entries. Replacement and concurrent-edit guards apply, and the managed connection keeps the existing directory/device/tool policy. OpenCode 1's legacy MCP map requires migration rather than silent rewriting.
