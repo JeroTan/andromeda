@@ -50,3 +50,13 @@ The repo's Rust companion seam tests use a simulated ADB server for framing, cre
 On Android 11 and newer, the bridge can supply fresh screenshots using its declared screenshot capability. It supports bounded PNG/JPEG/WebP output and on-device scaling, while Rust validates the payload, encoding and native geometry. This uses the existing paired ADB connection and keeps no frame cache or files. Paused managed projects can still use allowed observation tools. Android-protected content remains protected and may appear black.
 
 The API has a platform rate limit and a bounded callback wait. Timeout, Stop and client disconnect discard the result and close buffers, including callbacks delivered later. Older phones and unavailable APIs retain the normal ADB path in automatic mode; no additional permission is granted automatically. Update/enablement behavior must be checked on each supported platform. See [API research](research/accessibility-capture.md) for lifecycle, clock and permission details.
+
+## Keep the bridge available in other apps
+
+Open **Settings → Background connection**. Andromeda checks its battery-optimization exemption and Android's background restriction flag, refreshes on return from system settings, and disables the exemption request once it is already granted. The home screen links to this section while a restriction may apply.
+
+**Allow background connection** opens Android's approval flow for this app. Android requires the owner to approve; the app does not silently whitelist itself, repeatedly reopen settings, or interrupt another app when it moves to the background. If the direct request is unavailable, it falls back to Android's battery-optimization list or this app's App info. **Open app battery settings** is available for additional manufacturer controls.
+
+On Xiaomi/HyperOS, check App battery saver → No restrictions and any Background autostart option in App info. These vendor-specific states cannot be confirmed through Android's standard APIs. The exemption improves background availability but does not guarantee survival of OEM process management, low-memory termination, reboot or service revocation. This is separate from `desktop_offline`: the Mac/PC app must remain open.
+
+Authenticated companion status adds `battery_exempt` and `background_restricted` diagnostics. Existing protocol clients can ignore these additional fields. See the official [Android power-management guidance](https://developer.android.com/training/monitoring-device-state/doze-standby) and [Xiaomi background-app guidance](https://www.mi.com/sg/support/faq/details/KA-538010/).

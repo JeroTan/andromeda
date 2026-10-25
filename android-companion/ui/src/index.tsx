@@ -7,6 +7,9 @@ type ManagedProject = {
   state: "running" | "paused" | "stopped";
 };
 type Status = {
+  battery_exempt: boolean;
+  background_restricted: boolean;
+  manufacturer: string;
   desktop_connected: boolean;
   projects_json: string;
   enabled: boolean;
@@ -34,6 +37,9 @@ type Action =
   | "accessibility-settings"
   | "settings"
   | "session-settings"
+  | "background-settings"
+  | "battery-exemption"
+  | "app-battery-settings"
   | "back"
   | "timer-off"
   | "timer-15"
@@ -229,7 +235,9 @@ function App() {
                 action="back"
                 secondary={true}
               >
-                {screen === "session" ? "Back to Settings" : "Back to home"}
+                {screen === "session" || screen === "background"
+                  ? "Back to Settings"
+                  : "Back to home"}
               </ActionButton>
               <text
                 flatten={false}
@@ -238,7 +246,11 @@ function App() {
                 accessibility-element={true}
                 accessibility-heading={true}
               >
-                {screen === "session" ? "Session timer" : "Settings"}
+                {screen === "session"
+                  ? "Session timer"
+                  : screen === "background"
+                    ? "Background connection"
+                    : "Settings"}
               </text>
               {screen === "settings" ? (
                 <>
@@ -249,6 +261,25 @@ function App() {
                     accessibility-element={true}
                   >
                     Choose a section to change its settings.
+                  </text>
+                  <ActionButton
+                    status={status}
+                    busy={busy}
+                    onAction={act}
+                    action="background-settings"
+                    secondary={true}
+                  >
+                    Background connection
+                  </ActionButton>
+                  <text
+                    flatten={false}
+                    className="small"
+                    style={type(status.small_size)}
+                    accessibility-element={true}
+                  >
+                    {status.battery_exempt
+                      ? "Battery optimization exemption is active"
+                      : "Battery optimization may limit background use"}
                   </text>
                   <ActionButton
                     status={status}
@@ -265,6 +296,77 @@ function App() {
                     style={type(status.small_size)}
                     accessibility-element={true}
                   >{`Session timer · ${status.timer_minutes === 0 ? "Off" : status.timer_minutes === 60 ? "1 hour" : `${status.timer_minutes} minutes`}`}</text>
+                </>
+              ) : screen === "background" ? (
+                <>
+                  <text
+                    flatten={false}
+                    className="body"
+                    style={type(status.body_size)}
+                    accessibility-element={true}
+                  >
+                    Keep the bridge available while you use other apps. Android
+                    can exempt Andromeda from battery optimization after you
+                    approve its request.
+                  </text>
+                  <text
+                    flatten={false}
+                    className="status-title"
+                    style={type(status.body_size)}
+                    accessibility-element={true}
+                  >
+                    {status.battery_exempt
+                      ? "Battery optimization exemption is active"
+                      : "Battery optimization may limit background use"}
+                  </text>
+                  <ActionButton
+                    status={status}
+                    busy={busy}
+                    onAction={act}
+                    action="battery-exemption"
+                    disabled={status.battery_exempt}
+                  >
+                    Allow background connection
+                  </ActionButton>
+                  <text
+                    flatten={false}
+                    className="small"
+                    style={type(status.small_size)}
+                    accessibility-element={true}
+                  >
+                    {status.background_restricted
+                      ? "Android reports background use is restricted. Review this app's battery settings."
+                      : "Android reports no background-use restriction. Manufacturer settings may still apply."}
+                  </text>
+                  <ActionButton
+                    status={status}
+                    busy={busy}
+                    onAction={act}
+                    action="app-battery-settings"
+                    secondary={true}
+                  >
+                    Open app battery settings
+                  </ActionButton>
+                  <text
+                    flatten={false}
+                    className="small"
+                    style={type(status.small_size)}
+                    accessibility-element={true}
+                  >
+                    {status.manufacturer.toLowerCase() === "xiaomi"
+                      ? "On Xiaomi, check App battery saver and choose No restrictions. Background autostart may also be listed in App info. These manufacturer settings cannot be confirmed automatically."
+                      : "If the bridge still disconnects, check this app's unrestricted battery or background-use options. Available settings depend on your device."}
+                  </text>
+                  <text
+                    flatten={false}
+                    className="small"
+                    style={type(status.small_size)}
+                    accessibility-element={true}
+                  >
+                    This may use more battery. The status updates when you
+                    return here. The Mac or PC app must also remain open; its
+                    gateway is separate from this Android setting.
+                  </text>
                 </>
               ) : (
                 <>
@@ -465,6 +567,38 @@ function App() {
                   )}
                 </view>
               ))}
+              {(!status.battery_exempt || status.background_restricted) && (
+                <view className="panel controls">
+                  <text
+                    flatten={false}
+                    className="status-title"
+                    style={type(status.body_size)}
+                    accessibility-element={true}
+                    accessibility-heading={true}
+                  >
+                    Keep the bridge connected
+                  </text>
+                  <text
+                    flatten={false}
+                    className="small"
+                    style={type(status.small_size)}
+                    accessibility-element={true}
+                  >
+                    Battery restrictions can limit Andromeda when you switch
+                    apps. Review background access once; existing approval is
+                    detected automatically.
+                  </text>
+                  <ActionButton
+                    status={status}
+                    busy={busy}
+                    onAction={act}
+                    action="background-settings"
+                    secondary={true}
+                  >
+                    Background connection
+                  </ActionButton>
+                </view>
+              )}
               <view className="status-panel panel">
                 <view className="status-heading">
                   <text
@@ -670,7 +804,7 @@ function App() {
                 className="footer"
                 style={type(status.small_size)}
               >
-                {"A LITTLE MORE REACH.\nANDROMEDA / 0.1.2"}
+                {"A LITTLE MORE REACH.\nANDROMEDA / 0.1.3"}
               </text>
             </>
           )}

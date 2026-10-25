@@ -61,7 +61,7 @@ dependencies = [
 
 [[package]]
 name = "andromeda-desktop"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "andromeda-mcp",
  "base64 0.22.1",
@@ -79,7 +79,7 @@ dependencies = [
 
 [[package]]
 name = "andromeda-mcp"
-version = "0.1.2"
+version = "0.1.3"
 dependencies = [
  "base64 0.22.1",
  "clap",

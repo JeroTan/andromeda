@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-25",
+  "source_commit": "125c9a714ef5f669e0759554aef64d73efb0d188",
+  "environment": "Disposable Android API 37 emulator, independent from the physical Xiaomi tablet",
+  "battery_ui": {
+    "optimized_state": "passed; request opens system settings; no exemption granted without owner approval",
+    "exempt_state": "passed; exemption detected and request unavailable",
+    "app_info_fallback_control": "passed; opens Android app settings",
+    "settings_back_navigation": "passed",
+    "stop_control_available": "passed",
+    "exemption_test_setup": "Shell whitelist changed only on the disposable emulator to test both states"
+  },
+  "background_switch": {
+    "background_duration_seconds": 5,
+    "battery_exempt": true,
+    "desktop_bridge_connected_after": true,
+    "environment": "disposable Android API37 emulator",
+    "foreground_switch": "Android Settings",
+    "input_actions": 0,
+    "limit": "Short background-switch check, not long Doze/OEM survival evidence. Exemption state set by emulator shell for this test.",
+    "session_active_after": true,
+    "session_active_before": true
+  },
+  "mcp_guidance": {
+    "default_opencode_codemode": false,
+    "real_ZZZ_configuration_updated": true,
+    "real_ZZZ_connected_after_update": true,
+    "command_device_and_tool_scope_preserved": true,
+    "examples": [
+      "adm_get_view",
+      "adm_touch",
+      "adm_swipe",
+      "adm_wait_for",
+      "adm_batch_actions"
+    ],
+    "example_validation": "All advertised examples executed successfully through the public MCP call interface against simulated ADB",
+    "current_session_diagnosis": "Recent tool inputs used placeholder text for waits; recorded errors include setTimeout unknown identifier and missing swipe key. No raw transcript retained."
+  },
+  "validation": {
+    "rust_workspace_tests_passed": 75,
+    "strict_workspace_clippy": "passed",
+    "phone_typescript_and_bundle_build": "passed",
+    "android_debug_release_and_instrumentation_build": "passed",
+    "phone_prettier": "passed",
+    "spec_review": "no actionable findings",
+    "standards_review": "no actionable findings"
+  },
+  "harness_correction": "The old UI probe expected the pre-session-sync label Stop companion session; updated to the current Stop all phone projects label. Earlier No active window failures were not app crashes.",
+  "limitations": [
+    "The native battery UI was tested on an emulator, not the physical Xiaomi Pad 6.",
+    "A five-second foreground switch is not long Doze/OEM process-survival evidence.",
+    "No silent battery exemption or OEM setting change is claimed.",
+    "Direct schemas use more context and do not guarantee model accuracy.",
+    "No game actions, model calls or hosted Actions runs."
+  ]
+}

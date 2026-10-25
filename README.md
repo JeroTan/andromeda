@@ -6,7 +6,7 @@ Use Claude Code, OpenAI Codex or OpenCode to see your screen, tap, swipe, type, 
 
 You choose the task, the device and the allowed tools. Your agent observes the screen, takes action and checks the result.
 
-[Download the native apps](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md) · [Tool reference](docs/api.md)
+[Download the native apps](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) · [Desktop setup](docs/desktop.md) · [Android companion](docs/companion.md) · [Tool reference](docs/api.md)
 
 ## Bring your favorite agent
 
@@ -14,7 +14,7 @@ You choose the task, the device and the allowed tools. Your agent observes the s
 | --- | --- |
 | **Claude Code** | [Connect from the desktop app](docs/claude-code.md). A real-device Settings task has been verified. |
 | **OpenAI Codex** | [Connect from the desktop app](docs/codex.md). A real-device Settings task has been verified. |
-| **OpenCode 2** | [Connect from the desktop app](docs/opencode.md). Connection verified with OpenCode 2.0.22; available in current source builds, after the v0.1.2 release. |
+| **OpenCode 2** | [Connect from the desktop app](docs/opencode.md). Connection verified with OpenCode 2.0.22 and 2.1.4; direct schemas by default. Included in the Mac preview/source builds; Windows v0.1.2 predates this connector. |
 | **Cursor and other MCP clients** | [Configure a stdio connection](docs/clients.md). These clients need their own compatibility checks. |
 
 Your agent brings the reasoning. Andromeda supplies the phone controls, so the same tools can work across different apps.
@@ -36,7 +36,7 @@ Tasks depend on what the app exposes and how well your agent handles it. Start w
 
 ## Get started
 
-The [v0.1.2 native preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2) includes a Windows EXE, Apple silicon Mac DMG and Android APK. The desktop apps include the Rust MCP server and run without npm. The optional phone companion adds multi-touch, Unicode input and faster screenshots on supported devices.
+The [v0.1.3 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) includes an Apple silicon Mac DMG and Android APK. The previous [Windows EXE preview is available in v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2). The desktop apps include the Rust MCP server and run without npm. The optional phone companion adds multi-touch, Unicode input and faster screenshots on supported devices.
 
 1. Install the desktop app and [Android Platform Tools](https://developer.android.com/tools/releases/platform-tools). Connect your Android device and authorize USB debugging.
 2. In Andromeda, choose your project folder, device and allowed tools. Add your device-use instructions to `ANDROMEDA.md` through **Edit instructions**.
@@ -44,7 +44,7 @@ The [v0.1.2 native preview](https://github.com/JeroTan/andromeda/releases/tag/v0
 
 Each project has its own Start, Pause/Resume and Stop controls. **Stop all projects** is the emergency control. Sessions stay open until you stop them by default; the phone's optional timer lives under Settings → Session.
 
-See the [installation guide](docs/installation.md) for setup and troubleshooting. Desktop packages are unsigned previews, Windows runtime testing is deferred, and broader accessibility checks remain unverified. Release notes and the [evidence ledger](docs/implementation-status.md) record the limits. The [npm launcher](npm/README.md) is an optional local launch route; it is not published to npm.
+See the [installation guide](docs/installation.md) for setup and troubleshooting. The Mac app has ad-hoc signatures and is not Developer ID signed or notarized; the earlier Windows preview is unsigned. Windows runtime testing is deferred, and broader accessibility checks remain unverified. Release notes and the [evidence ledger](docs/implementation-status.md) record the limits. The [npm launcher](npm/README.md) is an optional local launch route; it is not published to npm.
 
 ## Build the command-line server
 

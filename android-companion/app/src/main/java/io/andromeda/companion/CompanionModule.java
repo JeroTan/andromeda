@@ -32,9 +32,13 @@ public final class CompanionModule extends LynxModule {
             String error = null;
             try {
                 ControlService service = ControlService.instance;
-                if ("settings".equals(action) || "session-settings".equals(action) || "back".equals(action)) {
+                if ("settings".equals(action) || "session-settings".equals(action) || "background-settings".equals(action) || "back".equals(action)) {
                     MainActivity host = (MainActivity) activity();
-                    host.navigate("back".equals(action) ? ("session".equals(host.screen()) ? "settings" : "home") : "settings".equals(action) ? "settings" : "session");
+                    host.navigate("back".equals(action) ? ("session".equals(host.screen()) || "background".equals(host.screen()) ? "settings" : "home") : "settings".equals(action) ? "settings" : "background-settings".equals(action) ? "background" : "session");
+                } else if ("battery-exemption".equals(action)) {
+                    BackgroundAccess.requestBatteryExemption(activity());
+                } else if ("app-battery-settings".equals(action)) {
+                    BackgroundAccess.openAppSettings(activity());
                 } else if ("timer-off".equals(action) || "timer-15".equals(action) || "timer-30".equals(action) || "timer-60".equals(action)) {
                     int minutes = "timer-off".equals(action) ? 0 : Integer.parseInt(action.substring(6));
                     if (!mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).edit().putInt("session_timer_minutes", minutes).commit())
@@ -90,6 +94,9 @@ public final class CompanionModule extends LynxModule {
     private Map<String,Object> snapshot(String error) {
         Map<String,Object> status = new HashMap<>();
         ControlService service = ControlService.instance;
+        status.put("battery_exempt", BackgroundAccess.batteryExempt(mContext));
+        status.put("background_restricted", BackgroundAccess.restricted(mContext));
+        status.put("manufacturer", android.os.Build.MANUFACTURER);
         status.put("enabled", accessibilityEnabled());
         status.put("service_ready", service != null && service.ready() && !(BuildConfig.DEBUG && testServiceDisconnected));
         status.put("paired", !mContext.getSharedPreferences("pairing", Context.MODE_PRIVATE).getString("token", "").isEmpty());

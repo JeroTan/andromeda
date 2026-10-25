@@ -2,6 +2,12 @@
 
 The original requirements are in [intial_prompt.md](intial_prompt.md). This ledger records implementation and dated acceptance results. See the [current release audit](release-audit-0.1.1.md) for shipped artifacts, evidence and remaining validation limits. Historical pending items below may be resolved by later entries; unchecked verification is not a claim of a pass. A passing mock test does not prove Android behavior or client compatibility.
 
+## Background connection and tool guidance — 2026-10-25
+
+Added Android Settings → Background connection, automatic exemption/restriction checks, an owner-approved exemption request with fallbacks, and a home link while attention may be needed. Already-exempt devices do not reopen the request. Xiaomi-specific controls are explained without claiming automatic detection or changes. Optional companion status fields expose battery state. Emulator optimized/exempt settings flows and a five-second background switch passed; long Doze/OEM survival and physical Xiaomi behavior remain unverified.
+
+MCP descriptions and initialization instructions now distinguish taps/swipes/holds, real conditions versus batch pauses, coordinate scaling and error recovery. Five executable schema examples pass the public call boundary. OpenCode defaults to direct schemas (`codemode: false`), and the existing ZZZ connection was updated without changing its command or scope. No model-accuracy improvement is claimed. See [evidence](evidence/background-and-tool-guidance-2026-10-25.json).
+
 ## Core MCP startup/update recovery — 2026-10-25
 
 Fixed the underlying macOS executable/bundle update path: fresh-inode staging, Tauri ad-hoc signatures, verified whole-bundle installation and rollback. A bundled-server startup/version preflight now runs before client settings are written. OpenCode connection setup applies the reviewed runtime entry in the selected project and verifies the actual connection, while preserving disabled/auth-required states and unrelated sessions.

@@ -1160,7 +1160,7 @@ function App() {
           <span>
             ANDROMEDA <span aria-hidden="true">↗</span> A LITTLE MORE REACH.
           </span>
-          <span>LOCAL CONTROL · VERSION 0.1.2 · PREVIEW</span>
+          <span>LOCAL CONTROL · VERSION 0.1.3 · PREVIEW</span>
         </footer>
       </main>
       {dialog && (

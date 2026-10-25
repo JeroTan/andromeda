@@ -47,7 +47,7 @@ public final class MainActivity extends Activity {
         if (lynxView != null) lynxView.updateGlobalProps(java.util.Map.of("screen", screen));
         if (android.os.Build.VERSION.SDK_INT >= 33) {
             if (!"home".equals(screen) && backCallback == null) {
-                backCallback = () -> navigate("session".equals(screen) ? "settings" : "home");
+                backCallback = () -> navigate(("session".equals(screen) || "background".equals(screen)) ? "settings" : "home");
                 getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, backCallback);
             } else if ("home".equals(screen) && backCallback != null) {
                 getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
@@ -56,7 +56,7 @@ public final class MainActivity extends Activity {
         }
     }
     @Override public void onBackPressed() {
-        if (!"home".equals(screen)) navigate("session".equals(screen) ? "settings" : "home");
+        if (!"home".equals(screen)) navigate(("session".equals(screen) || "background".equals(screen)) ? "settings" : "home");
         else super.onBackPressed();
     }
     @Override protected void onSaveInstanceState(Bundle state) {

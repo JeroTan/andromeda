@@ -183,3 +183,47 @@ async fn mcp_negotiates_and_advertises_android_tools_with_input_schemas() {
     client.cancel().await.unwrap();
     task.await.unwrap();
 }
+
+#[tokio::test]
+async fn advertised_phone_control_examples_are_executable_through_the_public_mcp_interface() {
+    use tokio_util::sync::CancellationToken;
+    for name in [
+        "adm_get_view",
+        "adm_touch",
+        "adm_swipe",
+        "adm_wait_for",
+        "adm_batch_actions",
+    ] {
+        let fixture = if name == "adm_get_view" {
+            let mut bytes = Vec::new();
+            image::DynamicImage::new_rgb8(64, 64)
+                .write_to(
+                    &mut std::io::Cursor::new(&mut bytes),
+                    image::ImageFormat::Png,
+                )
+                .unwrap();
+            support::DeviceFixture::with_capture(bytes).await
+        } else {
+            support::DeviceFixture::start(0).await
+        };
+        let server = Server {
+            controller: Controller::new(Adb::new(fixture.address), Some("phone-A".into()), true),
+        };
+        let tool = andromeda::mcp::tools()
+            .into_iter()
+            .find(|t| t.name == name)
+            .unwrap();
+        let arguments = tool.input_schema["examples"][0].clone();
+        assert!(
+            arguments.is_object(),
+            "{name} must advertise an argument object"
+        );
+        let result = server.call(name, arguments, CancellationToken::new()).await;
+        assert_eq!(
+            result.structured_content.as_ref().unwrap()["success"],
+            true,
+            "Advertised example for {name} failed: {:?}",
+            result.structured_content
+        );
+    }
+}
