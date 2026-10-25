@@ -73,7 +73,7 @@ const clientNames: Record<AgentClient, string> = {
 };
 type DialogState =
   | { kind: "connection"; client: AgentClient; change: Change }
-  | { kind: "connection_result"; client: string; result: string }
+  | { kind: "connection_result"; client: AgentClient; result: string }
   | { kind: "instructions"; project: Project; document: Instructions }
   | { kind: "remove"; project: Project };
 
@@ -1170,7 +1170,7 @@ function App() {
             dialog.kind === "connection"
               ? `Connect ${clientNames[dialog.client]}`
               : dialog.kind === "connection_result"
-                ? "Claude connection configured"
+                ? `${clientNames[dialog.client]} connection configured`
                 : dialog.kind === "instructions"
                   ? "Project instructions"
                   : dialog.kind === "remove"
@@ -1201,7 +1201,7 @@ function App() {
                 {dialog.client === "claude"
                   ? "This registers Andromeda in your private Claude setup for this project and checks the connection. Other projects and servers are preserved."
                   : dialog.client === "opencode"
-                    ? "For OpenCode 2. Saves this project's connection while preserving your settings and comments. Reopen OpenCode in this project to load Andromeda."
+                    ? "For OpenCode 2. Applies the reviewed connection to this OpenCode project and checks the result. Other projects and sessions are preserved."
                     : "Your other client settings are preserved. Reopen the project or reconnect MCP afterward; your client may ask you to trust this connection."}
               </p>
               {dialog.change.replaces_existing && (
@@ -1228,7 +1228,7 @@ function App() {
                         id: dialog.change.id,
                         allowReplacement: replace,
                       });
-                      if (dialog.client === "claude") {
+                      if (dialog.client !== "codex") {
                         setDialog({
                           kind: "connection_result",
                           client: dialog.client,
@@ -1242,10 +1242,10 @@ function App() {
                   }
                 >
                   {busy === "apply"
-                    ? dialog.client === "claude"
+                    ? dialog.client !== "codex"
                       ? "Connecting…"
                       : "Saving…"
-                    : dialog.client === "claude"
+                    : dialog.client !== "codex"
                       ? "Connect this project"
                       : "Save connection"}
                 </button>
@@ -1262,16 +1262,26 @@ function App() {
           {dialog.kind === "connection_result" && (
             <>
               <p role="status">{dialog.result}</p>
-              <h3>Already have a Claude chat open?</h3>
-              <p>
-                That conversation keeps its existing tool list. Reconnect
-                Andromeda from Claude's MCP panel or reopen the conversation to
-                load the newly configured tools.
-              </p>
-              <p className="field-hint">
-                The add command registers a server; it cannot refresh a running
-                Claude conversation. No further Andromeda approval is needed.
-              </p>
+              {dialog.client === "claude" ? (
+                <>
+                  <h3>Already have a Claude chat open?</h3>
+                  <p>
+                    That conversation keeps its existing tool list. Reconnect
+                    Andromeda from Claude's MCP panel or reopen the conversation
+                    to load the newly configured tools.
+                  </p>
+                  <p className="field-hint">
+                    The add command registers a server; it cannot refresh a
+                    running Claude conversation. No further Andromeda approval
+                    is needed.
+                  </p>
+                </>
+              ) : (
+                <p>
+                  OpenCode is ready to use this connection. Keep Andromeda open
+                  and start this project when you want to allow input.
+                </p>
+              )}
               <button className="primary" onClick={() => setDialog(null)}>
                 Done
               </button>

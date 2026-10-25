@@ -623,3 +623,7 @@ The operator explicitly chose: “Defer broader accessibility checks for this pr
 ## OpenCode connector — 2026-10-24
 
 Add Connect OpenCode to the desktop app, alongside Codex and Claude. Target the installed OpenCode 2 schema (`mcp.servers`, local command array), preserve existing project JSON/JSONC settings and comments, preview the entry, fence concurrent edits and keep existing project/device/tool authorization. Document the connection and verify it with the installed client.
+
+## Core MCP startup correction — 2026-10-25
+
+Fix the underlying startup/update path rather than repairing individual installations. Stage executable replacements at fresh inodes, ad-hoc sign and verify complete local macOS bundles, verify the installed MCP executable, and retain rollback for failed updates. Connection setup must check the bundled server before writing client configuration. Connect OpenCode must verify the selected project's actual MCP status and recover failed or missing runtime connections using the reviewed entry, without globally reloading unrelated sessions. Preserve directory/device/tool scope and keep hosted Actions disabled.

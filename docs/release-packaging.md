@@ -97,3 +97,19 @@ python3 scripts/build-windows-preview.py --toolchain PREPARED_RUST_SYSROOT \
 ```
 
 The sysroot must contain its host compiler/stdlib and Windows GNU stdlib. The helper does not download or accept licenses automatically. Windows notices include the exact WebView2 1.0.3650.58 publisher-package texts after matching its loader DLL to the bundled crate binary, plus MinGW/Rust notices. This cross-build is not native Windows validation.
+
+## Local macOS updates and MCP startup checks
+
+The macOS bundle uses Tauri's ad-hoc signing identity (`-`), providing local code/resource integrity without Developer ID signing or notarization. This follows the [Tauri signing guide](https://v2.tauri.app/distribute/sign/macos/#ad-hoc-signing). The published 0.1.2 downloads predate this correction.
+
+Build an app bundle with `npm run tauri --prefix desktop -- build --bundles app`, close the running desktop app, then run:
+
+```sh
+npm run install:macos --prefix desktop
+# Optional test destination:
+# npm run install:macos --prefix desktop -- --destination /absolute/path/Andromeda.app
+```
+
+The installer stages a fresh complete bundle beside the destination, signs and verifies it, checks the bundled MCP version/tool catalog, swaps directories and repeats verification at the installed path. Failed installed-path validation restores the previous app; a failed rollback preserves its backup. It never merges new executable bytes into the installed bundle. Private project/pairing state remains outside the app. Build preparation likewise stages the MCP executable at a new inode before replacement.
+
+Regression checks: `npm run test:packaging --prefix desktop` and `python3 -m unittest discover -s scripts -p test_install_macos.py`. The native installer checks require macOS/Clang/code-signing tools. Desktop connection setup now starts the bundled server with `--version` before writing client configuration, reporting a killed or mismatched executable directly.

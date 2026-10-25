@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-25",
+  "source_commit": "1c5e920",
+  "root_causes": [
+    "Copying executable bytes over installed Mach-O inodes can leave macOS execution validation cached against overwritten code. The installed MCP exited via SIGKILL while an identical fresh-inode copy started.",
+    "The copied application bundle had invalid sealed-resource code-signing metadata.",
+    "OpenCode retained the failed MCP runtime after the executable repair; saving configuration alone did not reconnect it."
+  ],
+  "core_changes": [
+    "Fresh-inode executable staging instead of in-place copy",
+    "Tauri ad-hoc code signing for complete macOS bundles",
+    "Verified staged bundle installation with installed-path checks and rollback",
+    "Metadata/executable ancestor symlinks rejected before signing",
+    "Bundled server executable/version preflight before client configuration changes",
+    "OpenCode selected-project runtime synchronization using the reviewed entry, status verification and policy-state preservation"
+  ],
+  "validation": {
+    "workspace_tests_passed": 74,
+    "desktop_connection_tests_passed": 8,
+    "native_installer_tests_passed": 4,
+    "executable_inode_test": "failed with previous copyFileSync behavior; passes with atomic replacement",
+    "typescript_vite": "passed",
+    "formatting": "passed",
+    "strict_workspace_clippy": "passed",
+    "production_app_bundle": "valid codesign deep/strict; MCP version 0.1.2; 18 tools",
+    "installed_app_bundle": "valid codesign deep/strict; installer installed-path verification passed",
+    "real_opencode_client": "2.1.4",
+    "real_client_fixture_before": "Connection closed: MCP server process exited with code 1",
+    "real_client_fixture_after": "connected via native Connect OpenCode; no manual runtime-reconnect command used for this fixture",
+    "real_ZZZ_opencode": "connected",
+    "real_ZZZ_claude": "Connected",
+    "ZZZ_state_restored": "running"
+  },
+  "installed_binary_sha256": "2217ec79d32e8f4722ce5c862924a5550ef6ecfa45d305a041ff12985e57d81f",
+  "limits": [
+    "Ad-hoc signing provides local code integrity, not Developer ID or notarization.",
+    "Published 0.1.2 release assets predate these corrections.",
+    "The app restart briefly made the desktop gateway unavailable; this is distinct from Android battery management.",
+    "No model calls or game actions were used in validation.",
+    "Broader accessibility and Windows-native runtime checks remain deferred."
+  ]
+}

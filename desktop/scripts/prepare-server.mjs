@@ -1,12 +1,6 @@
+import { stageExecutable } from "./stage-executable.mjs";
 import { execFileSync } from "node:child_process";
-import {
-  copyFileSync,
-  mkdirSync,
-  chmodSync,
-  existsSync,
-  cpSync,
-  rmSync,
-} from "node:fs";
+import { copyFileSync, mkdirSync, existsSync, cpSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 const root = fileURLToPath(new URL("../../", import.meta.url));
@@ -30,7 +24,7 @@ rmSync(
   ),
   { force: true },
 );
-copyFileSync(
+stageExecutable(
   join(
     root,
     "target",
@@ -39,9 +33,8 @@ copyFileSync(
     executable,
   ),
   join(destination, executable),
+  !target.includes("windows"),
 );
-if (!target.includes("windows"))
-  chmodSync(join(destination, executable), 0o755);
 
 // Keep release notices inside the native bundle as well as download archives.
 const notices = join(root, "desktop", "src-tauri", "notices");

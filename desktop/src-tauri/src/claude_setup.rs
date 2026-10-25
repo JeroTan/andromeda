@@ -1,12 +1,8 @@
 //! User-initiated Claude setup via its supported project-local CLI scope.
+use super::cli_process::run;
 use andromeda::errors::{Error, Result};
 use serde_json::{Value, json};
-use std::{
-    path::{Path, PathBuf},
-    process::Stdio,
-    time::Duration,
-};
-use tokio::io::AsyncReadExt;
+use std::path::{Path, PathBuf};
 
 pub(super) struct Plan {
     pub project_id: String,
@@ -189,9 +185,15 @@ impl Plan {
                     Error::new("invalid_config", "Claude server argument is not text")
                 })?);
             }
-            run(&self.cli, &self.root, &arguments).await?;
+            run(&self.cli, &self.root, &arguments, "Claude").await?;
         }
-        let status = run(&self.cli, &self.root, &["mcp", "get", "andromeda"]).await?;
+        let status = run(
+            &self.cli,
+            &self.root,
+            &["mcp", "get", "andromeda"],
+            "Claude",
+        )
+        .await?;
         if !status
             .lines()
             .any(|line| line.trim_start().starts_with("Status:") && line.contains("Connected"))
@@ -208,70 +210,4 @@ impl Plan {
         }
         .into())
     }
-}
-async fn run(cli: &Path, root: &Path, args: &[&str]) -> Result<String> {
-    let mut child = tokio::process::Command::new(cli)
-        .args(args)
-        .current_dir(root)
-        .env("NO_COLOR", "1")
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .kill_on_drop(true)
-        .spawn()
-        .map_err(|_| {
-            Error::new(
-                "claude_start_failed",
-                "Could not start the installed Claude Code executable",
-            )
-        })?;
-    let stdout = child
-        .stdout
-        .take()
-        .ok_or_else(|| Error::new("claude_start_failed", "Claude stdout unavailable"))?;
-    let stderr = child
-        .stderr
-        .take()
-        .ok_or_else(|| Error::new("claude_start_failed", "Claude stderr unavailable"))?;
-    let operation = async {
-        let read_out = async {
-            let mut bytes = Vec::new();
-            stdout.take(65537).read_to_end(&mut bytes).await?;
-            Ok::<_, std::io::Error>(bytes)
-        };
-        let read_err = async {
-            let mut bytes = Vec::new();
-            stderr.take(65537).read_to_end(&mut bytes).await?;
-            Ok::<_, std::io::Error>(bytes)
-        };
-        let (status, out, err) = tokio::try_join!(child.wait(), read_out, read_err)?;
-        if out.len() > 65536 || err.len() > 65536 {
-            return Err(Error::new(
-                "output_limit",
-                "Claude setup output exceeded its limit",
-            ));
-        }
-        if !status.success() {
-            return Err(Error::new(
-                "claude_setup_failed",
-                format!(
-                    "Claude could not complete setup: {}",
-                    String::from_utf8_lossy(&err)
-                        .chars()
-                        .take(400)
-                        .collect::<String>()
-                ),
-            ));
-        }
-        String::from_utf8(out)
-            .map_err(|_| Error::new("claude_setup_failed", "Claude returned invalid text"))
-    };
-    tokio::time::timeout(Duration::from_secs(20), operation)
-        .await
-        .map_err(|_| {
-            Error::new(
-                "timeout",
-                "Claude setup timed out; check its MCP status before retrying",
-            )
-        })?
 }
