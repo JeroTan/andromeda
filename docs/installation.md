@@ -1,6 +1,6 @@
 # Install Andromeda
 
-Download the [v0.1.2 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2): standalone Windows x64 EXE, Apple silicon Mac DMG, and signed Android APK. These apps do not need Node.js/npm to run. Android Platform Tools/ADB is still needed on the computer. Windows is an unsigned cross-build without native Windows testing; Linux packages remain pending. The optional `@jrw/andromeda` launcher is unpublished; npm publication is not required. See the release notes for unsigned-Mac and development-APK migration details, and [release packaging](release-packaging.md) for build commands.
+Download the [v0.1.3 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) for the Apple silicon Mac DMG and signed Android APK. The [previous Windows x64 EXE preview is in v0.1.2](https://github.com/JeroTan/andromeda/releases/tag/v0.1.2). The apps do not need Node.js/npm; Android Platform Tools/ADB is still needed on the computer. The Mac app is ad-hoc signed and not notarized; the Windows cross-build is unsigned and has no native Windows testing. Linux downloads are not shipped. The optional npm launcher remains unpublished. See release notes for qualifications and debug-APK migration, and [release packaging](release-packaging.md) for build commands.
 
 1. Install the desktop app from the DMG or EXE. Install the APK on the phone if you need the optional gesture, Unicode or faster screenshot bridge.
 2. Enable USB debugging and authorize the computer on the phone. Start ADB using Android Platform Tools.
