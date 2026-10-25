@@ -4,7 +4,7 @@ The original requirements are in [intial_prompt.md](intial_prompt.md). This ledg
 
 ## v0.1.3 publication and cleanup — 2026-10-25
 
-Published the [Mac/Android v0.1.3 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) at `a62f067`. All four uploaded asset hashes match the local files; see [publication evidence](evidence/release-publication-0.1.3.json). Windows v0.1.2 remains the previous preview. The Mac DMG contains the current signed bundle and five executable tool examples; the Android APK uses versionCode 4 and the retained release key.
+Published the [Mac/Android v0.1.3 preview](https://github.com/JeroTan/andromeda/releases/tag/v0.1.3) at `a62f067`. All four uploaded asset hashes match the local files; see [publication evidence](evidence/release-publication-0.1.3.json). The repository is public at final verification, so downloads no longer require GitHub sign-in. Windows v0.1.2 remains the previous preview. The Mac DMG contains the current signed bundle and five executable tool examples; the Android APK uses versionCode 4 and the retained release key.
 
 Temporary emulator, build caches, interface dependencies, test state and screenshots were removed. Final downloads and signing material were preserved; see [cleanup evidence](evidence/release-cleanup-0.1.3.json). The user chose to install the final Mac update after the current OpenCode run finishes. At publication time the core-fixed Mac app stays open, and ZZZ already uses direct schemas. Android installation and its battery approval remain owner actions on the Xiaomi device. No full OEM/Doze or model-accuracy certification is claimed.
 
