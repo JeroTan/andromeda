@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, rmSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
@@ -27,6 +27,8 @@ if (process.platform === "darwin") {
   ).version;
   const arch = process.arch === "arm64" ? "aarch64" : process.arch;
   const output = resolve(bundleRoot, "dmg", `Andromeda_${version}_${arch}.dmg`);
+  // Rebuild generated target output; create-dmg still protects arbitrary release paths.
+  rmSync(output, { force: true });
   execFileSync(
     process.execPath,
     [
